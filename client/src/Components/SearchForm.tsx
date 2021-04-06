@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   formSumbmitBtn: {
     boxShadow: `0 10px 20px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
     margin: 8,
+    marginRight: 0,
     padding: '28px 70px',
   },
 }));

@@ -20,6 +20,7 @@ export const SearchTextField = withStyles((theme) => ({
       borderRadius: '8px 8px 0px 0px',
       padding: 0,
       paddingLeft: 14,
+      marginBottom: -22
     },
 
     '& .MuiOutlinedInput-root': {

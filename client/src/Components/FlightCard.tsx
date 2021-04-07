@@ -1,5 +1,7 @@
 import { Button, Divider, makeStyles, Paper, Typography } from '@material-ui/core';
+import moment from 'moment';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   flightCard: {
@@ -85,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 type PropsType = {
   companyLogoSrc: string;
   flight: string;
+  flightId: string;
   airplane: string;
   departureDate: string;
   departureCity: string;
@@ -96,6 +99,7 @@ type PropsType = {
 export const FlightCard: React.FC<PropsType> = ({
   companyLogoSrc,
   flight,
+  flightId,
   airplane,
   departureDate,
   departureCity,
@@ -105,28 +109,29 @@ export const FlightCard: React.FC<PropsType> = ({
 }) => {
   const classes = useStyles();
 
-  const inFlightTime = '1h 30min';
-  const departureParsedTime = '7:00';
-  const departureParsedDate = '16 April 2021, Friday';
-  const arrivalParsedTime = '9:30';
-  const arrivalParsedDate = '16 April 2021, Friday';
+  const formattedDepDate = moment(departureDate, 'YYYY-MM-DD hh:mm:ss');
+  const formattedArrDate = moment(arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+
+  const depParsedTime = formattedDepDate.format('H:mm');
+  const depParsedDate = formattedDepDate.format('D MMMM YYYY, dddd');
+  const arrParsedTime = formattedArrDate.format('H:mm');
+  const arrParsedDate = formattedArrDate.format('D MMMM YYYY, dddd');
+
+  const inFlDiff = formattedArrDate.diff(formattedDepDate);
+  const inFl = moment.utc(inFlDiff).format('H,m').split(',');
+  const inFlightTime = `${inFl[0]}h ${inFl[1]}min`;
 
   return (
     <Paper className={classes.flightCard}>
       <div className={classes.flightCardContent}>
         <div>
-          <img
-            //src="https://static.tickets.ua/img/logos_s/PS.png?9e3008e77a"
-            src={companyLogoSrc}
-            alt="companyLogo"
-            className={classes.flightCardCompanyLogo}
-          />
+          <img src={companyLogoSrc} alt="companyLogo" className={classes.flightCardCompanyLogo} />
         </div>
         <div style={{ width: 200 }}>
           <Typography variant="h5">Flight {flight}</Typography>
           <Typography variant="body1">Airplane {airplane}</Typography>
         </div>
-        <FlightDate time={departureParsedTime} date={departureParsedDate} city={departureCity} />
+        <FlightDate time={depParsedTime} date={depParsedDate} city={departureCity} />
         <div className={classes.flightCardContentTimeLineContainer}>
           <div>
             <Typography variant="body1" gutterBottom>
@@ -137,15 +142,17 @@ export const FlightCard: React.FC<PropsType> = ({
             <hr className={classes.flightCardContentTimeLine}></hr>
           </span>
         </div>
-        <FlightDate time={arrivalParsedTime} date={arrivalParsedDate} city={arrivalCity} />
+        <FlightDate time={arrParsedTime} date={arrParsedDate} city={arrivalCity} />
       </div>
       <Divider />
       <div className={classes.flightCardSelect}>
         <span>Cost:</span>
         <span className={classes.flightCardCostText}>{cost} USD</span>
-        <Button color="secondary" variant="contained">
-          Select
-        </Button>
+        <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
+          <Button color="secondary" variant="contained">
+            Select
+          </Button>
+        </Link>
       </div>
     </Paper>
   );

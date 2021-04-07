@@ -1,5 +1,6 @@
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import React from 'react';
+import { Header } from '../Components/Header';
 import { SearchForm } from '../Components/SearchForm';
 
 const useStyles = makeStyles((theme) => ({
@@ -8,7 +9,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 'none',
     minHeight: '100vh',
     display: 'flex',
-    //justifyContent: 'center',
     textAlign: 'center',
     flexDirection: 'column',
   },
@@ -18,13 +18,11 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 400,
     display: 'flex',
     alignItems: 'center',
-    //justifyContent: 'space-between',
-    //boxShadow: `0 20px 30px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
     padding: 15,
-    //backgroundColor: '#f0f2f5'
     marginBottom: 100,
   },
   tagImg: {
+    borderRadius: 9,
     boxShadow: `0 10px 20px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
     maxWidth: 200,
   },
@@ -41,8 +39,9 @@ export const Home = () => {
 
   return (
     <div className={classes.homeContainer}>
+      <Header />
       <Paper className={classes.tagContainer}>
-        <img alt="logo" className={classes.tagImg} src="https://i.ibb.co/yPXXf2j/555.png" />
+        <img alt="tag" className={classes.tagImg} src="https://i.ibb.co/jzwS91s/tagIcon.png" />
         <Typography className={classes.tagTitle} color="secondary">
           Search Flights
         </Typography>

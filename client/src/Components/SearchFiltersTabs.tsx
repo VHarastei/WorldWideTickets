@@ -1,4 +1,4 @@
-import { Tabs, TextField, withStyles } from '@material-ui/core';
+import { Tabs, withStyles } from '@material-ui/core';
 
 export const SearchFiltersTabs = withStyles((theme) => ({
   root: {

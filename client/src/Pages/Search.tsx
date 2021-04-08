@@ -71,7 +71,7 @@ export const Search = () => {
         <FlightCard
           companyLogoSrc="https://static.tickets.ua/img/logos_s/EY.png?9e3008e77a"
           flight="EY-5417"
-          flightId="1"
+          flightId="2"
           airplane="Airbus A350"
           departureDate="2021-5-18 13:30:00"
           departureCity="Dubai"
@@ -82,7 +82,7 @@ export const Search = () => {
         <FlightCard
           companyLogoSrc="https://static.tickets.ua/img/logos_s/FR.png?9e3008e77a"
           flight="SS-346"
-          flightId="1"
+          flightId="3"
           airplane="Boeing 747"
           departureDate="2021-3-16 7:00:00"
           departureCity="Uzhhorod"
@@ -93,7 +93,7 @@ export const Search = () => {
         <FlightCard
           companyLogoSrc="https://static.tickets.ua/img/logos_s/TK.png?9e3008e77a"
           flight="TK-3277"
-          flightId="1"
+          flightId="4"
           airplane="Boeing 737-800"
           departureDate="2021-4-17 3:10:00"
           departureCity="Istanbul"

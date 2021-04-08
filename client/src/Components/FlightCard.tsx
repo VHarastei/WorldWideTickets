@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'space-around',
+    cursor: 'pointer',
   },
   flightCardCompanyLogo: {
     width: 150,
@@ -93,7 +94,7 @@ type PropsType = {
   departureCity: string;
   arrivalDate: string;
   arrivalCity: string;
-  cost: number;
+  cost?: number;
 };
 
 export const FlightCard: React.FC<PropsType> = ({
@@ -144,16 +145,21 @@ export const FlightCard: React.FC<PropsType> = ({
         </div>
         <FlightDate time={arrParsedTime} date={arrParsedDate} city={arrivalCity} />
       </div>
-      <Divider />
-      <div className={classes.flightCardSelect}>
-        <span>Cost:</span>
-        <span className={classes.flightCardCostText}>{cost} USD</span>
-        <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
-          <Button color="secondary" variant="contained">
-            Select
-          </Button>
-        </Link>
-      </div>
+      {cost && (
+        <div>
+          <Divider />
+
+        <div className={classes.flightCardSelect}>
+          <span>Cost:</span>
+          <span className={classes.flightCardCostText}>{cost} USD</span>
+          <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
+            <Button color="secondary" variant="contained">
+              Select
+            </Button>
+          </Link>
+        </div>
+        </div>
+      )}
     </Paper>
   );
 };

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
-import { createMuiTheme } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export const theme = createMuiTheme({
   typography: {
@@ -57,6 +57,11 @@ export const theme = createMuiTheme({
         color: '#2cb162',
         backgroundColor: '#eeeeee',
       },
+      outlined: {
+        color: '#2cb162',
+        backgroundColor: '#eeeeee',
+        borderColor: 'transparent',
+      },
       root: {
         borderRadius: 8,
         padding: '0 50px',
@@ -72,46 +77,46 @@ export const theme = createMuiTheme({
       //  border: 'none'
       // },
     },
-    MuiFilledInput: {
-      underline: {
-        '&:after': {
-          borderBottomWidth: '2px',
-        },
-        '&:before': {
-          borderColor: '#000',
-          borderBottomWidth: '2px',
-        },
-      },
-      input: {
-        backgroundColor: 'rgb(245, 248, 250)',
-      },
-    },
-    MuiDialog: {
-      paper: {
-        borderRadius: 15,
-      },
-    },
-    MuiDialogActions: {
-      root: {
-        marginBottom: 8,
-      },
-    },
-    MuiDialogTitle: {
-      root: {
-        borderBottom: '1px solid rgb(204, 214, 221)',
-        marginBottom: 10,
-        padding: '10px 15px',
-        '& h2': {
-          display: 'flex',
-          alignItems: 'center',
-          fontWeight: 800,
-        },
-        '& button': {
-          padding: 8,
-          marginRight: 20,
-        },
-      },
-    },
+    // MuiFilledInput: {
+    //   underline: {
+    //     '&:after': {
+    //       borderBottomWidth: '2px',
+    //     },
+    //     '&:before': {
+    //       borderColor: '#000',
+    //       borderBottomWidth: '2px',
+    //     },
+    //   },
+    //   input: {
+    //     backgroundColor: 'rgb(245, 248, 250)',
+    //   },
+    // },
+    // MuiDialog: {
+    //   paper: {
+    //     borderRadius: 15,
+    //   },
+    // },
+    // MuiDialogActions: {
+    //   root: {
+    //     marginBottom: 8,
+    //   },
+    // },
+    // MuiDialogTitle: {
+    //   root: {
+    //     borderBottom: '1px solid rgb(204, 214, 221)',
+    //     marginBottom: 10,
+    //     padding: '10px 15px',
+    //     '& h2': {
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       fontWeight: 800,
+    //     },
+    //     '& button': {
+    //       padding: 8,
+    //       marginRight: 20,
+    //     },
+    //   },
+    // },
   },
 });
 

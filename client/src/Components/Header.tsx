@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 10,
     top: 0,
     position: 'sticky',
+    zIndex: 101
   },
 }));
 

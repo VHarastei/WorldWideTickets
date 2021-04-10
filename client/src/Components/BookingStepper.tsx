@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormikProps } from 'formik';
 import React, { useRef } from 'react';
 import { PassengerDetailsFormPropsType, PassengerDetailsStep } from './PassengerDetailsStep';
-import { SeatingStepFormPropsType, SeatingStep } from './SeatingStep';
+import { SeatingStep } from './SeatingStep';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,7 +70,7 @@ export const BookingStepper = () => {
   const steps = ['Search', 'Passenger details', 'Seating', 'Overview', 'Payment'];
   const formRefs = {
     passengerDetailsForm: useRef<FormikProps<PassengerDetailsFormPropsType>>(null),
-    SeatingForm: useRef<FormikProps<SeatingStepFormPropsType>>(null),
+    SeatingForm: useRef<FormikProps<{}>>(null),
   };
 
   const nextStep = () => {

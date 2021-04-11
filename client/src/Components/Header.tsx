@@ -7,21 +7,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 2,
+    paddingBottom: 6,
     top: 0,
     position: 'sticky',
-    zIndex: 101
+    zIndex: 101,
   },
 }));
-
 
 export const Header = () => {
   const classes = useStyles();
 
   return (
     <Paper className={classes.headerLogo}>
-      <img alt="logo" style={{ width: 500 }} src="https://i.ibb.co/KKk47bp/wwtLogo.png" />
+      <img alt="logo" style={{ width: 500 }} src="https://i.ibb.co/Kbh5WjF/newLogo.png" />
     </Paper>
   );
 };

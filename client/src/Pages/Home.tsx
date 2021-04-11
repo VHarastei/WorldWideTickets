@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 200,
   },
   tagTitle: {
+    color: 'white',
     marginLeft: 10,
     fontWeight: 500,
     maxWidth: 300,
@@ -42,9 +43,7 @@ export const Home = () => {
       <Header />
       <Paper className={classes.tagContainer}>
         <img alt="tag" className={classes.tagImg} src="https://i.ibb.co/jzwS91s/tagIcon.png" />
-        <Typography className={classes.tagTitle} color="secondary">
-          Search Flights
-        </Typography>
+        <Typography className={classes.tagTitle}>Search Flights</Typography>
       </Paper>
       <SearchForm />
     </div>

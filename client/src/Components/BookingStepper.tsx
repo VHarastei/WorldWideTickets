@@ -51,9 +51,9 @@ function getStepContent(
   switch (stepIndex) {
     case 0:
       return 'Search';
-    case 2:
-      return <PassengerDetailsStep formRef={formRefs.passengerDetailsForm} nextStep={nextStep} />;
     case 1:
+      return <PassengerDetailsStep formRef={formRefs.passengerDetailsForm} nextStep={nextStep} />;
+    case 2:
       return <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} />;
     case 3:
       return 'Overview';

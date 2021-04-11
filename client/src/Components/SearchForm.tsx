@@ -4,8 +4,8 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { SearchTextField } from './SearchTextField';
 import * as Yup from 'yup';
-import { useHistory  } from 'react-router';
-
+import { useHistory, useLocation } from 'react-router';
+import queryString from 'query-string';
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     marginBottom: 10,
@@ -45,14 +45,23 @@ export const SearchForm = () => {
   const classes = useStyles();
   let history = useHistory();
 
+  let parsed = queryString.parse(useLocation().search);
+  if (!Object.keys(parsed).length) {
+    parsed = { whereFrom: '', whereTo: '', departureDate: '', arrivalDate: '' };
+  }
+
   return (
     <div className={classes.formContainer}>
       <Formik
         validationSchema={searchSchema}
-        initialValues={{ arrivalDate: '', departureDate: '', whereFrom: '', whereTo: '' }}
+        initialValues={parsed}
         onSubmit={(formData) => {
-          console.log(formData);
-          history.push("/search")
+          //console.log(formData);
+          const { arrivalDate, ...newData } = formData;
+          history.push({
+            pathname: '/search/results',
+            search: queryString.stringify(newData),
+          });
         }}
       >
         {({ errors, touched }) => (
@@ -111,7 +120,6 @@ export const SearchForm = () => {
               >
                 Search
                 {/* <FlightTakeoffIcon/> */}
-                
               </Button>
             </Form>
           </Container>

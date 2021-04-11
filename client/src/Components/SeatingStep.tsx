@@ -1,22 +1,54 @@
-import { List, ListItem, MenuItem, Paper, Select, TextField } from '@material-ui/core';
+import {
+  FormControl,
+  InputLabel,
+  List,
+  ListItem,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    passDetailsPaper: {
+    seatingPaper: {
       marginBottom: 20,
       padding: 20,
     },
-    seatsColumn: {
-      width: 150,
-
-      //height: 500,
+    seatingHeader: {
+      fontSize: 24,
+      fontWeight: 500,
+      paddingBottom: 10,
     },
-    seatsColumnItem: {},
+    seatingDescBtn: {
+      width: 30,
+    },
+    formContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    formField: {
+      margin: 10,
+      width: 150,
+      height: 64,
+    },
+    formSelect: {
+      width: 150,
+      margin: 10,
+      marginBottom: 20,
+      height: 56,
+    },
+    formFieldLabel: {
+      top: 9,
+      left: 10,
+    },
     seatNumber: {
       fontWeight: 500,
       fontSize: 14,
@@ -33,18 +65,25 @@ type SeatingStepPropsType = {
 export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep }) => {
   const classes = useStyles();
 
-  const [seat, setSeat] = React.useState<number | null>(null);
+  const [seat, setSeat] = useState<number | null>(null);
 
   const handleSeat = (event: React.MouseEvent<HTMLElement>, newSeat: number) => {
-    setSeat(newSeat);
+    if (seatClass === 'economy' && newSeat > 0 && newSeat <= 20) {
+      setSeat(newSeat);
+    }
+    if (seatClass === 'business' && newSeat > 20 && newSeat <= 40) {
+      setSeat(newSeat);
+    }
+    if (seatClass === 'first' && newSeat > 40 && newSeat <= 60) {
+      setSeat(newSeat);
+    }
   };
+  const [seatClass, setSeatClass] = useState<string>('economy');
 
-  //const [class, setClass] = React.useState('');
-  //const [class, setClass] = React.useState<string>('economy');
-
-  // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   setClass(event.target.value as string);
-  // };
+  const handleChangeSeatClass = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSeat(null);
+    setSeatClass(event.target.value as string);
+  };
 
   const initialSeats = {
     economy: [
@@ -114,47 +153,88 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
       { 60: false },
     ],
   };
-
   return (
     <div>
-      <Paper className={classes.passDetailsPaper}>
-        {/* <Select value={class} onChange={handleChange}>
-        <MenuItem value="economy">economy</MenuItem>
-                <MenuItem value="business">business</MenuItem>
-                <MenuItem value="first">first</MenuItem>
-        </Select> */}
-        <Formik
-          innerRef={formRef}
-          initialValues={{}}
-          onSubmit={() => {
-            console.log('res', seat);
-            nextStep();
-          }}
-        >
-          {() => (
-            <Form>
-              <Field color="primary" name="class" as={Select} variant="outlined" fullWidth>
-                <MenuItem value="economy">economy</MenuItem>
-                <MenuItem value="business">business</MenuItem>
-                <MenuItem value="first">first</MenuItem>
-              </Field>
-              <Field
-                color="primary"
-                as={TextField}
-                variant="outlined"
-                label="Seat"
-                name="seat"
-                value={seat !== null ? seat : 'Choose your seat!'}
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Form>
-          )}
-        </Formik>
+      <Paper className={classes.seatingPaper}>
+        <Typography className={classes.seatingHeader}>Select a seat on the map</Typography>
+        <div>
+          <div>
+            <StyledToggleButton>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — free seating</span>
+          </div>
+          <div>
+            <StyledToggleButton selected>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — choosed seating</span>
+          </div>
+          <div>
+            <StyledToggleButton disabled>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — occupied seating</span>
+          </div>
+        </div>
+        <div className={classes.formContainer}>
+          <FormControl variant="outlined">
+            <InputLabel className={classes.formFieldLabel}>Seat class</InputLabel>
+            <Select
+              value={seatClass}
+              onChange={handleChangeSeatClass}
+              variant="outlined"
+              color="primary"
+              label="Seat class"
+              //style={{ margin: 10, marginBottom: 26, height: 56 }}
+              className={classes.formSelect}
+            >
+              <MenuItem value="economy">Economy</MenuItem>
+              <MenuItem value="business">Business</MenuItem>
+              <MenuItem value="first">First</MenuItem>
+            </Select>
+          </FormControl>
+          <Formik
+            innerRef={formRef}
+            initialValues={{}}
+            onSubmit={(d, { setStatus }) => {
+              if (seat) {
+                console.log('res:', seat, seatClass);
+                nextStep();
+              } else {
+                setStatus({ empty: true });
+              }
+            }}
+          >
+            {({ status = { empty: false } }) => (
+              <Form>
+                <Field
+                  color="primary"
+                  as={TextField}
+                  variant="outlined"
+                  label="Seat"
+                  name="seat"
+                  value={seat !== null ? seat : 'Choose your seat!'}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  className={classes.formField}
+                  error={!!!seat && !!status.empty}
+                  helperText={!!!seat && !!status.empty ? 'You must choose seat!' : ''}
+                />
+              </Form>
+            )}
+          </Formik>
+        </div>
         <List>
-          <StyledListItem button={false as any} selected={true}>
+          <StyledListItem
+            button={false as any}
+            disabled={seatClass !== 'economy'}
+            selected={seatClass === 'economy'}
+          >
+            <Typography variant="h6" color="primary">
+              Economy class
+            </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
               {initialSeats.economy.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
@@ -171,7 +251,14 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
               )}
             </StyledToggleButtonGroup>
           </StyledListItem>
-          <StyledListItem button={false as any} selected={false}>
+          <StyledListItem
+            button={false as any}
+            disabled={seatClass !== 'business'}
+            selected={seatClass === 'business'}
+          >
+            <Typography variant="h6" color="primary">
+              Business class
+            </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
               {initialSeats.business.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
@@ -188,7 +275,14 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
               )}
             </StyledToggleButtonGroup>
           </StyledListItem>
-          <StyledListItem button={false as any} selected={false}>
+          <StyledListItem
+            button={false as any}
+            disabled={seatClass !== 'first'}
+            selected={seatClass === 'first'}
+          >
+            <Typography variant="h6" color="primary">
+              First class
+            </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
               {initialSeats.first.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
@@ -211,34 +305,6 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
   );
 };
 
-const StyledToggleButtonGroup = withStyles((theme) => ({
-  root: {
-    display: 'block',
-    //height: 500,
-    //width: 330,
-    margin: 0,
-    border: 'none',
-  },
-  grouped: {
-    '&:not(:first-child)': {
-      borderRadius: 8,
-      margin: 6,
-      marginBottom: 20,
-    },
-    '&:first-child': {
-      borderRadius: 8,
-      margin: 6,
-      marginBottom: 20,
-    },
-    '& button': {
-      //margin: 6,
-    },
-  },
-  groupedHorizontal: {
-    borderRadius: 8,
-  },
-}))(ToggleButtonGroup);
-
 const StyledListItem = withStyles((theme) => ({
   root: {
     margin: 'auto',
@@ -246,34 +312,76 @@ const StyledListItem = withStyles((theme) => ({
     width: 340,
     display: 'flex',
     flexDirection: 'column',
-    //height: 500,
+    border: '1px solid transparent',
+    transition: '0.5s',
     '&$selected': {
-      backgroundColor: '#2cb16222',
+      backgroundColor: 'white',
+      boxShadow: `0 10px 20px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
       transition: '0.5s',
     },
     '&$selected:hover': {
       transition: '0.5s',
-      backgroundColor: '#2cb16233',
+      backgroundColor: 'white',
     },
   },
   selected: {},
 }))(ListItem);
 
+const StyledToggleButtonGroup = withStyles((theme) => ({
+  root: {
+    display: 'block',
+    margin: 0,
+    border: 'none',
+    textAlign: 'center',
+  },
+  grouped: {
+    '&:not(:first-child)': {
+      height: 64,
+      width: 64,
+      borderRadius: 8,
+      fontSize: 30,
+      padding: 15,
+      margin: 6,
+      marginBottom: 20,
+      '& span': {
+        color: 'white',
+        '& svg': {
+          fontSize: 34,
+        },
+      },
+    },
+    '&:first-child': {
+      height: 64,
+      width: 64,
+      borderRadius: 8,
+      fontSize: 30,
+      padding: 15,
+      margin: 6,
+      marginBottom: 20,
+      '& span': {
+        color: 'white',
+        '& svg': {
+          fontSize: 34,
+        },
+      },
+    },
+  },
+  groupedHorizontal: {
+    borderRadius: 8,
+  },
+}))(ToggleButtonGroup);
 const StyledToggleButton = withStyles((theme) => ({
   root: {
-    height: 64,
-    width: 64,
-    borderRadius: 8,
-    fontSize: 30,
-    padding: 15,
-    margin: 5,
+    height: 34,
+    width: 34,
+    margin: '6px 0px',
     border: '2px solid',
     borderColor: theme.palette.primary.light,
     backgroundColor: theme.palette.primary.light,
     '& span': {
       color: 'white',
       '& svg': {
-        fontSize: 34,
+        fontSize: 24,
       },
     },
     '&:hover': {

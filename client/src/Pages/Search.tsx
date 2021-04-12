@@ -1,9 +1,14 @@
 import { Container, makeStyles, Paper, Tab } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlightCard } from '../Components/FlightCard';
 import { Header } from '../Components/Header';
+import { Preloader } from '../Components/Preloader';
 import { SearchFiltersTabs } from '../Components/SearchFiltersTabs';
 import { SearchForm } from '../Components/SearchForm';
+import { FetchFlights, SetFlightsLoadingState } from '../store/ducks/flights/actionCreators';
+import { LoadingState } from '../store/ducks/flights/contracts/store';
+import { selectFlightsItems, selectIsFlightsLoaded } from '../store/ducks/flights/selectors';
 
 const useStyles = makeStyles((theme) => ({
   searchContainer: {},
@@ -35,73 +40,64 @@ export const Search = () => {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+  const dispatch = useDispatch();
+
+  const flights = useSelector(selectFlightsItems);
+  const IsFlightsLoaded = useSelector(selectIsFlightsLoaded);
+
+  useEffect(() => {
+    dispatch(FetchFlights());
+    return () => {
+      dispatch(SetFlightsLoadingState(LoadingState.NEVER));
+    };
+  }, [dispatch]);
 
   return (
     <div className={classes.searchContainer}>
       <Header />
-      <Paper square className={classes.headerForm}>
-        <SearchForm />
-      </Paper>
-      <Container className={classes.flightsContainer}>
-        <Paper>
-          <SearchFiltersTabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-          >
-            <Tab label="Cheapest" />
-            <Tab label="Average" />
-            <Tab label="Fastest" />
-          </SearchFiltersTabs>
-        </Paper>
-
-        <FlightCard
-          companyLogoSrc="https://static.tickets.ua/img/logos_s/PS.png?9e3008e77a"
-          flight="PS-9066"
-          flightId="1"
-          airplane="Alenia ATR 72"
-          departureDate="2021-4-17 6:00:00"
-          departureCity="Lviv"
-          arrivalDate="2021-4-17 13:30:00"
-          arrivalCity="Kyiv"
-          cost={135}
-        />
-        <FlightCard
-          companyLogoSrc="https://static.tickets.ua/img/logos_s/EY.png?9e3008e77a"
-          flight="EY-5417"
-          flightId="2"
-          airplane="Airbus A350"
-          departureDate="2021-5-18 13:30:00"
-          departureCity="Dubai"
-          arrivalDate="2021-5-18 18:30:00"
-          arrivalCity="Paris"
-          cost={720}
-        />
-        <FlightCard
-          companyLogoSrc="https://static.tickets.ua/img/logos_s/FR.png?9e3008e77a"
-          flight="SS-346"
-          flightId="3"
-          airplane="Boeing 747"
-          departureDate="2021-3-16 7:00:00"
-          departureCity="Uzhhorod"
-          arrivalDate="2021-3-16 14:45:00"
-          arrivalCity="Kyiv"
-          cost={110}
-        />
-        <FlightCard
-          companyLogoSrc="https://static.tickets.ua/img/logos_s/TK.png?9e3008e77a"
-          flight="TK-3277"
-          flightId="4"
-          airplane="Boeing 737-800"
-          departureDate="2021-4-17 3:10:00"
-          departureCity="Istanbul"
-          arrivalDate="2021-4-17 18:30:00"
-          arrivalCity="Tokyo"
-          cost={460}
-        />
-      </Container>
+      {IsFlightsLoaded ? (
+        <div>
+          <Paper square className={classes.headerForm}>
+            <SearchForm />
+          </Paper>
+          <Container className={classes.flightsContainer}>
+            <div>
+              <Paper>
+                <SearchFiltersTabs
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="fullWidth"
+                >
+                  <Tab label="Cheapest" />
+                  <Tab label="Average" />
+                  <Tab label="Fastest" />
+                </SearchFiltersTabs>
+              </Paper>
+              <div>
+                {flights.map((flight) => {
+                  return (
+                    <FlightCard
+                      key={flight.flightId}
+                      companyLogoSrc={flight.companyLogoSrc}
+                      flightId={flight.flightId}
+                      airplane={flight.airplane}
+                      departureDate={flight.departureDate}
+                      departureCity={flight.departureCity}
+                      arrivalDate={flight.arrivalDate}
+                      arrivalCity={flight.arrivalCity}
+                      cost={flight.cost}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </Container>
+        </div>
+      ) : (
+        <Preloader />
+      )}
     </div>
   );
 };

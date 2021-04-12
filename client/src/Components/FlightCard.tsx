@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 type PropsType = {
   companyLogoSrc: string;
-  flight: string;
+  // flight: string;
   flightId: string;
   airplane: string;
   departureDate: string;
@@ -99,7 +99,7 @@ type PropsType = {
 
 export const FlightCard: React.FC<PropsType> = ({
   companyLogoSrc,
-  flight,
+  //flight,
   flightId,
   airplane,
   departureDate,
@@ -129,7 +129,7 @@ export const FlightCard: React.FC<PropsType> = ({
           <img src={companyLogoSrc} alt="companyLogo" className={classes.flightCardCompanyLogo} />
         </div>
         <div style={{ width: 200 }}>
-          <Typography variant="h5">Flight {flight}</Typography>
+          <Typography variant="h5">Flight {flightId}</Typography>
           <Typography variant="body1">Airplane {airplane}</Typography>
         </div>
         <FlightDate time={depParsedTime} date={depParsedDate} city={departureCity} />
@@ -149,15 +149,15 @@ export const FlightCard: React.FC<PropsType> = ({
         <div>
           <Divider />
 
-        <div className={classes.flightCardSelect}>
-          <span>Cost:</span>
-          <span className={classes.flightCardCostText}>{cost} USD</span>
-          <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
-            <Button color="secondary" variant="contained">
-              Select
-            </Button>
-          </Link>
-        </div>
+          <div className={classes.flightCardSelect}>
+            <span>Cost:</span>
+            <span className={classes.flightCardCostText}>{cost} USD</span>
+            <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
+              <Button color="secondary" variant="contained">
+                Select
+              </Button>
+            </Link>
+          </div>
         </div>
       )}
     </Paper>

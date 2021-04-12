@@ -1,11 +1,12 @@
 import { Button, Container, makeStyles } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
+import queryString from 'query-string';
 //import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import React from 'react';
-import { SearchTextField } from './SearchTextField';
-import * as Yup from 'yup';
 import { useHistory, useLocation } from 'react-router';
-import queryString from 'query-string';
+import * as Yup from 'yup';
+import { SearchTextField } from './SearchTextField';
+
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     marginBottom: 10,

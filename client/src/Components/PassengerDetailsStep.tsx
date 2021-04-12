@@ -61,8 +61,7 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
         <div style={{ margin: -20 }}>
           <FlightCard
             companyLogoSrc="https://static.tickets.ua/img/logos_s/PS.png?9e3008e77a"
-            flight="PS-9066"
-            flightId="1"
+            flightId="PS-9066"
             airplane="Alenia ATR 72"
             departureDate="2021-4-17 6:00:00"
             departureCity="Lviv"

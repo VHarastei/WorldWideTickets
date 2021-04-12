@@ -20,7 +20,7 @@ export const Header = () => {
 
   return (
     <Paper className={classes.headerLogo}>
-      <img alt="logo" style={{ width: 500 }} src="https://i.ibb.co/Kbh5WjF/newLogo.png" />
+      <img alt="logo" style={{ width: 500 }} src="https://i.ibb.co/4F8s1cb/finally-Logo.png" />
     </Paper>
   );
 };

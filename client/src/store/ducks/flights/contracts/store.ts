@@ -13,7 +13,13 @@ export interface Flight {
   departureCity: string;
   arrivalDate: string;
   arrivalCity: string;
-  cost: number;
+  cost: FlightCost;
+}
+
+interface FlightCost {
+  economy: number;
+  business: number;
+  first: number;
 }
 
 export interface FlightsState {

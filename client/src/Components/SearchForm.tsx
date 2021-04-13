@@ -89,6 +89,7 @@ export const SearchForm = () => {
                 error={Boolean(touched.whereTo && errors.whereTo)}
                 helperText={touched.whereTo ? errors.whereTo : ''}
               />
+
               <Field
                 color="secondary"
                 as={SearchTextField}

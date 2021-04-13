@@ -174,7 +174,7 @@ const FlightDate: React.FC<FlightDatePropsType> = ({ time, date, city }) => {
   const classes = useStyles();
 
   return (
-    <div style={{ width: 170 }}>
+    <div style={{ width: 180 }}>
       <Typography variant="h5" className={classes.flightCardContentTime}>
         {time}
       </Typography>

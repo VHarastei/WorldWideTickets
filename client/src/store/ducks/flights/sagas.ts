@@ -1,7 +1,7 @@
-import { FlightsActionsType, SetFlights, SetFlightsLoadingState } from './actionCreators';
-import { FlightsApi } from '../../../services/api/flightsApi';
-import { FlightsState, LoadingState } from './contracts/store';
 import { call, put, takeLatest } from 'redux-saga/effects';
+import { FlightsApi } from '../../../services/api/flightsApi';
+import { FlightsActionsType, SetFlights, SetFlightsLoadingState } from './actionCreators';
+import { LoadingState } from './contracts/store';
 
 export function* fetchFlightsRequest() {
   try {

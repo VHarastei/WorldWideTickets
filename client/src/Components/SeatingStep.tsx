@@ -14,6 +14,10 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useState } from 'react';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectBookingFlightSeats } from '../store/ducks/booking/selectors';
+import { SetBookingSeatData } from '../store/ducks/booking/actionCreators';
+import { SeatData, SeatClass } from '../store/ducks/booking/contracts/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +68,7 @@ type SeatingStepPropsType = {
 };
 export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [seat, setSeat] = useState<number | null>(null);
 
@@ -78,81 +83,15 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
       setSeat(newSeat);
     }
   };
-  const [seatClass, setSeatClass] = useState<string>('economy');
+  const [seatClass, setSeatClass] = useState<SeatClass>('economy');
 
   const handleChangeSeatClass = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSeat(null);
-    setSeatClass(event.target.value as string);
+    setSeatClass(event.target.value as SeatClass);
   };
 
-  const initialSeats = {
-    economy: [
-      { 1: false },
-      { 2: false },
-      { 3: false },
-      { 4: false },
-      { 5: false },
-      { 6: false },
-      { 7: true },
-      { 8: true },
-      { 9: true },
-      { 10: false },
-      { 11: false },
-      { 12: false },
-      { 13: false },
-      { 14: false },
-      { 15: false },
-      { 16: false },
-      { 17: true },
-      { 18: true },
-      { 19: true },
-      { 20: false },
-    ],
-    business: [
-      { 21: false },
-      { 22: false },
-      { 23: false },
-      { 24: false },
-      { 25: false },
-      { 26: false },
-      { 27: true },
-      { 28: true },
-      { 29: true },
-      { 30: false },
-      { 31: false },
-      { 32: false },
-      { 33: false },
-      { 34: false },
-      { 35: false },
-      { 36: false },
-      { 37: true },
-      { 38: true },
-      { 39: true },
-      { 40: false },
-    ],
-    first: [
-      { 41: false },
-      { 42: false },
-      { 43: false },
-      { 44: false },
-      { 45: false },
-      { 46: false },
-      { 47: true },
-      { 48: true },
-      { 49: true },
-      { 50: false },
-      { 51: false },
-      { 52: false },
-      { 53: false },
-      { 54: false },
-      { 55: false },
-      { 56: false },
-      { 57: true },
-      { 58: true },
-      { 59: true },
-      { 60: false },
-    ],
-  };
+  const initialSeats = useSelector(selectBookingFlightSeats);
+
   return (
     <div>
       <Paper className={classes.seatingPaper}>
@@ -198,8 +137,14 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
             innerRef={formRef}
             initialValues={{}}
             onSubmit={(d, { setStatus }) => {
+              //const class = seatClass;
               if (seat) {
                 console.log('res:', seat, seatClass);
+                const data: SeatData = {
+                  seat: seat,
+                  seatClass: seatClass,
+                };
+                dispatch(SetBookingSeatData(data));
                 nextStep();
               } else {
                 setStatus({ empty: true });
@@ -236,7 +181,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
               Economy class
             </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.economy.map((seats, i) =>
+              {initialSeats?.economy.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
                   return (
                     //@ts-ignore
@@ -260,7 +205,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
               Business class
             </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.business.map((seats, i) =>
+              {initialSeats?.business.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
                   return (
                     //@ts-ignore
@@ -284,7 +229,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
               First class
             </Typography>
             <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.first.map((seats, i) =>
+              {initialSeats?.first.map((seats, i) =>
                 Object.keys(seats).map((item, index) => {
                   return (
                     //@ts-ignore

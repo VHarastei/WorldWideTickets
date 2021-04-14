@@ -3,7 +3,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { SetBookingPassengerData } from '../store/ducks/booking/actionCreators';
+import { BookingFlight, PassengerData } from '../store/ducks/booking/contracts/store';
 import { FlightCard } from './FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,39 +38,36 @@ const passengerDetailsSchema = Yup.object().shape({
   phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid').required('Required'),
 });
 
-export type PassengerDetailsFormPropsType = {
-  firstName: string;
-  lastName: string;
-  nationality: string;
-  dateOfBirth: string;
-  email: string;
-  phone: string;
+type PassengerDetailsPropsType = {
+  formRef: React.RefObject<FormikProps<PassengerData>>;
+  nextStep: () => void;
+  flight?: BookingFlight;
 };
 
-type PassengerDetailsPropsType = {
-  formRef: React.RefObject<FormikProps<PassengerDetailsFormPropsType>>;
-  nextStep: () => void;
-};
 export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
   formRef,
   nextStep,
+  flight,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   return (
     <div>
       <Paper className={classes.passDetailsPaper}>
         <Typography className={classes.passDetailsPaperHeader}>Trip summary</Typography>
         <div style={{ margin: -20 }}>
-          <FlightCard
-            companyLogoSrc="https://static.tickets.ua/img/logos_s/PS.png?9e3008e77a"
-            flightId="PS-9066"
-            airplane="Alenia ATR 72"
-            departureDate="2021-4-17 6:00:00"
-            departureCity="Lviv"
-            arrivalDate="2021-4-17 13:30:00"
-            arrivalCity="Kyiv"
-          />
+          {flight && (
+            <FlightCard
+              companyLogoSrc={flight.companyLogoSrc}
+              flightId={flight.flightId}
+              airplane={flight.airplane}
+              departureDate={flight.departureDate}
+              departureCity={flight.departureCity}
+              arrivalDate={flight.arrivalDate}
+              arrivalCity={flight.arrivalCity}
+            />
+          )}
         </div>
       </Paper>
       <Paper className={classes.passDetailsPaper}>
@@ -83,10 +83,11 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
               dateOfBirth: '',
               email: '',
               phone: '',
-            } as PassengerDetailsFormPropsType
+            } as PassengerData
           }
-          onSubmit={(formData: PassengerDetailsFormPropsType, { setSubmitting }) => {
-            console.log(formData);
+          onSubmit={(passData: PassengerData, { setSubmitting }) => {
+            console.log(passData);
+            dispatch(SetBookingPassengerData(passData));
             setSubmitting(false);
             nextStep();
           }}

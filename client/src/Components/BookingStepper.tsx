@@ -6,8 +6,15 @@ import Stepper from '@material-ui/core/Stepper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { FormikProps } from 'formik';
-import React, { useRef } from 'react';
-import { PassengerDetailsFormPropsType, PassengerDetailsStep } from './PassengerDetailsStep';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { FetchBookingFlight, SetBookingLoadingState } from '../store/ducks/booking/actionCreators';
+import { LoadingState, PassengerData } from '../store/ducks/booking/contracts/store';
+import { selectBookingFlight, selectIsFlightLoaded } from '../store/ducks/booking/selectors';
+import { LinearPreloader } from './LinearPreloader';
+import { OverviewPayment } from './OverviewPayment';
+import { PassengerDetailsStep } from './PassengerDetailsStep';
 import { SeatingStep } from './SeatingStep';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,34 +49,50 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function getStepContent(
-  stepIndex: number,
-  //formRef: React.RefObject<FormikProps<PassengerDetailsFormPropsType & SeatingStepFormPropsType>>,
-  formRefs: any,
-  nextStep: () => void
-) {
-  switch (stepIndex) {
-    case 0:
-      return 'Search';
-    case 1:
-      return <PassengerDetailsStep formRef={formRefs.passengerDetailsForm} nextStep={nextStep} />;
-    case 2:
-      return <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} />;
-    case 3:
-      return 'Overview';
-    case 4:
-      return 'Payment';
-    default:
-      return 'Unknown step';
-  }
-}
+// function getStepContent(
+//   stepIndex: number,
+//   //formRef: React.RefObject<FormikProps<PassengerDetailsFormPropsType & SeatingStepFormPropsType>>,
+//   formRefs: any,
+//   nextStep: () => void
+// ) {
+//   switch (stepIndex) {
+//     case 0:
+//       return 'Search';
+//     case 1:
+//       return <PassengerDetailsStep formRef={formRefs.passengerDetailsForm} nextStep={nextStep} />;
+//     case 2:
+//       return <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} />;
+//     case 3:
+//       return 'Overview & Payment';
+//     default:
+//       return 'Unknown step';
+//   }
+// }
 
 export const BookingStepper = () => {
   const classes = useStyles();
+
+  const params: { flightId: string } = useParams();
+  const flightId = params.flightId;
+
+  const dispatch = useDispatch();
+  const flight = useSelector(selectBookingFlight);
+
+  const IsFlightLoaded = useSelector(selectIsFlightLoaded);
+
+  useEffect(() => {
+    if (flightId) {
+      dispatch(FetchBookingFlight(flightId));
+    }
+    return () => {
+      dispatch(SetBookingLoadingState(LoadingState.NEVER));
+    };
+  }, [dispatch, flightId]);
+
   const [activeStep, setActiveStep] = React.useState(1);
-  const steps = ['Search', 'Passenger details', 'Seating', 'Overview', 'Payment'];
+  const steps = ['Search', 'Passenger details', 'Seating', 'Overview & Payment'];
   const formRefs = {
-    passengerDetailsForm: useRef<FormikProps<PassengerDetailsFormPropsType>>(null),
+    passengerDetailsForm: useRef<FormikProps<PassengerData>>(null),
     SeatingForm: useRef<FormikProps<{}>>(null),
   };
 
@@ -78,11 +101,11 @@ export const BookingStepper = () => {
   };
 
   const handleNext = () => {
-    if (formRefs.SeatingForm.current) {
-      formRefs.SeatingForm.current.handleSubmit();
-    }
     if (formRefs.passengerDetailsForm.current) {
       formRefs.passengerDetailsForm.current.handleSubmit();
+    }
+    if (formRefs.SeatingForm.current) {
+      formRefs.SeatingForm.current.handleSubmit();
     }
   };
 
@@ -96,42 +119,60 @@ export const BookingStepper = () => {
 
   return (
     <Container className={classes.root}>
-      <Stepper activeStep={activeStep} alternativeLabel className={classes.stepper}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        <Typography className={classes.titleTrip}> Kyiv → Istanbul</Typography>
-        {activeStep === steps.length ? (
+      {IsFlightLoaded ? (
+        <div>
+          <Stepper activeStep={activeStep} alternativeLabel className={classes.stepper}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
           <div>
-            <Typography>All steps completed</Typography>
-            <Button onClick={handleReset}>Reset</Button>
+            <Typography className={classes.titleTrip}>
+              {flight?.departureCity} → {flight?.arrivalCity}
+            </Typography>
+            {activeStep === steps.length ? (
+              <div>
+                <Typography>All steps completed</Typography>
+                <Button onClick={handleReset}>Reset</Button>
+              </div>
+            ) : (
+              <div>
+                <div className={classes.instructions}>
+                  {activeStep === 1 ? (
+                    <PassengerDetailsStep
+                      formRef={formRefs.passengerDetailsForm}
+                      nextStep={nextStep}
+                      flight={flight}
+                    />
+                  ) : activeStep === 2 ? (
+                    <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} /> //give flight.seatings
+                  ) : activeStep === 3 ? (
+                    <OverviewPayment />
+                  ) : null}
+                </div>
+                <div className={classes.buttonsContainer}>
+                  <Button
+                    disabled={activeStep === 1}
+                    onClick={handleBack}
+                    className={classes.backButton}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Back
+                  </Button>
+                  <Button variant="contained" color="primary" onClick={handleNext}>
+                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <div className={classes.instructions}>
-              {getStepContent(activeStep, formRefs, nextStep)}
-            </div>
-            <div className={classes.buttonsContainer}>
-              <Button
-                disabled={activeStep === 1}
-                onClick={handleBack}
-                className={classes.backButton}
-                variant="contained"
-                color="primary"
-              >
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <LinearPreloader />
+      )}
     </Container>
   );
 };

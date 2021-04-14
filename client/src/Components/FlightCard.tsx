@@ -128,7 +128,7 @@ export const FlightCard: React.FC<PropsType> = ({
         <div>
           <img src={companyLogoSrc} alt="companyLogo" className={classes.flightCardCompanyLogo} />
         </div>
-        <div style={{ width: 200 }}>
+        <div style={{ width: 180 }}>
           <Typography variant="h5">Flight {flightId}</Typography>
           <Typography variant="body1">Airplane {airplane}</Typography>
         </div>

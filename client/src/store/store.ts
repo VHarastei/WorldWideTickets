@@ -1,11 +1,13 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { BookingState } from './ducks/booking/contracts/store';
 import { FlightsState } from './ducks/flights/contracts/store';
 import { rootReducer } from './rootReducer';
 import { rootSaga } from './saga';
 
 export interface RootState {
-  flights: FlightsState
+  flights: FlightsState;
+  booking: BookingState;
 }
 
 const sagaMiddleware = createSagaMiddleware();

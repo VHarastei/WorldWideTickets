@@ -130,7 +130,9 @@ export const FlightCard: React.FC<PropsType> = ({
         </div>
         <div style={{ width: 180 }}>
           <Typography variant="h5">Flight {flightId}</Typography>
-          <Typography variant="body1">Airplane {airplane}</Typography>
+          <Typography color="textSecondary" variant="body1">
+            Airplane {airplane}
+          </Typography>
         </div>
         <FlightDate time={depParsedTime} date={depParsedDate} city={departureCity} />
         <div className={classes.flightCardContentTimeLineContainer}>
@@ -178,8 +180,12 @@ const FlightDate: React.FC<FlightDatePropsType> = ({ time, date, city }) => {
       <Typography variant="h5" className={classes.flightCardContentTime}>
         {time}
       </Typography>
-      <Typography variant="body1">{date}</Typography>
-      <Typography variant="body1">{city}</Typography>
+      <Typography color="textSecondary" variant="body1">
+        {date}
+      </Typography>
+      <Typography color="textSecondary" variant="body1">
+        {city}
+      </Typography>
     </div>
   );
 };

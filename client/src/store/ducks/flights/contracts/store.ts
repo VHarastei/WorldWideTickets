@@ -8,6 +8,7 @@ export enum LoadingState {
 export interface Flight {
   flightId: string;
   companyLogoSrc: string;
+  companyName: string;
   airplane: string;
   departureDate: string;
   departureCity: string;

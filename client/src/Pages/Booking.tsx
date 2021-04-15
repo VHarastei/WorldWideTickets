@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookingStepper } from '../Components/BookingStepper';
+import { BookingStepper } from '../Components/BookingStepper/BookingStepper';
 import { Header } from '../Components/Header';
 
 //const useStyles = makeStyles((theme) => ({}));

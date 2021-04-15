@@ -9,13 +9,21 @@ import { FormikProps } from 'formik';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { FetchBookingFlight, SetBookingLoadingState } from '../store/ducks/booking/actionCreators';
-import { LoadingState, PassengerData } from '../store/ducks/booking/contracts/store';
-import { selectBookingFlight, selectIsFlightLoaded } from '../store/ducks/booking/selectors';
-import { LinearPreloader } from './LinearPreloader';
-import { OverviewPayment } from './OverviewPayment';
-import { PassengerDetailsStep } from './PassengerDetailsStep';
-import { SeatingStep } from './SeatingStep';
+import {
+  FetchBookingFlight,
+  SetBookingLoadingState,
+} from '../../store/ducks/booking/actionCreators';
+import { LoadingState, PassengerData } from '../../store/ducks/booking/contracts/store';
+import {
+  selectBookingCost,
+  selectBookingFlight,
+  selectBookingSeatClass,
+  selectIsFlightLoaded,
+} from '../../store/ducks/booking/selectors';
+import { LinearPreloader } from '../LinearPreloader';
+import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
+import { PassengerDetailsStep } from './Steps/PassengerDetailsStep';
+import { SeatingStep } from './Steps/SeatingStep';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,6 +88,10 @@ export const BookingStepper = () => {
 
   const IsFlightLoaded = useSelector(selectIsFlightLoaded);
 
+  //TODO: move to selectors.ts
+  const seatClass = useSelector(selectBookingSeatClass);
+  const totalCost = useSelector(selectBookingCost(seatClass));
+
   useEffect(() => {
     if (flightId) {
       dispatch(FetchBookingFlight(flightId));
@@ -94,6 +106,7 @@ export const BookingStepper = () => {
   const formRefs = {
     passengerDetailsForm: useRef<FormikProps<PassengerData>>(null),
     SeatingForm: useRef<FormikProps<{}>>(null),
+    PaymentForm: useRef<FormikProps<PaymentData>>(null),
   };
 
   const nextStep = () => {
@@ -106,6 +119,9 @@ export const BookingStepper = () => {
     }
     if (formRefs.SeatingForm.current) {
       formRefs.SeatingForm.current.handleSubmit();
+    }
+    if (formRefs.PaymentForm.current) {
+      formRefs.PaymentForm.current.handleSubmit();
     }
   };
 
@@ -147,9 +163,13 @@ export const BookingStepper = () => {
                       flight={flight}
                     />
                   ) : activeStep === 2 ? (
-                    <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} /> //give flight.seatings
+                    <SeatingStep formRef={formRefs.SeatingForm} nextStep={nextStep} /> //give flight.seatings ???
                   ) : activeStep === 3 ? (
-                    <OverviewPayment />
+                    <OverviewPaymentStep
+                      formRef={formRefs.PaymentForm}
+                      nextStep={nextStep}
+                      flight={flight}
+                    />
                   ) : null}
                 </div>
                 <div className={classes.buttonsContainer}>
@@ -163,7 +183,7 @@ export const BookingStepper = () => {
                     Back
                   </Button>
                   <Button variant="contained" color="primary" onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    {activeStep === steps.length - 1 ? `Pay ${totalCost} USD` : 'Next'}
                   </Button>
                 </div>
               </div>

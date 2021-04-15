@@ -5,9 +5,9 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { SetBookingPassengerData } from '../store/ducks/booking/actionCreators';
-import { BookingFlight, PassengerData } from '../store/ducks/booking/contracts/store';
-import { FlightCard } from './FlightCard';
+import { SetBookingPassengerData } from '../../../store/ducks/booking/actionCreators';
+import { BookingFlight, PassengerData } from '../../../store/ducks/booking/contracts/store';
+import { FlightCard } from '../../FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

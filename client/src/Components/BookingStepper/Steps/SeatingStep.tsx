@@ -15,9 +15,9 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useState } from 'react';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectBookingFlightSeats } from '../store/ducks/booking/selectors';
-import { SetBookingSeatData } from '../store/ducks/booking/actionCreators';
-import { SeatData, SeatClass } from '../store/ducks/booking/contracts/store';
+import { selectBookingFlightSeats } from '../../../store/ducks/booking/selectors';
+import { SetBookingSeatData } from '../../../store/ducks/booking/actionCreators';
+import { SeatData, SeatClass } from '../../../store/ducks/booking/contracts/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

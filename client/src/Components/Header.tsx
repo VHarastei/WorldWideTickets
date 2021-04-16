@@ -1,8 +1,9 @@
 import { makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-  headerLogo: {
+  header: {
     backgroundColor: theme.palette.primary.main,
     display: 'flex',
     alignItems: 'center',
@@ -13,14 +14,24 @@ const useStyles = makeStyles((theme) => ({
     position: 'sticky',
     zIndex: 101,
   },
+  headerLogo: {
+    cursor: 'pointer',
+    width: 400,
+  },
 }));
 
 export const Header = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.headerLogo}>
-      <img alt="logo" style={{ width: 400 }} src="https://i.ibb.co/BVqZR6J/lastLogo.png" />
+    <div className={classes.header}>
+      <Link to="/">
+        <img
+          alt="logo"
+          className={classes.headerLogo}
+          src="https://i.ibb.co/BVqZR6J/lastLogo.png"
+        />
+      </Link>
     </div>
   );
 };

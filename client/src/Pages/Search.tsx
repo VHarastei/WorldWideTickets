@@ -54,6 +54,7 @@ export const Search = () => {
     };
   }, [dispatch]);
 
+  //deep copy
   const sortedFlights: Flight[] = JSON.parse(JSON.stringify(flights));
 
   if (sortBy === 'cheapest') {

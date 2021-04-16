@@ -10,14 +10,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useState } from 'react';
-import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectBookingFlightSeats } from '../../../store/ducks/booking/selectors';
+import { useDispatch } from 'react-redux';
 import { SetBookingSeatData } from '../../../store/ducks/booking/actionCreators';
-import { SeatData, SeatClass } from '../../../store/ducks/booking/contracts/store';
+import { FlightSeats, SeatClass, SeatData } from '../../../store/ducks/booking/contracts/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,8 +64,13 @@ const useStyles = makeStyles((theme: Theme) =>
 type SeatingStepPropsType = {
   formRef: React.RefObject<FormikProps<{}>>;
   nextStep: () => void;
+  initialSeats?: FlightSeats;
 };
-export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep }) => {
+export const SeatingStep: React.FC<SeatingStepPropsType> = ({
+  formRef,
+  nextStep,
+  initialSeats,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -90,7 +94,8 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep 
     setSeatClass(event.target.value as SeatClass);
   };
 
-  const initialSeats = useSelector(selectBookingFlightSeats);
+  //const initialSeats = useSelector(selectBookingFlightSeats);
+  if (!initialSeats) return null;
 
   return (
     <div>

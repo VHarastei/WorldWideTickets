@@ -1,14 +1,18 @@
-import {
-  Button,
-  createStyles,
-  makeStyles,
-  Paper,
-  TextField,
-  Theme,
-  Typography,
-} from '@material-ui/core';
-import React, { useImperativeHandle, useRef } from 'react';
+import { createStyles, makeStyles, Paper, TextField, Theme, Typography } from '@material-ui/core';
+import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
+import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
+import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
+import LanguageIcon from '@material-ui/icons/Language';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import PaymentOutlinedIcon from '@material-ui/icons/PaymentOutlined';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
+import valid from 'card-validator';
+import { Field, Form, Formik, FormikProps } from 'formik';
+import React from 'react';
+import InputMask from 'react-input-mask';
 import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
 import { BookingFlight } from '../../../store/ducks/booking/contracts/store';
 import {
   selectBookingCost,
@@ -16,18 +20,6 @@ import {
   selectBookingSeatClass,
 } from '../../../store/ducks/booking/selectors';
 import { FlightCard } from '../../FlightCard';
-import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import LanguageIcon from '@material-ui/icons/Language';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
-import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
-import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
-import PaymentOutlinedIcon from '@material-ui/icons/PaymentOutlined';
-import { Field, Form, Formik, FormikProps } from 'formik';
-import InputMask from 'react-input-mask';
-import * as Yup from 'yup';
-import valid from 'card-validator';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

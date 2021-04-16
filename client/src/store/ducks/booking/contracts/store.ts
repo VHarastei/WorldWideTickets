@@ -11,7 +11,7 @@ export interface BookingFlight extends Flight {
   seats: FlightSeats;
 }
 
-interface FlightSeats {
+export interface FlightSeats {
   economy: FlightSeat[];
   business: FlightSeat[];
   first: FlightSeat[];

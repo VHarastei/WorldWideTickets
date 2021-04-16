@@ -2,8 +2,9 @@ import { Paper, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { SetBookingPassengerData } from '../../../store/ducks/booking/actionCreators';
 import { BookingFlight, PassengerData } from '../../../store/ducks/booking/contracts/store';
@@ -51,6 +52,14 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const history = useHistory();
+  useEffect(() => {
+    history.push({
+      //pathname: `/booking/${flightId}`,
+      search: `step=${1}`,
+    });
+  }, []);
 
   return (
     <div>

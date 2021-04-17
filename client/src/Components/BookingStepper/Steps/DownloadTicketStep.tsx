@@ -13,6 +13,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
+import {
+  BookingFlight,
+  BookingData,
+  PassengerData,
+} from '../../../store/ducks/booking/contracts/store';
+import { useSelector } from 'react-redux';
+import { selectBookingFlight, selectBookingData } from '../../../store/ducks/booking/selectors';
 
 const styles = StyleSheet.create({
   page: {
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   ticketInfoBottomItem: {
-    marginRight: 18,
+    marginRight: 25,
     width: 60,
   },
   rightTicketInfo: {
@@ -103,8 +110,40 @@ const styles = StyleSheet.create({
   },
 });
 
-export const PdfDocument = (props: any) => {
-  console.log('pdf props', props);
+type PropsType = {
+  data: {
+    flight?: BookingFlight;
+    booking: BookingData;
+  };
+};
+
+export const PdfDocument: React.FC<PropsType> = ({ data }) => {
+  const { flight, booking } = data;
+
+  const { passengerData, seatData } = booking;
+
+  if (!flight || !passengerData || !seatData) {
+    return (
+      <Document>
+        <Page style={styles.page}></Page>
+        <Text style={styles.headerText}>CANNOT GENERATE BOARDING PASS</Text>
+      </Document>
+    );
+  }
+
+  let standartizedSeatClass: string;
+  switch (seatData.seatClass) {
+    case 'economy':
+      standartizedSeatClass = 'Y';
+      break;
+    case 'business':
+      standartizedSeatClass = 'J';
+      break;
+    case 'first':
+      standartizedSeatClass = 'F';
+      break;
+  }
+
   return (
     <Document>
       <Page style={styles.page}>
@@ -120,68 +159,83 @@ export const PdfDocument = (props: any) => {
               <View style={styles.ticketInfoTop}>
                 <View style={styles.ticketInfoColumn}>
                   <View style={styles.ticketInfoItem}>
-                    <TicketFields title={'Passenger Name'} text={'JOHN SMITH'} />
+                    <TicketFields
+                      title={'Passenger Name'}
+                      text={`${passengerData.firstName.toUpperCase()} ${passengerData.lastName.toUpperCase()}`}
+                    />
                   </View>
                   <View style={styles.ticketInfoItem}>
-                    <TicketFields title={'From'} text={'KYIV'} />
+                    <TicketFields title={'From'} text={flight.departureCity.toUpperCase()} />
                   </View>
                   <View style={styles.ticketInfoItem}>
-                    <TicketFields title={'To'} text={'PARIS'} />
+                    <TicketFields title={'To'} text={flight.arrivalCity.toUpperCase()} />
                   </View>
                 </View>
                 <View style={styles.ticketInfoColumn}>
                   <View style={styles.ticketInfoItem}>
-                    <TicketFields title={'Carrier'} text={'TURKISH AIRLINES'} />
+                    <TicketFields title={'Carrier'} text={flight.companyName.toUpperCase()} />
                   </View>
                   <View style={styles.ticketInfoItem}>
                     <View style={styles.ticketInfoItem}>
-                      <TicketFields title={'Date'} text={'9 JUN'} />
+                      <TicketFields
+                        title={'Date'}
+                        text={moment(flight.departureDate).format('DD MMM').toUpperCase()}
+                      />
                     </View>
                     <View style={styles.ticketInfoItem}>
-                      <TicketFields title={'Time'} text={'8:40'} />
+                      <TicketFields
+                        title={'Time'}
+                        text={moment(flight.departureDate).format('H:mm').toUpperCase()}
+                      />
                     </View>
                   </View>
                 </View>
               </View>
               <View style={styles.ticketInfoBottom}>
                 <View style={styles.ticketInfoBottomItem}>
-                  <TicketFields title={'Flight'} text={'SS-3464'} />
+                  <TicketFields title={'Flight'} text={flight.flightId.toUpperCase()} />
                 </View>
                 <View style={styles.ticketInfoBottomItem}>
-                  <TicketFields title={'Airplane'} text={'BOEING 747'} />
+                  <TicketFields title={'Airplane'} text={flight.airplane.toUpperCase()} />
                 </View>
                 <View style={styles.ticketInfoBottomItem}>
-                  <TicketFields title={'Class'} text={'Y'} />
+                  <TicketFields title={'Class'} text={standartizedSeatClass} />
                 </View>
                 <View style={styles.ticketInfoBottomItem}>
-                  <TicketFields title={'Seat'} text={'17'} />
+                  <TicketFields title={'Seat'} text={`${seatData.seat}`} />
                 </View>
               </View>
             </View>
             <View style={styles.rightTicketInfo}>
               <View style={styles.rightTicketInfoItem}>
-                <TicketFields title={'Passenger Name'} text={'JOHN SMITH'} />
+                <TicketFields
+                  title={'Passenger Name'}
+                  text={`${passengerData.firstName.toUpperCase()} ${passengerData.lastName.toUpperCase()}`}
+                />
               </View>
               <View style={styles.rightTicketInfoItem}>
-                <TicketFields title={'From'} text={'KYIV'} />
+                <TicketFields title={'From'} text={flight.departureCity.toUpperCase()} />
               </View>
               <View style={styles.rightTicketInfoItem}>
-                <TicketFields title={'To'} text={'PARIS'} />
+                <TicketFields title={'To'} text={flight.arrivalCity.toUpperCase()} />
               </View>
               <View style={styles.rightTicketInfoRowItems}>
                 <View style={styles.rightTicketInfoRowItem}>
-                  <TicketFields title={'Flight'} text={'SS-3464'} />
+                  <TicketFields title={'Flight'} text={flight.flightId.toUpperCase()} />
                 </View>
                 <View style={styles.rightTicketInfoRowItem}>
-                  <TicketFields title={'Date'} text={'9 JUN'} />
+                  <TicketFields
+                    title={'Date'}
+                    text={moment(flight.departureDate).format('DD MMM').toUpperCase()}
+                  />
                 </View>
               </View>
               <View style={styles.rightTicketInfoRowItems}>
                 <View style={styles.rightTicketInfoRowItem}>
-                  <TicketFields title={'Class'} text={'Y'} />
+                  <TicketFields title={'Class'} text={standartizedSeatClass} />
                 </View>
                 <View style={styles.rightTicketInfoRowItem}>
-                  <TicketFields title={'Seat'} text={'17'} />
+                  <TicketFields title={'Seat'} text={`${seatData.seat}`} />
                 </View>
               </View>
             </View>
@@ -192,12 +246,12 @@ export const PdfDocument = (props: any) => {
   );
 };
 
-type PropsType = {
+type TicketFieldsPropsType = {
   title: string;
   text: string;
 };
 
-const TicketFields: React.FC<PropsType> = ({ title, text }) => {
+const TicketFields: React.FC<TicketFieldsPropsType> = ({ title, text }) => {
   return (
     <View>
       <Text style={styles.ticketInfoItemTitle}>{title}</Text>
@@ -222,8 +276,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function DownloadTicketStep() {
+export const DownloadTicketStep: React.FC = () => {
   const classes = useStyles();
+  const flight = useSelector(selectBookingFlight);
+  const booking = useSelector(selectBookingData);
 
   return (
     <Container className={classes.ticketContainer} maxWidth="sm">
@@ -237,7 +293,7 @@ export default function DownloadTicketStep() {
             textDecoration: 'none',
             color: 'inherit',
           }}
-          document={<PdfDocument data={{}} />}
+          document={<PdfDocument data={{ flight, booking }} />}
           fileName="ticket.pdf"
         >
           {({ blob, url, loading, error }) => (
@@ -249,4 +305,4 @@ export default function DownloadTicketStep() {
       </Paper>
     </Container>
   );
-}
+};

@@ -57,7 +57,6 @@ export const SearchForm = () => {
         validationSchema={searchSchema}
         initialValues={parsed}
         onSubmit={(formData) => {
-          //console.log(formData);
           const { arrivalDate, ...newData } = formData;
           history.push({
             pathname: '/search/results',

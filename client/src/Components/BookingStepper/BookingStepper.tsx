@@ -26,7 +26,7 @@ import {
   selectIsFlightLoaded,
 } from '../../store/ducks/booking/selectors';
 import { LinearPreloader } from '../LinearPreloader';
-import DownloadTicketStep from './Steps/DownloadTicketStep';
+import { DownloadTicketStep } from './Steps/DownloadTicketStep';
 import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
 import { PassengerDetailsStep } from './Steps/PassengerDetailsStep';
 import { SeatingStep } from './Steps/SeatingStep';
@@ -73,10 +73,9 @@ export const BookingStepper = () => {
   const flightId = params.flightId;
 
   const dispatch = useDispatch();
+
   const flight = useSelector(selectBookingFlight);
-
   const IsFlightLoaded = useSelector(selectIsFlightLoaded);
-
   //TODO: move to selectors.ts
   const seatClass = useSelector(selectBookingSeatClass);
   const totalCost = useSelector(selectBookingCost(seatClass));

@@ -53,7 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: 6,
       paddingBottom: 2,
     },
-    paymentFormField: { height: 70, margin: '10px 0px' },
+    paymentFormField: {
+      height: 70,
+      margin: '10px 0px',
+    },
   })
 );
 
@@ -70,13 +73,10 @@ const paymentSchema = Yup.object().shape({
       'Invalid Expiration Date has past',
       (expirationDate) => {
         if (!expirationDate) return false;
-
         const today = new Date();
         const monthToday = today.getMonth() + 1;
         const yearToday = today.getFullYear().toString().substr(-2);
-
         const [expMonth, expYear] = expirationDate.split('/');
-
         if (Number(expYear) < Number(yearToday)) {
           return false;
         } else if (Number(expMonth) < monthToday && Number(expYear) <= Number(yearToday)) {
@@ -89,7 +89,6 @@ const paymentSchema = Yup.object().shape({
       if (!expirationDate) return false;
       const today = new Date().getFullYear().toString().substr(-2);
       const [expMonth] = expirationDate.split('/');
-
       if (Number(expMonth) > 12) {
         return false;
       }
@@ -120,7 +119,7 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
   const seatClass = useSelector(selectBookingSeatClass);
   const totalCost = useSelector(selectBookingCost(seatClass));
   const bookingData = useSelector(selectBookingData);
-  const { passengerData, SeatData } = bookingData;
+  const { passengerData, seatData } = bookingData;
 
   if (!flight) return null;
 
@@ -177,12 +176,12 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
           <div className={classes.contentArticle}>
             <ClassOutlinedIcon color="primary" />
             <Typography className={classes.contentArticleData}>
-              Class: {SeatData?.seatClass}
+              Class: {seatData?.seatClass}
             </Typography>
           </div>
           <div className={classes.contentArticle}>
             <AirlineSeatIcon color="primary" />
-            <Typography className={classes.contentArticleData}>Seat: {SeatData?.seat}</Typography>
+            <Typography className={classes.contentArticleData}>Seat: {seatData?.seat}</Typography>
           </div>
         </div>
       </Paper>
@@ -201,7 +200,6 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
               innerRef={formRef}
               initialValues={{ cardNumber: '', expiryDate: '', cvc: '' } as PaymentData}
               onSubmit={(passData: PaymentData, { setSubmitting }) => {
-                console.log(passData);
                 setSubmitting(false);
                 nextStep();
               }}
@@ -237,7 +235,6 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
                       );
                     }}
                   </Field>
-
                   <div style={{ display: 'flex' }}>
                     <Field name="expiryDate">
                       {({ field }: any) => {

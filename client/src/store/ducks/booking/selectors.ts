@@ -21,7 +21,7 @@ export const selectBookingData = createSelector(selectBooking, (booking) => book
 
 export const selectBookingSeatClass = createSelector(
   selectBookingData,
-  (bookingData) => bookingData.SeatData?.seatClass
+  (bookingData) => bookingData.seatData?.seatClass
 );
 
 export const selectBookingCost = (seatClass: SeatClass | undefined) => (state: RootState) => {

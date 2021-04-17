@@ -94,7 +94,6 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
     setSeatClass(event.target.value as SeatClass);
   };
 
-  //const initialSeats = useSelector(selectBookingFlightSeats);
   if (!initialSeats) return null;
 
   return (
@@ -130,7 +129,6 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
               variant="outlined"
               color="primary"
               label="Seat class"
-              //style={{ margin: 10, marginBottom: 26, height: 56 }}
               className={classes.formSelect}
             >
               <MenuItem value="economy">Economy</MenuItem>
@@ -142,9 +140,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
             innerRef={formRef}
             initialValues={{}}
             onSubmit={(d, { setStatus }) => {
-              //const class = seatClass;
               if (seat) {
-                console.log('res:', seat, seatClass);
                 const data: SeatData = {
                   seat: seat,
                   seatClass: seatClass,

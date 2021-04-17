@@ -44,7 +44,7 @@ interface FlightSeat {
 
 export interface BookingData {
   passengerData?: PassengerData;
-  SeatData?: SeatData;
+  seatData?: SeatData;
 }
 
 export interface SeatData {

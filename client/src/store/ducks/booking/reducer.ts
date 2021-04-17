@@ -4,7 +4,7 @@ import produce, { Draft } from 'immer';
 
 const initialBookingData: BookingData = {
   passengerData: undefined,
-  SeatData: undefined,
+  seatData: undefined,
 };
 
 const initialState: BookingState = {
@@ -30,7 +30,7 @@ export const bookingReducer = produce((draft: Draft<BookingState>, action: Booki
       draft.bookingData.passengerData = action.payload;
       break;
     case BookingActionsType.SET_BOOKING_SEAT_DATA:
-      draft.bookingData.SeatData = action.payload;
+      draft.bookingData.seatData = action.payload;
       break;
   }
 }, initialState);

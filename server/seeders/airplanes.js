@@ -1,7 +1,7 @@
-module.exports = airplanes = [
-  { model: 'Boeing 747' },
-  { model: 'Boeing 777' },
-  { model: 'Airbus 217' },
-  { model: 'Airbus 717' },
-  { model: 'Boeing 333' },
+module.exports = flights = [
+  { model: 'Boeing 747', FlightId: 1 },
+  { model: 'Boeing 777', FlightId: 1 },
+  { model: 'Airbus 217', FlightId: 2 },
+  { model: 'Airbus 717', FlightId: 1 },
+  { model: 'Boeing 333', FlightId: 3 },
 ];

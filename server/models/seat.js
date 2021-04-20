@@ -22,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Seat.associate = (models) => {
-    Seat.belongsTo(models.Airplane);
+    Seat.belongsTo(models.Airplane, {
+      foreignKey: 'AirplaneId',
+    });
   };
   return Seat;
 };

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     Airplane.belongsTo(models.Flight, {
       foreignKey: 'FlightId',
     });
+    // models.Flight.belongsTo(Airplane, {
+    //   foreignKey: 'AirplaneId',
+    //   constraints: false,
+    // });
   };
 
   return Airplane;

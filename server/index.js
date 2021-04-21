@@ -38,10 +38,14 @@ const createAirports = () => {
   });
 };
 
-//createAirports();
-//createFlights();
-//createAirplanes();
-//createSeats();
+try {
+  //createAirports();
+  //createFlights();
+  //createAirplanes();
+  //createSeats();
+} catch (err) {
+  console.log(err);
+}
 
 db.sequelize.sync({ alter: true }).then(() => {
   app.listen(3001, () => {

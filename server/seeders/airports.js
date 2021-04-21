@@ -1,6 +1,6 @@
 module.exports = airports = [
-  { city: 'Uzhhorod' },
-  { city: 'Lviv' },
-  { city: 'Paris' },
-  { city: 'Kyiv' },
+  { city: 'Uzhhorod', airportName: 'Los Angeles International Airport' },
+  { city: 'Lviv', airportName: 'Heathrow Airport' },
+  { city: 'Paris', airportName: 'Dubai International Airport' },
+  { city: 'Kyiv', airportName: 'Frankfurt Airport' },
 ];

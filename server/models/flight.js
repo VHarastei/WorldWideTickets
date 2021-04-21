@@ -1,4 +1,5 @@
 const { UUIDV4 } = require('sequelize');
+const { Airport } = require('./airport');
 
 module.exports = (sequelize, DataTypes) => {
   const Flight = sequelize.define(
@@ -15,6 +16,28 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      departureDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      arrivalDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      // departureAirport: {
+      //   type: DataTypes.INTEGER,
+      //   references: {
+      //     model: Airport,
+      //     key: 'id',
+      //   },
+      // },
+      // arrivalAirport: {
+      //   type: DataTypes.INTEGER,
+      //   references: {
+      //     model: Airport,
+      //     key: 'id',
+      //   },
+      // },
     },
     {
       timestamps: false,
@@ -22,12 +45,25 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Flight.associate = (models) => {
-    Flight.hasOne(models.Airplane, {
+    Flight.hasMany(models.Airplane, {
       foreignKey: 'FlightId',
     });
     Flight.belongsTo(models.Airport, {
-      foreignKey: 'AirportId',
+      as: 'departureAirport',
     });
+    Flight.belongsTo(models.Airport, {
+      as: 'arrivalAirport',
+    });
+    // Flight.belongsTo(models.Airport, {
+    //foreignKey: 'departureAirport',
+    //   foreignKey: 'AirportId',
+    //   //as: 'departureAirport',
+    // });
+
+    // Flight.belongsTo(models.Airport, {
+    //   foreignKey: 'AirportId',
+    //   as: 'arrivalAirport',
+    // });
   };
 
   return Flight;

@@ -12,7 +12,9 @@ const airplanes = require('./seeders/airplanes');
 const seats = require('./seeders/seats');
 const flights = require('./seeders/flights');
 const airports = require('./seeders/airports');
-const { sequelize } = require('./models');
+const passengers = require('./seeders/passengers');
+const tickets = require('./seeders/tickets');
+const companies = require('./seeders/companies ');
 
 const createFlights = () => {
   flights.map((flight) => {
@@ -38,16 +40,32 @@ const createAirports = () => {
   });
 };
 
-try {
-  //createAirports();
-  //createFlights();
-  //createAirplanes();
-  //createSeats();
-} catch (err) {
-  console.log(err);
-}
+const createPassengers = () => {
+  passengers.map((item) => {
+    db.Passenger.create(item);
+  });
+};
 
-db.sequelize.sync({ alter: true }).then(() => {
+const createTickets = () => {
+  tickets.map((item) => {
+    db.Ticket.create(item);
+  });
+};
+const createCompanies = () => {
+  companies.map((item) => {
+    db.Company.create(item);
+  });
+};
+
+//createAirports();
+//createCompanies();
+//createFlights();
+//createAirplanes();
+//createSeats();
+//createPassengers();
+//createTickets();
+
+db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log('Server is running');
   });

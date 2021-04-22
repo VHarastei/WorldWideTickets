@@ -52,7 +52,6 @@ module.exports = seats = [
   },
   {
     seatClass: 'business',
-    seatStatus: true,
     AirplaneId: 2,
     seatNumber: 4,
   },
@@ -65,5 +64,6 @@ module.exports = seats = [
     seatClass: 'first',
     AirplaneId: 2,
     seatNumber: 6,
+    seatStatus: true,
   },
 ];

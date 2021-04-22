@@ -17,20 +17,14 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Airport.associate = (models) => {
-    // Airport.hasMany(models.Flight, {
-    //   //onDelete: 'cascade',
-    //   as: 'departureAirport',
-    // or
-    // foreignKey: 'departureAirport',
-    // });
-    // Airport.hasMany(models.Flight, {
-    //   //onDelete: 'cascade',
-    //   as: 'arrivalAirport',
-    // });
-    // Airport.hasMany(models.Flight, {
-    //   //onDelete: 'cascade',
-    //   //foreignKey: 'AirportId',
-    // });
+    Airport.hasMany(models.Flight, {
+      foreignKey: 'id',
+      as: 'departureAirport',
+    });
+    Airport.hasMany(models.Flight, {
+      foreignKey: 'id',
+      as: 'arrivalAirport',
+    });
   };
 
   return Airport;

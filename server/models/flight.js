@@ -24,20 +24,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      // departureAirport: {
-      //   type: DataTypes.INTEGER,
-      //   references: {
-      //     model: Airport,
-      //     key: 'id',
-      //   },
-      // },
-      // arrivalAirport: {
-      //   type: DataTypes.INTEGER,
-      //   references: {
-      //     model: Airport,
-      //     key: 'id',
-      //   },
-      // },
     },
     {
       timestamps: false,
@@ -48,22 +34,18 @@ module.exports = (sequelize, DataTypes) => {
     Flight.hasMany(models.Airplane, {
       foreignKey: 'FlightId',
     });
-    Flight.belongsTo(models.Airport, {
-      as: 'departureAirport',
+    Flight.hasMany(models.Ticket, {
+      foreignKey: 'FlightId',
     });
     Flight.belongsTo(models.Airport, {
-      as: 'arrivalAirport',
+      foreignKey: 'departureAirport',
     });
-    // Flight.belongsTo(models.Airport, {
-    //foreignKey: 'departureAirport',
-    //   foreignKey: 'AirportId',
-    //   //as: 'departureAirport',
-    // });
-
-    // Flight.belongsTo(models.Airport, {
-    //   foreignKey: 'AirportId',
-    //   as: 'arrivalAirport',
-    // });
+    Flight.belongsTo(models.Airport, {
+      foreignKey: 'arrivalAirport',
+    });
+    Flight.belongsTo(models.Company, {
+      //foreignKey: 'arrivalAirport',
+    });
   };
 
   return Flight;

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Airplane.associate = (models) => {
     Airplane.hasMany(models.Seat, {
-      onDelete: 'cascade',
+      // onDelete: 'cascade',
       foreignKey: 'AirplaneId',
     });
     Airplane.belongsTo(models.Flight, {

@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Airport.associate = (models) => {
     Airport.hasMany(models.Flight, {
-      foreignKey: 'id',
+      foreignKey: 'departureAirportId',
       as: 'departureAirport',
     });
     Airport.hasMany(models.Flight, {
-      foreignKey: 'id',
+      foreignKey: 'arrivalAirportId',
       as: 'arrivalAirport',
     });
   };

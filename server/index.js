@@ -14,7 +14,8 @@ const flights = require('./seeders/flights');
 const airports = require('./seeders/airports');
 const passengers = require('./seeders/passengers');
 const tickets = require('./seeders/tickets');
-const companies = require('./seeders/companies ');
+const companies = require('./seeders/companies');
+const prices = require('./seeders/prices');
 
 const createFlights = () => {
   flights.map((flight) => {
@@ -57,6 +58,13 @@ const createCompanies = () => {
   });
 };
 
+const createPrices = () => {
+  prices.map((item) => {
+    db.Price.create(item);
+  });
+};
+
+//createPrices();
 //createAirports();
 //createCompanies();
 //createFlights();
@@ -65,7 +73,7 @@ const createCompanies = () => {
 //createPassengers();
 //createTickets();
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   app.listen(3001, () => {
     console.log('Server is running');
   });

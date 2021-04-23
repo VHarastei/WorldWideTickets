@@ -31,17 +31,22 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Flight.associate = (models) => {
-    Flight.hasMany(models.Airplane, {
+    Flight.hasOne(models.Airplane, {
       foreignKey: 'FlightId',
     });
+    // Flight.hasMany(models.Airplane, {
+    //   foreignKey: 'FlightId',
+    // });
     Flight.hasMany(models.Ticket, {
       foreignKey: 'FlightId',
     });
     Flight.belongsTo(models.Airport, {
-      foreignKey: 'departureAirport',
+      foreignKey: 'departureAirportId',
+      as: 'departureAirport',
     });
     Flight.belongsTo(models.Airport, {
-      foreignKey: 'arrivalAirport',
+      foreignKey: 'arrivalAirportId',
+      as: 'arrivalAirport',
     });
     Flight.belongsTo(models.Company, {
       //foreignKey: 'arrivalAirport',

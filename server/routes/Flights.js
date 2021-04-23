@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
     const items = await Flight.findAll({
       include: [{ model: Airplane, include: [{ model: Seat }] }, { model: Company }],
     });
-    // const airplanes = await Airplane.findAll({ include: Seat });
     res.status(201).json(items);
   } catch (err) {
     console.log(err);
@@ -43,16 +42,22 @@ router.get('/search', async (req, res) => {
     });
 
     const flights = await Flight.findAll({
+      attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
+      include: [
+        { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
+        { model: Airport, as: 'departureAirport', attributes: { exclude: ['id'] } },
+        { model: Company, attributes: { exclude: ['id'] } },
+      ],
       where: {
-        departureAirport: departureAirport.id,
-        arrivalAirport: arrivalAirport.id,
+        departureAirportId: departureAirport.id,
+        arrivalAirportId: arrivalAirport.id,
       },
     });
 
     res.status(200).json(flights);
   } catch (err) {
     console.log(err);
-    res.status(404).send(err);
+    res.status(404).send('Flights Not Found');
   }
 });
 
@@ -61,23 +66,20 @@ router.get('/booking/:flightNumber', async (req, res) => {
     const flightNumber = req.params.flightNumber;
 
     const flight = await Flight.findOne({
-      attributes: { exclude: ['id', 'CompanyId', 'departureAirport', 'arrivalAirport'] },
+      attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
       where: {
         flightNumber: flightNumber,
       },
       order: [[Airplane, Seat, 'seatNumber', 'ASC']],
       include: [
+        { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
+        { model: Airport, as: 'departureAirport', attributes: { exclude: ['id'] } },
+        { model: Company, attributes: { exclude: ['id'] } },
         {
           model: Airplane,
           attributes: ['model'],
-          include: [
-            {
-              model: Seat,
-              attributes: { exclude: ['id', 'AirplaneId'] },
-            },
-          ],
+          include: [{ model: Seat, attributes: { exclude: ['id', 'AirplaneId'] } }],
         },
-        { model: Company, attributes: { exclude: ['id'] } },
       ],
     });
 

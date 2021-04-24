@@ -7,6 +7,7 @@ const { Airport } = require('../models');
 const { Ticket } = require('../models');
 const { Passenger } = require('../models');
 const { Company } = require('../models');
+const { Price } = require('../models');
 
 router.get('/', async (req, res) => {
   try {
@@ -41,7 +42,7 @@ router.get('/search', async (req, res) => {
       where: { city: arrivalCity },
     });
 
-    const flights = await Flight.findAll({
+    let flights = await Flight.findAll({
       attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
       include: [
         { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
@@ -52,6 +53,15 @@ router.get('/search', async (req, res) => {
         departureAirportId: departureAirport.id,
         arrivalAirportId: arrivalAirport.id,
       },
+    });
+
+    const ticketClassPrice = await Price.findOne({ attributes: ['economy'] });
+
+    flights.map((flight) => {
+      const ticketPrice = Math.round(
+        ticketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 20
+      );
+      flight.setDataValue('lowestTicketPrice', ticketPrice);
     });
 
     res.status(200).json(flights);

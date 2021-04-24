@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Ticket = sequelize.define(
     'Ticket',
     {
-      seat: {
+      seatNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      cost: {
+      price: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

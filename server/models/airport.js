@@ -6,15 +6,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      airportName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lon: {
+      lat: {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
-      lat: {
+      lon: {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },

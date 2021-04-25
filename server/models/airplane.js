@@ -17,9 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       // onDelete: 'cascade',
       foreignKey: 'AirplaneId',
     });
-    Airplane.belongsTo(models.Flight, {
-      foreignKey: 'FlightId',
-    });
+    Airplane.hasMany(models.Flight);
     // models.Flight.belongsTo(Airplane, {
     //   foreignKey: 'AirplaneId',
     //   constraints: false,

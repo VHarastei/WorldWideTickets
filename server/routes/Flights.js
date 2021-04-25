@@ -4,49 +4,24 @@ const { Flight } = require('../models');
 const { Seat } = require('../models');
 const { Airplane } = require('../models');
 const { Airport } = require('../models');
-const { Ticket } = require('../models');
-const { Passenger } = require('../models');
 const { Company } = require('../models');
 const { Price } = require('../models');
 
-router.get('/', async (req, res) => {
-  try {
-    const items = await Flight.findAll({
-      include: [{ model: Airplane, include: [{ model: Seat }] }, { model: Company }],
-    });
-    res.status(201).json(items);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
-  }
-});
-
-router.get('/tickets', async (req, res) => {
-  const items = await Ticket.findAll({
-    include: [{ model: Passenger }],
-  });
-
-  res.json(items);
-});
-
 router.get('/search', async (req, res) => {
   try {
-    const departureCity = req.query.departureCity;
-    const arrivalCity = req.query.arrivalCity;
-    //const departureDate = req.query.departureDate;
+    // const departureCity = req.query.departureCity;
+    // const arrivalCity = req.query.arrivalCity;
+    // const departureDate = req.query.departureDate;
 
-    const departureAirport = await Airport.findOne({
-      where: { city: departureCity },
-    });
-    const arrivalAirport = await Airport.findOne({
-      where: { city: arrivalCity },
-    });
+    const departureAirport = await Airport.findOne({ where: { city: req.query.departureCity } });
+    const arrivalAirport = await Airport.findOne({ where: { city: req.query.arrivalCity } });
 
     let flights = await Flight.findAll({
-      attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
+      attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
       include: [
-        { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
-        { model: Airport, as: 'departureAirport', attributes: { exclude: ['id'] } },
+        { model: Airplane, attributes: ['model'] },
+        { model: Airport, as: 'departureAirport', attributes: ['city', 'name'] },
+        { model: Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },
         { model: Company, attributes: { exclude: ['id'] } },
       ],
       where: {
@@ -55,19 +30,23 @@ router.get('/search', async (req, res) => {
       },
     });
 
-    const ticketClassPrice = await Price.findOne({ attributes: ['economy'] });
+    const lowestTicketClassPrice = await Price.findOne({ attributes: ['economy'] });
 
     flights.map((flight) => {
       const ticketPrice = Math.round(
-        ticketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 20
+        lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 20
       );
       flight.setDataValue('lowestTicketPrice', ticketPrice);
     });
 
-    res.status(200).json(flights);
+    if (flights.length) {
+      res.status(200).json(flights);
+    } else {
+      res.status(404).send('Flights Not Found');
+    }
   } catch (err) {
     console.log(err);
-    res.status(404).send('Flights Not Found');
+    res.status(404).send('Flight Search Error');
   }
 });
 
@@ -76,14 +55,14 @@ router.get('/booking/:flightNumber', async (req, res) => {
     const flightNumber = req.params.flightNumber;
 
     const flight = await Flight.findOne({
-      attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
+      attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
       where: {
         flightNumber: flightNumber,
       },
       order: [[Airplane, Seat, 'seatNumber', 'ASC']],
       include: [
-        { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
-        { model: Airport, as: 'departureAirport', attributes: { exclude: ['id'] } },
+        { model: Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },
+        { model: Airport, as: 'departureAirport', attributes: ['city', 'name'] },
         { model: Company, attributes: { exclude: ['id'] } },
         {
           model: Airplane,

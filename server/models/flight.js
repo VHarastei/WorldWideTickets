@@ -17,11 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      distance: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 100,
-      },
       departureDate: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -30,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      distance: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       timestamps: false,
@@ -37,9 +37,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Flight.associate = (models) => {
-    Flight.hasOne(models.Airplane, {
-      foreignKey: 'FlightId',
-    });
+    Flight.belongsTo(models.Airplane);
+
+    // Flight.hasOne(models.Airplane, {
+    //   foreignKey: 'FlightId',
+    // });
     // Flight.hasMany(models.Airplane, {
     //   foreignKey: 'FlightId',
     // });
@@ -58,24 +60,6 @@ module.exports = (sequelize, DataTypes) => {
       //foreignKey: 'arrivalAirport',
     });
   };
-
-  // Flight.afterBulkCreate(async (flight, options) => {
-  //   try {
-  //     flight.distance = 300;
-
-  //     // let flights = await Flight.findAll({
-  //     //   //attributes: { exclude: ['id', 'CompanyId', 'departureAirportId', 'arrivalAirportId'] },
-  //     //   include: [
-  //     //     { model: Airport, as: 'arrivalAirport', attributes: { exclude: ['id'] } },
-  //     //     { model: Airport, as: 'departureAirport', attributes: { exclude: ['id'] } },
-  //     //   ],
-  //     // });
-
-  //     // console.log('----------------------', flights);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // });
 
   return Flight;
 };

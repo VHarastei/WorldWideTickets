@@ -37,11 +37,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Flight.associate = (models) => {
-    Flight.belongsTo(models.Airplane);
+    //Flight.belongsTo(models.Airplane);
 
-    // Flight.hasOne(models.Airplane, {
-    //   foreignKey: 'FlightId',
-    // });
+    Flight.hasOne(models.Airplane, {
+      foreignKey: 'FlightId',
+    });
     // Flight.hasMany(models.Airplane, {
     //   foreignKey: 'FlightId',
     // });

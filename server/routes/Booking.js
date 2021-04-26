@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const createTicket = require('../utils/creators/createTicket');
 
 router.post('/', async (req, res) => {
   try {
@@ -17,17 +18,15 @@ router.post('/', async (req, res) => {
       ticketClassPrice[seatData.seatClass] + (flight.distance * flight.Company.rating) / 20
     );
 
-    const ticketData = {
-      seatNumber: seatData.seatNumber,
-      seatClass: seatData.seatClass,
-      price: ticketPrice,
-      FlightId: flight.id,
-      PassengerId: passenger.id,
-    };
+    await createTicket(
+      seatData.seatNumber,
+      seatData.seatClass,
+      ticketPrice,
+      flight.id,
+      passenger.id
+    );
 
-    const ticket = await db.Ticket.create(ticketData);
-
-    res.status(200).json(ticket);
+    res.status(200).send('Ticket created successfully');
   } catch (err) {
     console.log(err);
     res.status(404).send('Ticket not created');

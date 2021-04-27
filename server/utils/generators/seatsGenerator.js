@@ -5,10 +5,11 @@ module.exports = generateSeats = (airplanesNumber) => {
     let seatNumber = 1;
     for (let classItem = 0; classItem <= 2; classItem++) {
       for (let seatItem = 1; seatItem <= 20; seatItem++) {
+        const seatStatus =  Math.random() < 0.1,
         const seat = {
           seatClass: seatClass[classItem],
           seatNumber: seatNumber++,
-          seatStatus: Math.random() < 0.1,
+          seatStatus,
           AirplaneId: airplaneItem,
         };
         seatsArr.push(seat);

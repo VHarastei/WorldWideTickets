@@ -7,7 +7,7 @@ import { rootSaga } from './saga';
 
 export interface RootState {
   flights: FlightsState;
-  booking: BookingState;
+  //booking: BookingState;
 }
 
 const sagaMiddleware = createSagaMiddleware();

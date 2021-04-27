@@ -1,4 +1,6 @@
+const { sequelize } = require('../../models');
 const db = require('../../models');
+const Op = sequelize.Op;
 
 module.exports = generateTickets = async () => {
   const ticketsArr = [];
@@ -7,38 +9,42 @@ module.exports = generateTickets = async () => {
       seatStatus: true,
     },
   });
+
   const ticketClassPrice = await db.Price.findOne();
 
   freeSeats.forEach(async (seat, index) => {
-    airplane = await db.Airplane.findOne({
-      where: {
-        id: seat.AirplaneId,
-      },
-      attributes: ['id'],
-      include: [
-        {
-          model: db.Flight,
-          attributes: ['id', 'distance'],
-          include: [{ model: db.Company, attributes: ['rating'] }],
+    if (seat.seatStatus === true) {
+      airplane = await db.Airplane.findOne({
+        where: {
+          id: seat.AirplaneId,
         },
-      ],
-    });
+        attributes: ['id'],
+        include: [
+          {
+            model: db.Flight,
+            attributes: ['id', 'distance'],
+            include: [{ model: db.Company, attributes: ['rating'] }],
+          },
+        ],
+      });
 
-    const ticketPrice = Math.round(
-      ticketClassPrice[seat.seatClass] +
-        (airplane.Flight.distance * airplane.Flight.Company.rating) / 20
-    );
+      const ticketPrice = Math.round(
+        ticketClassPrice[seat.seatClass] +
+          (airplane.Flight.distance * airplane.Flight.Company.rating) / 20
+      );
 
-    const ticket = {
-      seatNumber: seat.seatNumber,
-      seatClass: seat.seatClass,
-      price: ticketPrice,
-      FlightId: airplane.Flight.id,
-      PassengerId: index + 1,
-    };
-    //await createTicket(seat.seatNumber, seat.seatClass, ticketPrice, airplane.Flight.id, index);
+      const ticket = {
+        id: index + 1,
+        seatNumber: seat.seatNumber,
+        seatClass: seat.seatClass,
+        price: ticketPrice,
+        FlightId: airplane.Flight.id, // there
+        PassengerId: index + 1,
+      };
+      //await createTicket(seat.seatNumber, seat.seatClass, ticketPrice, airplane.Flight.id, index);
 
-    ticketsArr.push(ticket);
+      ticketsArr.push(ticket);
+    }
   });
 
   setTimeout(() => {

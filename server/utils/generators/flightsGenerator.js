@@ -6,9 +6,10 @@ module.exports = generateFlights = async (amount) => {
   try {
     const flightsArr = [];
     for (let i = 0; i < amount; i++) {
-      const [departureAirportId, arrivalAirportId] = randPairId(1, 7);
-      const CompanyId = randId(1, 5);
+      const [departureAirportId, arrivalAirportId] = randPairId(1, 8);
+      const CompanyId = randId(1, 15);
 
+      const company = await db.Company.findByPk(CompanyId);
       const departureAirport = await db.Airport.findByPk(departureAirportId);
       const arrivalAirport = await db.Airport.findByPk(arrivalAirportId);
 
@@ -25,7 +26,8 @@ module.exports = generateFlights = async (amount) => {
       const endDate = moment(startDate).add(30, 'd').toDate();
 
       const departureDate = momentRandom(endDate, startDate).toDate();
-      const arrivalDate = moment(departureDate).add(flightTime).add(30, 'm').toDate();
+      const shiftArrival = Math.round(120 / company.rating);
+      const arrivalDate = moment(departureDate).add(flightTime).add(shiftArrival, 'm').toDate();
 
       const flight = {
         flightNumber: randFlightNumber(),
@@ -39,7 +41,10 @@ module.exports = generateFlights = async (amount) => {
       flightsArr.push(flight);
       //db.Flight.create(flight);
     }
-    console.log(flightsArr);
+    //console.log(flightsArr);
+    setTimeout(() => {
+      console.log(JSON.stringify(flightsArr));
+    }, 3000);
   } catch (err) {
     console.log(err);
   }

@@ -4,10 +4,12 @@ import { BookingState } from '../../store/ducks/booking/contracts/store';
 
 export const FlightsApi = {
   fetchFlights: (): Promise<FlightsState['items']> => {
-    return axios.get('/flights').then(({ data }) => data);
+    return axios
+      .get('http://localhost:3001/flights?departureCity=Paris&arrivalCity=Lviv')
+      .then(({ data }) => data);
   },
 
-  fetchFlight: (flightId: string): Promise<BookingState['bookingFlight']> => {
-    return axios.get(`/flights?flightId=${flightId}`).then(({ data }) => data[0]);
+  fetchFlight: (flightNumber: string): Promise<BookingState['bookingFlight']> => {
+    return axios.get(`/flights/${flightNumber}`).then(({ data }) => data[0]);
   },
 };

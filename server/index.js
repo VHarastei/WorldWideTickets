@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
 
+const cors = require('cors');
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(cors());
 const db = require('./models');
 
 const flightsRouter = require('./routes/Flights');
@@ -26,7 +32,7 @@ const createFlights = () => {
   flights.map((item) => db.Flight.create(item));
 };
 const createSeats = () => {
-  seats.map((seat) => db.Seat.create(seat));
+  seats.map(async (seat) => await db.Seat.create(seat));
 };
 const createTickets = () => {
   tickets.map((item) => db.Ticket.create(item));
@@ -46,6 +52,7 @@ const generateSimpleData = () => {
 //createAirplanes();
 //createSeats();
 //createTickets();
+//const generateFlights = require('./utils/generators/flightsGenerator');
 
 db.sequelize.sync().then(() => {
   app.listen(3001, async () => {

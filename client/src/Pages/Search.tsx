@@ -57,32 +57,31 @@ export const Search = () => {
   //deep copy
   const sortedFlights: Flight[] = JSON.parse(JSON.stringify(flights));
 
-  if (sortBy === 'cheapest') {
-    sortedFlights.sort((a, b) => (a.cost.economy > b.cost.economy ? 1 : -1));
-  }
-  if (sortBy === 'earliest') {
-    sortedFlights.sort((a, b) => {
-      const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
-      const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
+  // if (sortBy === 'cheapest') {
+  //   sortedFlights.sort((a, b) => (a.cost.economy > b.cost.economy ? 1 : -1));
+  // }
+  // if (sortBy === 'earliest') {
+  //   sortedFlights.sort((a, b) => {
+  //     const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
+  //     const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
 
-      return aDepDate > bDepDate ? 1 : -1;
-    });
-  }
-  if (sortBy === 'fastest') {
-    sortedFlights.sort((a, b) => {
-      const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss');
-      const aArrDate = moment(a.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+  //     return aDepDate > bDepDate ? 1 : -1;
+  //   });
+  // }
+  // if (sortBy === 'fastest') {
+  //   sortedFlights.sort((a, b) => {
+  //     const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const aArrDate = moment(a.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
 
-      const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss');
-      const bArrDate = moment(b.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const bArrDate = moment(b.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
 
-      const aInFlDiff = aArrDate.diff(aDepDate);
-      const bInFlDiff = bArrDate.diff(bDepDate);
+  //     const aInFlDiff = aArrDate.diff(aDepDate);
+  //     const bInFlDiff = bArrDate.diff(bDepDate);
 
-      return aInFlDiff > bInFlDiff ? 1 : -1;
-    });
-  }
-
+  //     return aInFlDiff > bInFlDiff ? 1 : -1;
+  //   });
+  // }
   return (
     <div className={classes.searchContainer}>
       <Header />
@@ -108,15 +107,15 @@ export const Search = () => {
             {sortedFlights.map((flight) => {
               return (
                 <FlightCard
-                  key={flight.flightId}
-                  companyLogoSrc={flight.companyLogoSrc}
-                  flightId={flight.flightId}
-                  airplane={flight.airplane}
+                  key={flight.flightNumber}
+                  companyLogoSrc={flight.Company.logoSrc}
+                  flightNumber={flight.flightNumber}
+                  airplane={flight.Airplane.model}
                   departureDate={flight.departureDate}
-                  departureCity={flight.departureCity}
                   arrivalDate={flight.arrivalDate}
-                  arrivalCity={flight.arrivalCity}
-                  cost={flight.cost.economy}
+                  departureCity={flight.departureAirport.city}
+                  arrivalCity={flight.arrivalAirport.city}
+                  price={flight.lowestTicketPrice}
                 />
               );
             })}

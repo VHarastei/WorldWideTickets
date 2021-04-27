@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  flightCardCostText: {
+  flightCardPriceText: {
     fontSize: 24,
     fontWeight: 700,
     opacity: 0.9,
@@ -88,30 +88,30 @@ const useStyles = makeStyles((theme) => ({
 type PropsType = {
   companyLogoSrc: string;
   // flight: string;
-  flightId: string;
+  flightNumber: string;
   airplane: string;
   departureDate: string;
   departureCity: string;
   arrivalDate: string;
   arrivalCity: string;
-  cost?: number;
+  price?: number;
 };
 
 export const FlightCard: React.FC<PropsType> = ({
   companyLogoSrc,
   //flight,
-  flightId,
+  flightNumber,
   airplane,
   departureDate,
   departureCity,
   arrivalDate,
   arrivalCity,
-  cost,
+  price,
 }) => {
   const classes = useStyles();
 
-  const formattedDepDate = moment(departureDate, 'YYYY-MM-DD hh:mm:ss');
-  const formattedArrDate = moment(arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+  const formattedDepDate = moment(departureDate, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  const formattedArrDate = moment(arrivalDate, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
   const depParsedTime = formattedDepDate.format('H:mm');
   const depParsedDate = formattedDepDate.format('D MMMM YYYY, dddd');
@@ -129,7 +129,7 @@ export const FlightCard: React.FC<PropsType> = ({
           <img src={companyLogoSrc} alt="companyLogo" className={classes.flightCardCompanyLogo} />
         </div>
         <div style={{ width: 180 }}>
-          <Typography variant="h5">Flight {flightId}</Typography>
+          <Typography variant="h5">Flight {flightNumber}</Typography>
           <Typography color="textSecondary" variant="body1">
             Airplane {airplane}
           </Typography>
@@ -147,14 +147,14 @@ export const FlightCard: React.FC<PropsType> = ({
         </div>
         <FlightDate time={arrParsedTime} date={arrParsedDate} city={arrivalCity} />
       </div>
-      {cost && (
+      {price && (
         <div>
           <Divider />
 
           <div className={classes.flightCardSelect}>
-            <span>Cost:</span>
-            <span className={classes.flightCardCostText}>{cost} USD</span>
-            <Link to={`/booking/${flightId}`} style={{ textDecoration: 'none' }}>
+            <span>Price:</span>
+            <span className={classes.flightCardPriceText}>{price} USD</span>
+            <Link to={`/booking/${flightNumber}`} style={{ textDecoration: 'none' }}>
               <Button color="secondary" variant="contained">
                 Select
               </Button>

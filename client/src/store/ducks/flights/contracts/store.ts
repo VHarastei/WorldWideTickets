@@ -6,21 +6,27 @@ export enum LoadingState {
 }
 
 export interface Flight {
-  flightId: string;
-  companyLogoSrc: string;
-  companyName: string;
-  airplane: string;
+  flightNumber: string;
   departureDate: string;
-  departureCity: string;
   arrivalDate: string;
-  arrivalCity: string;
-  cost: FlightCost;
+  distance: number;
+  departureAirport: FlightAirport;
+  arrivalAirport: FlightAirport;
+  Airplane: FlightAirplane;
+  Company: FlightCompany;
+  lowestTicketPrice: number;
 }
-
-interface FlightCost {
-  economy: number;
-  business: number;
-  first: number;
+interface FlightAirport {
+  city: string;
+  name: string;
+}
+interface FlightAirplane {
+  model: string;
+}
+interface FlightCompany {
+  name: string;
+  logoSrc: string;
+  rating: number;
 }
 
 export interface FlightsState {

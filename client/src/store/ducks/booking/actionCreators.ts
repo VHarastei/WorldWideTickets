@@ -1,5 +1,12 @@
 import { Action } from 'redux';
-import { BookingState, LoadingState, PassengerData, SeatData } from './contracts/store';
+import {
+  BookingState,
+  LoadingState,
+  PassengerData,
+  SeatData,
+  BookingData,
+  BookingTicket,
+} from './contracts/store';
 
 export enum BookingActionsType {
   SET_BOOKING_FLIGHT = 'booking/SET_BOOKING_FLIGHT',
@@ -7,6 +14,8 @@ export enum BookingActionsType {
   SET_LOADING_STATE = 'booking/SET_LOADING_STATE',
   SET_BOOKING_PASSENGER_DATA = 'booking/SET_BOOKING_PASSENGER_DATA',
   SET_BOOKING_SEAT_DATA = 'booking/SET_BOOKING_SEAT_DATA',
+  CREATE_BOOKING_TICKET = 'booking/CREATE_BOOKING_TICKET',
+  SET_BOOKING_TICKET = 'booking/SET_BOOKING_TICKET',
 }
 
 export interface SetBookingFlightActionInterface extends Action<BookingActionsType> {
@@ -33,34 +42,56 @@ export interface SetBookingSeatDataActionInterface extends Action<BookingActions
   payload: SeatData;
 }
 
-export const SetBookingFlight = (
+export interface CreateBookingTicketActionInterface extends Action<BookingActionsType> {
+  type: BookingActionsType.CREATE_BOOKING_TICKET;
+  payload: BookingData;
+}
+
+export interface SetBookingTicketActionInterface extends Action<BookingActionsType> {
+  type: BookingActionsType.SET_BOOKING_TICKET;
+  payload: BookingState['bookingTicket'];
+}
+
+export const setBookingFlight = (
   payload: BookingState['bookingFlight']
 ): SetBookingFlightActionInterface => ({
   type: BookingActionsType.SET_BOOKING_FLIGHT,
   payload,
 });
 
-export const SetBookingPassengerData = (
+export const setBookingPassengerData = (
   payload: PassengerData
 ): SetBookingPassengerDataActionInterface => ({
   type: BookingActionsType.SET_BOOKING_PASSENGER_DATA,
   payload,
 });
 
-export const SetBookingSeatData = (payload: SeatData): SetBookingSeatDataActionInterface => ({
+export const setBookingSeatData = (payload: SeatData): SetBookingSeatDataActionInterface => ({
   type: BookingActionsType.SET_BOOKING_SEAT_DATA,
   payload,
 });
 
-export const FetchBookingFlight = (payload: string): FetchBookingFlightActionInterface => ({
+export const fetchBookingFlight = (payload: string): FetchBookingFlightActionInterface => ({
   type: BookingActionsType.FETCH_BOOKING_FLIGHT,
   payload,
 });
 
-export const SetBookingLoadingState = (
+export const setBookingLoadingState = (
   payload: LoadingState
 ): SetBookingLoadingStateActionInterface => ({
   type: BookingActionsType.SET_LOADING_STATE,
+  payload,
+});
+
+export const createBookingTicket = (payload: BookingData): CreateBookingTicketActionInterface => ({
+  type: BookingActionsType.CREATE_BOOKING_TICKET,
+  payload,
+});
+
+export const setBookingTicket = (
+  payload: BookingState['bookingTicket']
+): SetBookingTicketActionInterface => ({
+  type: BookingActionsType.SET_BOOKING_TICKET,
   payload,
 });
 
@@ -69,4 +100,6 @@ export type BookingActions =
   | FetchBookingFlightActionInterface
   | SetBookingLoadingStateActionInterface
   | SetBookingPassengerDataActionInterface
-  | SetBookingSeatDataActionInterface;
+  | SetBookingSeatDataActionInterface
+  | CreateBookingTicketActionInterface
+  | SetBookingTicketActionInterface;

@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../models');
 const createTicket = require('../utils/creators/createTicket');
 
+//TODO:
+//create get ticket price endpoint
+//on frontend dont store this buffer price, only display
+
 router.post('/', async (req, res) => {
   try {
     const { passengerData, flightNumber, seatData } = req.body;

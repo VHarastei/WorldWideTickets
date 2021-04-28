@@ -1,5 +1,5 @@
 import { BookingActions, BookingActionsType } from './actionCreators';
-import { BookingState, LoadingState, BookingData } from './contracts/store';
+import { BookingState, LoadingState, BookingData, createTicketState } from './contracts/store';
 import produce, { Draft } from 'immer';
 
 const initialBookingData: BookingData = {
@@ -10,7 +10,9 @@ const initialBookingData: BookingData = {
 const initialState: BookingState = {
   bookingFlight: undefined,
   bookingData: initialBookingData,
+  bookingTicket: undefined,
   loadingState: LoadingState.NEVER,
+  createTicketState: createTicketState.NEVER,
 };
 
 export const bookingReducer = produce((draft: Draft<BookingState>, action: BookingActions) => {
@@ -31,6 +33,14 @@ export const bookingReducer = produce((draft: Draft<BookingState>, action: Booki
       break;
     case BookingActionsType.SET_BOOKING_SEAT_DATA:
       draft.bookingData.seatData = action.payload;
+      break;
+    case BookingActionsType.CREATE_BOOKING_TICKET:
+      draft.bookingTicket = undefined;
+      draft.createTicketState = createTicketState.CREATING;
+      break;
+    case BookingActionsType.SET_BOOKING_TICKET:
+      draft.bookingTicket = action.payload;
+      draft.createTicketState = createTicketState.CREATED;
       break;
   }
 }, initialState);

@@ -2,6 +2,8 @@ import { Button, Divider, makeStyles, Paper, Typography } from '@material-ui/cor
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FlightIcon from '@material-ui/icons/Flight';
+import { Rating } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   flightCard: {
@@ -83,6 +85,19 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.9,
     margin: '0px 10px',
   },
+  flightCardRating: {
+    display: 'flex',
+    padding: 10,
+  },
+  flightCardRatingIcon: {
+    transform: 'rotate(90deg)',
+    opacity: 0.25,
+  },
+  flightCardRatingText: {
+    margin: '0px 10px',
+    fontSize: 18,
+    fontWeight: 650,
+  },
 }));
 
 type PropsType = {
@@ -95,10 +110,11 @@ type PropsType = {
   arrivalDate: string;
   arrivalCity: string;
   price?: number;
+  companyName: string;
+  companyRating?: number;
 };
 
 export const FlightCard: React.FC<PropsType> = ({
-  companyLogoSrc,
   //flight,
   flightNumber,
   airplane,
@@ -107,6 +123,9 @@ export const FlightCard: React.FC<PropsType> = ({
   arrivalDate,
   arrivalCity,
   price,
+  companyLogoSrc,
+  companyName,
+  companyRating,
 }) => {
   const classes = useStyles();
 
@@ -124,6 +143,15 @@ export const FlightCard: React.FC<PropsType> = ({
 
   return (
     <Paper className={classes.flightCard}>
+      {companyRating && (
+        <div className={classes.flightCardRating}>
+          <FlightIcon className={classes.flightCardRatingIcon} />
+          <Typography className={classes.flightCardRatingText}>{companyName}</Typography>
+          <Rating defaultValue={companyRating} precision={0.5} readOnly color="primary" />
+        </div>
+      )}
+      {price && <Divider />}
+
       <div className={classes.flightCardContent}>
         <div>
           <img src={companyLogoSrc} alt="companyLogo" className={classes.flightCardCompanyLogo} />

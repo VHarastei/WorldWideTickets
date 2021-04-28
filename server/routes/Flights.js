@@ -55,7 +55,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/booking/:flightNumber', async (req, res) => {
+router.get('/:flightNumber', async (req, res) => {
   try {
     const flightNumber = req.params.flightNumber;
 

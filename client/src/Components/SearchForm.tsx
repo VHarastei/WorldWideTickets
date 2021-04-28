@@ -3,8 +3,11 @@ import { Field, Form, Formik } from 'formik';
 import queryString from 'query-string';
 //import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import * as Yup from 'yup';
+import { FetchFlightPayload } from '../services/api/flightsApi';
+import { fetchFlights } from '../store/ducks/flights/actionCreators';
 import { SearchTextField } from './SearchTextField';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +53,7 @@ export const SearchForm = () => {
   if (!Object.keys(parsed).length) {
     parsed = { whereFrom: '', whereTo: '', departureDate: '', arrivalDate: '' };
   }
+  const dispatch = useDispatch();
 
   return (
     <div className={classes.formContainer}>
@@ -58,6 +62,8 @@ export const SearchForm = () => {
         initialValues={parsed}
         onSubmit={(formData) => {
           const { arrivalDate, ...newData } = formData;
+
+          dispatch(fetchFlights(newData as FetchFlightPayload));
           history.push({
             pathname: '/search/results',
             search: queryString.stringify(newData),

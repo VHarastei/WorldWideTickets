@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { FetchFlightPayload } from '../../../services/api/flightsApi';
 import { FlightsState, LoadingState } from './contracts/store';
 
 export enum FlightsActionsType {
@@ -14,6 +15,7 @@ export interface SetFlightsActionInterface extends Action<FlightsActionsType> {
 
 export interface FetchFlightsActionInterface extends Action<FlightsActionsType> {
   type: FlightsActionsType.FETCH_FLIGHTS;
+  payload: FetchFlightPayload;
 }
 
 export interface SetFlightsLoadingStateActionInterface extends Action<FlightsActionsType> {
@@ -21,16 +23,17 @@ export interface SetFlightsLoadingStateActionInterface extends Action<FlightsAct
   payload: LoadingState;
 }
 
-export const SetFlights = (payload: FlightsState['items']): SetFlightsActionInterface => ({
+export const setFlights = (payload: FlightsState['items']): SetFlightsActionInterface => ({
   type: FlightsActionsType.SET_FLIGHTS,
   payload,
 });
 
-export const FetchFlights = (): FetchFlightsActionInterface => ({
+export const fetchFlights = (payload: FetchFlightPayload): FetchFlightsActionInterface => ({
   type: FlightsActionsType.FETCH_FLIGHTS,
+  payload,
 });
 
-export const SetFlightsLoadingState = (
+export const setFlightsLoadingState = (
   payload: LoadingState
 ): SetFlightsLoadingStateActionInterface => ({
   type: FlightsActionsType.SET_LOADING_STATE,

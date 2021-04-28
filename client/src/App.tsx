@@ -10,7 +10,7 @@ function App() {
       <Route path="/search">
         <Search />
       </Route>
-      <Route path="/booking/:flightId">
+      <Route path="/booking/:flightNumber">
         <Booking />
       </Route>
       <Route path="/">

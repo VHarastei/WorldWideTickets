@@ -1,3 +1,4 @@
+import { FlightAirplane } from './../../flights/contracts/store';
 import { Flight } from '../../flights/contracts/store';
 
 export enum LoadingState {
@@ -7,48 +8,32 @@ export enum LoadingState {
   NEVER = 'NEVER',
 }
 
-export interface BookingFlight extends Flight {
-  seats: FlightSeats;
+export enum createTicketState {
+  CREATED = 'CREATED',
+  CREATING = 'CREATING',
+  ERROR = 'ERROR',
+  NEVER = 'NEVER',
 }
 
-export interface FlightSeats {
-  economy: FlightSeat[];
-  business: FlightSeat[];
-  first: FlightSeat[];
+//type FlightWithoutPrice = Omit<Flight, 'lowestTicketPrice'>;
+
+export interface BookingFlight extends Omit<Flight, 'lowestTicketPrice'> {
+  Airplane: FlightAirplaneWithSeats;
 }
 
-// i know...
-interface FlightSeat {
-  0: boolean;
-  1: boolean;
-  2: boolean;
-  3: boolean;
-  4: boolean;
-  5: boolean;
-  6: boolean;
-  7: boolean;
-  8: boolean;
-  9: boolean;
-  10: boolean;
-  11: boolean;
-  12: boolean;
-  13: boolean;
-  14: boolean;
-  15: boolean;
-  16: boolean;
-  17: boolean;
-  18: boolean;
-  19: boolean;
-  20: boolean;
+interface FlightAirplaneWithSeats extends FlightAirplane {
+  model: string;
+  Seats: FlightSeat[];
 }
 
-export interface BookingData {
-  passengerData?: PassengerData;
-  seatData?: SeatData;
+export interface FlightSeat {
+  seatClass: SeatClass;
+  seatNumber: number;
+  seatStatus: boolean;
 }
 
 export interface SeatData {
-  seat: number;
+  seatNumber: number;
   seatClass: SeatClass;
 }
 
@@ -57,14 +42,32 @@ export type SeatClass = 'economy' | 'business' | 'first';
 export interface PassengerData {
   firstName: string;
   lastName: string;
-  nationality: string;
+  country: string;
   dateOfBirth: string;
-  email: string;
   phone: string;
+  email: string;
 }
 
+interface BookingSeatData extends SeatData {
+  flightNumber?: string;
+}
+export interface BookingData {
+  passengerData?: PassengerData;
+  seatData?: BookingSeatData;
+}
+
+export interface BookingTicket {
+  flight: Omit<Flight, 'lowestTicketPrice' | 'arrivalDate' | 'distance'>;
+  passenger: {
+    firstName: string;
+    lastName: string;
+  };
+  seat: SeatData;
+}
 export interface BookingState {
   bookingFlight?: BookingFlight;
   bookingData: BookingData;
+  bookingTicket?: BookingTicket;
   loadingState: LoadingState;
+  createTicketState: createTicketState;
 }

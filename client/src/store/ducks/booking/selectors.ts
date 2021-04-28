@@ -1,23 +1,23 @@
-// import { RootState } from '../../store';
-// import { createSelector } from 'reselect';
-// import { LoadingState, SeatClass } from './contracts/store';
+import { RootState } from '../../store';
+import { createSelector } from 'reselect';
+import { LoadingState, SeatClass } from './contracts/store';
 
-// export const selectBooking = (state: RootState) => state.booking;
+export const selectBooking = (state: RootState) => state.booking;
 
-// export const selectBookingFlight = createSelector(
-//   selectBooking,
-//   (booking) => booking.bookingFlight
-// );
+export const selectBookingFlight = createSelector(
+  selectBooking,
+  (booking) => booking.bookingFlight
+);
 
-// export const selectBookingFlightSeats = createSelector(
-//   selectBookingFlight,
-//   (bookingFlight) => bookingFlight?.seats
-// );
+export const selectBookingFlightSeats = createSelector(
+  selectBookingFlight,
+  (bookingFlight) => bookingFlight?.Airplane.Seats
+);
 
-// export const selectIsFlightLoaded = (state: RootState) =>
-//   selectBooking(state).loadingState === LoadingState.LOADED;
+export const selectIsFlightLoaded = (state: RootState) =>
+  selectBooking(state).loadingState === LoadingState.LOADED;
 
-// export const selectBookingData = createSelector(selectBooking, (booking) => booking.bookingData);
+export const selectBookingData = createSelector(selectBooking, (booking) => booking.bookingData);
 
 // export const selectBookingSeatClass = createSelector(
 //   selectBookingData,
@@ -30,4 +30,6 @@
 //   }
 // };
 
-export default {};
+export const selectBookingCost = () => (state: RootState) => {
+  return 1488;
+};

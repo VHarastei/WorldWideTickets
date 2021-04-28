@@ -20,7 +20,7 @@ interface FlightAirport {
   city: string;
   name: string;
 }
-interface FlightAirplane {
+export interface FlightAirplane {
   model: string;
 }
 interface FlightCompany {

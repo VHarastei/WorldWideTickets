@@ -22,7 +22,7 @@ module.exports = generateFlights = async (amount) => {
 
       const flightTime = distance * 5000;
 
-      const startDate = moment();
+      const startDate = moment().add(30, 'd');
       const endDate = moment(startDate).add(30, 'd').toDate();
 
       const departureDate = momentRandom(endDate, startDate).toDate();

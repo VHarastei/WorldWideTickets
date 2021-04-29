@@ -34,4 +34,5 @@ export function* createTicketRequest({ payload }: CreateBookingTicketActionInter
 
 export function* bookingSaga() {
   yield takeLatest(BookingActionsType.FETCH_BOOKING_FLIGHT, fetchFlightRequest);
+  yield takeLatest(BookingActionsType.CREATE_BOOKING_TICKET, createTicketRequest);
 }

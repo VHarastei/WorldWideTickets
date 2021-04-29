@@ -30,7 +30,7 @@ module.exports = generateTickets = async () => {
 
       const ticketPrice = Math.round(
         ticketClassPrice[seat.seatClass] +
-          (airplane.Flight.distance * airplane.Flight.Company.rating) / 20
+          (airplane.Flight.distance * airplane.Flight.Company.rating) / 30
       );
 
       const ticket = {

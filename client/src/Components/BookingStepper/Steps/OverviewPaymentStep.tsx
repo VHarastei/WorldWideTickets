@@ -1,24 +1,33 @@
-import { createStyles, makeStyles, Paper, TextField, Theme, Typography } from '@material-ui/core';
+import {
+  CircularProgress,
+  createStyles,
+  makeStyles,
+  Paper,
+  TextField,
+  Theme,
+  Typography
+} from '@material-ui/core';
 import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
+import FlightLandIcon from '@material-ui/icons/FlightLand';
+import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import LanguageIcon from '@material-ui/icons/Language';
+import LinearScaleIcon from '@material-ui/icons/LinearScale';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PaymentOutlinedIcon from '@material-ui/icons/PaymentOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import valid from 'card-validator';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputMask from 'react-input-mask';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { createBookingTicket } from '../../../store/ducks/booking/actionCreators';
+import { BookingApi } from '../../../services/api/bookingApi';
 import { BookingFlight } from '../../../store/ducks/booking/contracts/store';
 import {
-  selectBookingCost,
-  selectBookingData,
-  //selectBookingSeatClass,
+  selectBookingData
 } from '../../../store/ducks/booking/selectors';
 import { FlightCard } from '../../FlightCard';
 
@@ -117,18 +126,21 @@ export type PaymentData = {
 export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, nextStep }) => {
   const classes = useStyles();
 
-  //const seatClass = useSelector(selectBookingSeatClass);
-  //const totalCost = useSelector(selectBookingCost(seatClass));
-  const totalCost = 228;
+  const [ticketPrice, setTicketPrice] = useState(0);
   const bookingData = useSelector(selectBookingData);
   const { passengerData, seatData } = bookingData;
 
   useEffect(() => {
-    createBookingTicket(bookingData);
-  }, []);
+    //createBookingTicket(bookingData);
+
+    if (flight && seatData) {
+      BookingApi.getPrice(flight.flightNumber, seatData.seatClass).then((price) =>
+        setTicketPrice(price)
+      );
+    }
+  }, [flight, seatData?.seatClass]);
 
   if (!flight) return null;
-
   return (
     <div>
       <Paper className={classes.content}>
@@ -139,6 +151,24 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
             <BusinessOutlinedIcon color="primary" />
             <Typography className={classes.contentArticleData}>
               Flight company: {flight.Company.name}
+            </Typography>
+          </div>
+          <div className={classes.contentArticle}>
+            <LinearScaleIcon color="primary" />
+            <Typography className={classes.contentArticleData}>
+              Flight distance: {flight.distance} km
+            </Typography>
+          </div>
+          <div className={classes.contentArticle}>
+            <FlightTakeoffIcon color="primary" />
+            <Typography className={classes.contentArticleData}>
+              Departure airport: {flight.departureAirport.name}
+            </Typography>
+          </div>
+          <div className={classes.contentArticle}>
+            <FlightLandIcon color="primary" />
+            <Typography className={classes.contentArticleData}>
+              Arrival airport: {flight.arrivalAirport.name}
             </Typography>
           </div>
 
@@ -201,14 +231,26 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
             <div className={classes.contentArticle}>
               <PaymentOutlinedIcon color="primary" />
               <Typography className={classes.contentArticleData}>
-                Total cost: <b>{totalCost} USD</b>
+                Total price:
+                <b>
+                  {ticketPrice ? (
+                    ` ${ticketPrice} USD`
+                  ) : (
+                    <CircularProgress
+                      size={18}
+                      color="primary"
+                      thickness={5}
+                      style={{ marginLeft: 8 }}
+                    />
+                  )}
+                </b>
               </Typography>
             </div>
             <Formik
               validationSchema={paymentSchema}
               innerRef={formRef}
               initialValues={{ cardNumber: '', expiryDate: '', cvc: '' } as PaymentData}
-              onSubmit={(passData: PaymentData, { setSubmitting }) => {
+              onSubmit={(payData: PaymentData, { setSubmitting }) => {
                 setSubmitting(false);
                 nextStep();
               }}
@@ -315,3 +357,6 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
     </div>
   );
 };
+function getPrice(flightNumber: string | undefined, seatClass: string) {
+  throw new Error('Function not implemented.');
+}

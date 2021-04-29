@@ -10,8 +10,8 @@ const initialBookingData: BookingData = {
 const initialState: BookingState = {
   bookingFlight: undefined,
   bookingData: initialBookingData,
-  bookingTicket: undefined,
   loadingState: LoadingState.NEVER,
+  bookingTicket: undefined,
   createTicketState: createTicketState.NEVER,
 };
 

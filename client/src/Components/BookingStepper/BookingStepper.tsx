@@ -77,10 +77,7 @@ export const BookingStepper = () => {
 
   const flight = useSelector(selectBookingFlight);
   const IsFlightLoaded = useSelector(selectIsFlightLoaded);
-  //TODO: move to selectors.ts
-  //const seatClass = useSelector(selectBookingSeatClass);
-  const totalCost = useSelector(selectBookingCost());
-  console.log(flightNumber);
+
   useEffect(() => {
     if (flightNumber) {
       dispatch(fetchBookingFlight(flightNumber));
@@ -157,7 +154,7 @@ export const BookingStepper = () => {
                   className={classes.link}
                 >
                   <Button variant="contained" color="primary" onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? `Pay ${totalCost} USD` : 'Next'}
+                    {activeStep === steps.length - 1 ? `Pay` : 'Next'}
                   </Button>
                 </Link>
               </div>

@@ -10,4 +10,5 @@ module.exports = createTicket = async (seatNumber, seatClass, price, FlightId, P
   };
 
   const ticket = await db.Ticket.create(ticketData);
+  return ticket;
 };

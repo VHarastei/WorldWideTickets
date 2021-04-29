@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
 
     flights.map((flight) => {
       const ticketPrice = Math.round(
-        lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 20
+        lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 30
       );
       flight.setDataValue('lowestTicketPrice', ticketPrice);
     });
@@ -61,9 +61,7 @@ router.get('/:flightNumber', async (req, res) => {
 
     const flight = await Flight.findOne({
       attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
-      where: {
-        flightNumber: flightNumber,
-      },
+      where: { flightNumber: flightNumber },
       order: [[Airplane, Seat, 'seatNumber', 'ASC']],
       include: [
         { model: Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },

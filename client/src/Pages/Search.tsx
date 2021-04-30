@@ -53,9 +53,8 @@ export const Search = () => {
   let parsedQueryString = queryString.parse(useLocation().search) as FetchFlightPayload;
 
   useEffect(() => {
-    //if (!IsFlightsLoaded) {
     dispatch(fetchFlights(parsedQueryString));
-    //}
+
     return () => {
       dispatch(setFlightsLoadingState(LoadingState.NEVER));
     };

@@ -5,7 +5,7 @@ import {
   Paper,
   TextField,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
@@ -26,9 +26,7 @@ import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { BookingApi } from '../../../services/api/bookingApi';
 import { BookingFlight } from '../../../store/ducks/booking/contracts/store';
-import {
-  selectBookingData
-} from '../../../store/ducks/booking/selectors';
+import { selectBookingData } from '../../../store/ducks/booking/selectors';
 import { FlightCard } from '../../FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,7 +95,6 @@ const paymentSchema = Yup.object().shape({
     )
     .test('test-credit-card-expiration-date', 'Invalid Expiration Month', (expirationDate) => {
       if (!expirationDate) return false;
-      const today = new Date().getFullYear().toString().substr(-2);
       const [expMonth] = expirationDate.split('/');
       if (Number(expMonth) > 12) {
         return false;
@@ -131,14 +128,12 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
   const { passengerData, seatData } = bookingData;
 
   useEffect(() => {
-    //createBookingTicket(bookingData);
-
     if (flight && seatData) {
       BookingApi.getPrice(flight.flightNumber, seatData.seatClass).then((price) =>
         setTicketPrice(price)
       );
     }
-  }, [flight, seatData?.seatClass]);
+  }, [flight, seatData]);
 
   if (!flight) return null;
   return (
@@ -230,20 +225,18 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
           <div>
             <div className={classes.contentArticle}>
               <PaymentOutlinedIcon color="primary" />
-              <Typography className={classes.contentArticleData}>
+              <Typography component="div" className={classes.contentArticleData}>
                 Total price:
-                <b>
-                  {ticketPrice ? (
-                    ` ${ticketPrice} USD`
-                  ) : (
-                    <CircularProgress
-                      size={18}
-                      color="primary"
-                      thickness={5}
-                      style={{ marginLeft: 8 }}
-                    />
-                  )}
-                </b>
+                {ticketPrice ? (
+                  <b>{` ${ticketPrice} USD`}</b>
+                ) : (
+                  <CircularProgress
+                    size={18}
+                    color="primary"
+                    thickness={5}
+                    style={{ marginLeft: 8 }}
+                  />
+                )}
               </Typography>
             </div>
             <Formik
@@ -357,6 +350,3 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
     </div>
   );
 };
-function getPrice(flightNumber: string | undefined, seatClass: string) {
-  throw new Error('Function not implemented.');
-}

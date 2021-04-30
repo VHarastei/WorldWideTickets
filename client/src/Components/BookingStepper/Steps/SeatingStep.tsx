@@ -77,13 +77,13 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
   const [seat, setSeat] = useState<number | null>(null);
 
   const handleSeat = (event: React.MouseEvent<HTMLElement>, newSeat: number) => {
-    if (seatClass === 'economy' && newSeat > 0 && newSeat <= 20) {
+    if (seatClass === seatClassArr[0] && newSeat > 0 && newSeat <= 20) {
       setSeat(newSeat);
     }
-    if (seatClass === 'business' && newSeat > 20 && newSeat <= 40) {
+    if (seatClass === seatClassArr[1] && newSeat > 20 && newSeat <= 40) {
       setSeat(newSeat);
     }
-    if (seatClass === 'first' && newSeat > 40 && newSeat <= 60) {
+    if (seatClass === seatClassArr[2] && newSeat > 40 && newSeat <= 60) {
       setSeat(newSeat);
     }
   };
@@ -93,6 +93,8 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
     setSeat(null);
     setSeatClass(event.target.value as SeatClass);
   };
+
+  const seatClassArr: SeatClass[] = ['economy', 'business', 'first'];
 
   if (!initialSeats) return null;
 
@@ -173,78 +175,64 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
           </Formik>
         </div>
         <List>
-          <StyledListItem
-            button={false as any}
-            disabled={seatClass !== 'economy'}
-            selected={seatClass === 'economy'}
-          >
-            <Typography variant="h6" color="primary">
-              Economy class
-            </Typography>
-            <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.map((seat, i) => {
-                if (seat.seatClass === 'economy') {
-                  return (
-                    <StyledToggleButton disabled={seat.seatStatus} key={i} value={seat.seatNumber}>
-                      <AirlineSeatReclineNormalIcon />
-                      <span className={classes.seatNumber} style={{ color: 'black' }}>
-                        {seat.seatNumber}
-                      </span>
-                    </StyledToggleButton>
-                  );
-                }
-              })}
-            </StyledToggleButtonGroup>
-          </StyledListItem>
-          <StyledListItem
-            button={false as any}
-            disabled={seatClass !== 'business'}
-            selected={seatClass === 'business'}
-          >
-            <Typography variant="h6" color="primary">
-              Business class
-            </Typography>
-            <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.map((seat, i) => {
-                if (seat.seatClass === 'business') {
-                  return (
-                    <StyledToggleButton disabled={seat.seatStatus} key={i} value={seat.seatNumber}>
-                      <AirlineSeatReclineNormalIcon />
-                      <span className={classes.seatNumber} style={{ color: 'black' }}>
-                        {seat.seatNumber}
-                      </span>
-                    </StyledToggleButton>
-                  );
-                }
-              })}
-            </StyledToggleButtonGroup>
-          </StyledListItem>
-          <StyledListItem
-            button={false as any}
-            disabled={seatClass !== 'first'}
-            selected={seatClass === 'first'}
-          >
-            <Typography variant="h6" color="primary">
-              First class
-            </Typography>
-            <StyledToggleButtonGroup value={seat} exclusive onChange={handleSeat}>
-              {initialSeats.map((seat, i) => {
-                if (seat.seatClass === 'first') {
-                  return (
-                    <StyledToggleButton disabled={seat.seatStatus} key={i} value={seat.seatNumber}>
-                      <AirlineSeatReclineNormalIcon />
-                      <span className={classes.seatNumber} style={{ color: 'black' }}>
-                        {seat.seatNumber}
-                      </span>
-                    </StyledToggleButton>
-                  );
-                }
-              })}
-            </StyledToggleButtonGroup>
-          </StyledListItem>
+          {seatClassArr.map((currentSeatClass) => {
+            return (
+              <SeatsByClass
+                seatClass={seatClass}
+                currentSeatClass={currentSeatClass}
+                choosedSeat={seat}
+                initialSeats={initialSeats}
+                handleSeat={handleSeat}
+              />
+            );
+          })}
         </List>
       </Paper>
     </div>
+  );
+};
+
+type SeatsByClassType = {
+  seatClass: SeatClass;
+  currentSeatClass: SeatClass;
+  choosedSeat: number | null;
+  initialSeats: FlightSeat[];
+  handleSeat: (event: React.MouseEvent<HTMLElement>, newSeat: number) => void;
+};
+
+const SeatsByClass: React.FC<SeatsByClassType> = ({
+  seatClass,
+  currentSeatClass,
+  choosedSeat,
+  initialSeats,
+  handleSeat,
+}) => {
+  const classes = useStyles();
+
+  return (
+    <StyledListItem
+      button={false as any}
+      disabled={seatClass !== currentSeatClass}
+      selected={seatClass === currentSeatClass}
+    >
+      <Typography variant="h6" color="primary">
+        {currentSeatClass[0].toUpperCase() + currentSeatClass.slice(1)} class
+      </Typography>
+      <StyledToggleButtonGroup value={choosedSeat} exclusive onChange={handleSeat}>
+        {initialSeats.map((seat, i) => {
+          if (seat.seatClass === currentSeatClass) {
+            return (
+              <StyledToggleButton disabled={seat.seatStatus} key={i} value={seat.seatNumber}>
+                <AirlineSeatReclineNormalIcon />
+                <span className={classes.seatNumber} style={{ color: 'black' }}>
+                  {seat.seatNumber}
+                </span>
+              </StyledToggleButton>
+            );
+          } else return null;
+        })}
+      </StyledToggleButtonGroup>
+    </StyledListItem>
   );
 };
 

@@ -8,14 +8,12 @@ export enum LoadingState {
   NEVER = 'NEVER',
 }
 
-export enum createTicketState {
+export enum CreateTicketState {
   CREATED = 'CREATED',
   CREATING = 'CREATING',
   ERROR = 'ERROR',
   NEVER = 'NEVER',
 }
-
-//type FlightWithoutPrice = Omit<Flight, 'lowestTicketPrice'>;
 
 export interface BookingFlight extends Omit<Flight, 'lowestTicketPrice'> {
   Airplane: FlightAirplaneWithSeats;
@@ -48,12 +46,10 @@ export interface PassengerData {
   email: string;
 }
 
-interface BookingSeatData extends SeatData {
-  flightNumber?: string;
-}
 export interface BookingData {
+  flightNumber?: string;
   passengerData?: PassengerData;
-  seatData?: BookingSeatData;
+  seatData?: SeatData;
 }
 
 export interface BookingTicket {
@@ -69,5 +65,5 @@ export interface BookingState {
   bookingData: BookingData;
   bookingTicket?: BookingTicket;
   loadingState: LoadingState;
-  createTicketState: createTicketState;
+  createTicketState: CreateTicketState;
 }

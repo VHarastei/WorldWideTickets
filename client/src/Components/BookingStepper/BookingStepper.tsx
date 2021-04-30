@@ -1,4 +1,4 @@
-import { Container, Paper } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -19,14 +19,9 @@ import {
   LoadingState,
   PassengerData,
 } from '../../store/ducks/booking/contracts/store';
-import {
-  selectBookingCost,
-  selectBookingFlight,
-  //selectBookingSeatClass,
-  selectIsFlightLoaded,
-} from '../../store/ducks/booking/selectors';
+import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
 import { LinearPreloader } from '../LinearPreloader';
-//import { DownloadTicketStep } from './Steps/DownloadTicketStep';
+import { DownloadTicketStep } from './Steps/DownloadTicketStep';
 import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
 import { PassengerDetailsStep } from './Steps/PassengerDetailsStep';
 import { SeatingStep } from './Steps/SeatingStep';
@@ -110,9 +105,9 @@ export const BookingStepper = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  // if (activeStep === steps.length) {
-  //   return <DownloadTicketStep />;
-  // }
+  if (activeStep === steps.length) {
+    return <DownloadTicketStep />;
+  }
 
   return (
     <Container className={classes.root}>

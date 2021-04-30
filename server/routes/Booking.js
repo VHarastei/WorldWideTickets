@@ -14,6 +14,7 @@ const getTicketPrice = async (flight, seatClass) => {
 router.post('/', async (req, res) => {
   try {
     const { passengerData, flightNumber, seatData } = req.body;
+
     const passenger = await db.Passenger.create(passengerData);
     const flight = await db.Flight.findOne({
       attributes: ['id', 'flightNumber', 'departureDate', 'arrivalDate', 'distance'],
@@ -28,6 +29,7 @@ router.post('/', async (req, res) => {
 
     const ticketPrice = await getTicketPrice(flight, seatData.seatClass);
 
+    //if (flight) {
     const ticket = await createTicket(
       seatData.seatNumber,
       seatData.seatClass,
@@ -53,8 +55,10 @@ router.post('/', async (req, res) => {
         seatNumber: ticket.seatNumber,
         seatClass: ticket.seatClass,
       },
+      //};
     };
 
+    // change seat status when ticket created
     res.status(201).json(passengerTicket);
   } catch (err) {
     console.log(err);

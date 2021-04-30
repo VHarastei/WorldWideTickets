@@ -1,6 +1,6 @@
-import { RootState } from '../../store';
 import { createSelector } from 'reselect';
-import { LoadingState, SeatClass } from './contracts/store';
+import { RootState } from '../../store';
+import { CreateTicketState, LoadingState } from './contracts/store';
 
 export const selectBooking = (state: RootState) => state.booking;
 
@@ -19,17 +19,10 @@ export const selectIsFlightLoaded = (state: RootState) =>
 
 export const selectBookingData = createSelector(selectBooking, (booking) => booking.bookingData);
 
-// export const selectBookingSeatClass = createSelector(
-//   selectBookingData,
-//   (bookingData) => bookingData.seatData?.seatClass
-// );
+export const selectBookingTicket = createSelector(
+  selectBooking,
+  (booking) => booking.bookingTicket
+);
 
-// export const selectBookingCost = (seatClass: SeatClass | undefined) => (state: RootState) => {
-//   if (seatClass) {
-//     return state.booking.bookingFlight?.cost[seatClass];
-//   }
-// };
-
-export const selectBookingCost = () => (state: RootState) => {
-  return 1488;
-};
+export const selectIsTicketCreated = (state: RootState) =>
+  selectBooking(state).createTicketState === CreateTicketState.CREATED;

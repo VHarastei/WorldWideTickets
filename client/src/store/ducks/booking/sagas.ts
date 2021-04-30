@@ -8,13 +8,14 @@ import {
   setBookingFlight,
   setBookingLoadingState,
   setBookingTicket,
+  setCreateBookingTicketState,
 } from './actionCreators';
-import { BookingState, LoadingState } from './contracts/store';
+import { BookingState, LoadingState, CreateTicketState } from './contracts/store';
 
 export function* fetchFlightRequest({ payload: flightNumber }: FetchBookingFlightActionInterface) {
   try {
     const flight: BookingState['bookingFlight'] = yield call(FlightsApi.fetchFlight, flightNumber);
-    console.log(flight);
+
     yield put(setBookingFlight(flight));
   } catch (err) {
     yield put(setBookingLoadingState(LoadingState.ERROR));
@@ -25,10 +26,9 @@ export function* createTicketRequest({ payload }: CreateBookingTicketActionInter
   try {
     const ticket: BookingState['bookingTicket'] = yield call(BookingApi.createTicket, payload);
 
-    console.log(ticket);
     yield put(setBookingTicket(ticket));
   } catch (err) {
-    yield put(setBookingLoadingState(LoadingState.ERROR));
+    yield put(setCreateBookingTicketState(CreateTicketState.ERROR));
   }
 }
 

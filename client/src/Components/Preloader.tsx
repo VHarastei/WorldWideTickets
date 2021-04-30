@@ -1,8 +1,21 @@
-import { CircularProgress, makeStyles } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 import moment from 'moment';
 import queryString from 'query-string';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import { selectIsFlightsError } from '../store/ducks/flights/selectors';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   preloader: {
@@ -28,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeight: 500,
   },
+  dialogContent: {
+    display: 'flex',
+    justifyContent: 'center',
+    lineHeight: '36px',
+  },
 }));
 
 export const Preloader: React.FC = () => {
@@ -35,9 +53,27 @@ export const Preloader: React.FC = () => {
 
   let parsed = queryString.parse(useLocation().search);
   const depParsedDate = moment(parsed.departureDate).format('D MMMM');
+  const flightsNotFound = useSelector(selectIsFlightsError);
 
   return (
     <div className={classes.preloader}>
+      <Dialog open={flightsNotFound} maxWidth="xs">
+        <DialogTitle style={{ textAlign: 'center' }}>Flights not found</DialogTitle>
+        <DialogContent>
+          <DialogContentText className={classes.dialogContent}>
+            <ErrorOutlineIcon style={{ fontSize: 40, marginRight: 6 }} />
+            No flights were found that match request criteria
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Link to="/" style={{ textDecoration: 'none', width: '100%' }}>
+            <Button variant="contained" color="primary" fullWidth>
+              Go to homepage
+            </Button>
+          </Link>
+        </DialogActions>
+      </Dialog>
+
       <div className={classes.preloaderTitleContainer}>
         <span className={classes.preloaderTitle}>{parsed.whereFrom}</span>
         <span className={classes.preloaderTitle}> — </span>

@@ -74,7 +74,7 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
   const history = useHistory();
   useEffect(() => {
     history.push({ search: `step=${1}` });
-  }, []);
+  }, [history]);
 
   return (
     <div>

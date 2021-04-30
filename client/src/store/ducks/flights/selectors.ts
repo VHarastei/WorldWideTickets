@@ -8,3 +8,9 @@ export const selectFlightsItems = createSelector(selectFlights, (flights) => fli
 
 export const selectIsFlightsLoaded = (state: RootState) =>
   selectFlights(state).loadingState === LoadingState.LOADED;
+
+export const selectIsFlightsLoading = (state: RootState) =>
+  selectFlights(state).loadingState === LoadingState.LOADING;
+
+export const selectIsFlightsError = (state: RootState) =>
+  selectFlights(state).loadingState === LoadingState.ERROR;

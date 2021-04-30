@@ -5,7 +5,7 @@ import {
   PassengerData,
   SeatData,
   BookingData,
-  BookingTicket,
+  CreateTicketState,
 } from './contracts/store';
 
 export enum BookingActionsType {
@@ -16,6 +16,7 @@ export enum BookingActionsType {
   SET_BOOKING_SEAT_DATA = 'booking/SET_BOOKING_SEAT_DATA',
   CREATE_BOOKING_TICKET = 'booking/CREATE_BOOKING_TICKET',
   SET_BOOKING_TICKET = 'booking/SET_BOOKING_TICKET',
+  SET_BOOKING_TICKET_STATE = 'booking/SET_BOOKING_TICKET_STATE',
 }
 
 export interface SetBookingFlightActionInterface extends Action<BookingActionsType> {
@@ -32,6 +33,11 @@ export interface SetBookingLoadingStateActionInterface extends Action<BookingAct
   type: BookingActionsType.SET_LOADING_STATE;
   payload: LoadingState;
 }
+export interface SetCreateBookingTicketStateActionInterface extends Action<BookingActionsType> {
+  type: BookingActionsType.SET_BOOKING_TICKET_STATE;
+  payload: CreateTicketState;
+}
+
 export interface SetBookingPassengerDataActionInterface extends Action<BookingActionsType> {
   type: BookingActionsType.SET_BOOKING_PASSENGER_DATA;
   payload: PassengerData;
@@ -83,6 +89,13 @@ export const setBookingLoadingState = (
   payload,
 });
 
+export const setCreateBookingTicketState = (
+  payload: CreateTicketState
+): SetCreateBookingTicketStateActionInterface => ({
+  type: BookingActionsType.SET_BOOKING_TICKET_STATE,
+  payload,
+});
+
 export const createBookingTicket = (payload: BookingData): CreateBookingTicketActionInterface => ({
   type: BookingActionsType.CREATE_BOOKING_TICKET,
   payload,
@@ -102,4 +115,5 @@ export type BookingActions =
   | SetBookingPassengerDataActionInterface
   | SetBookingSeatDataActionInterface
   | CreateBookingTicketActionInterface
-  | SetBookingTicketActionInterface;
+  | SetBookingTicketActionInterface
+  | SetCreateBookingTicketStateActionInterface;

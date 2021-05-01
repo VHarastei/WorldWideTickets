@@ -175,9 +175,10 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
           </Formik>
         </div>
         <List>
-          {seatClassArr.map((currentSeatClass) => {
+          {seatClassArr.map((currentSeatClass, index) => {
             return (
               <SeatsByClass
+                key={index}
                 seatClass={seatClass}
                 currentSeatClass={currentSeatClass}
                 choosedSeat={seat}

@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       seatNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+          min: 1,
+          max: 60,
+        },
       },
       seatStatus: {
         type: DataTypes.BOOLEAN,

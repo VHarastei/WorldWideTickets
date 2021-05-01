@@ -26,3 +26,6 @@ export const selectBookingTicket = createSelector(
 
 export const selectIsTicketCreated = (state: RootState) =>
   selectBooking(state).createTicketState === CreateTicketState.CREATED;
+
+export const selectIsTicketError = (state: RootState) =>
+  selectBooking(state).createTicketState === CreateTicketState.ERROR;

@@ -15,7 +15,6 @@ router.post('/', async (req, res) => {
   try {
     const { passengerData, flightNumber, seatData } = req.body;
 
-    const passenger = await db.Passenger.create(passengerData);
     const flight = await db.Flight.findOne({
       attributes: ['id', 'flightNumber', 'departureDate', 'arrivalDate', 'distance'],
       where: { flightNumber: flightNumber },
@@ -23,13 +22,32 @@ router.post('/', async (req, res) => {
         { model: db.Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },
         { model: db.Airport, as: 'departureAirport', attributes: ['city', 'name'] },
         { model: db.Company, attributes: ['rating', 'name'] },
-        { model: db.Airplane, attributes: ['model'] },
+        { model: db.Airplane, attributes: ['model', 'id'] },
       ],
     });
+    const passenger = await db.Passenger.create(passengerData);
+
+    const seat = await db.Seat.findOne({
+      where: {
+        AirplaneId: flight.Airplane.id,
+        seatNumber: seatData.seatNumber,
+        seatClass: seatData.seatClass,
+      },
+    });
+
+    if (seat) {
+      seat.seatStatus = true;
+      await seat.save();
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Ticket not created',
+        details: 'Incorrect seatData, seat not found',
+      });
+    }
 
     const ticketPrice = await getTicketPrice(flight, seatData.seatClass);
 
-    //if (flight) {
     const ticket = await createTicket(
       seatData.seatNumber,
       seatData.seatClass,
@@ -55,14 +73,16 @@ router.post('/', async (req, res) => {
         seatNumber: ticket.seatNumber,
         seatClass: ticket.seatClass,
       },
-      //};
     };
 
-    // change seat status when ticket created
     res.status(201).json(passengerTicket);
   } catch (err) {
     console.log(err);
-    res.status(404).send('Ticket not created');
+    res.status(404).json({
+      status: err.parent.code,
+      message: 'Ticket not created',
+      details: err.parent.sqlMessage,
+    });
   }
 });
 

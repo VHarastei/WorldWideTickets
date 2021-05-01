@@ -58,6 +58,7 @@ export const Search = () => {
     return () => {
       dispatch(setFlightsLoadingState(LoadingState.NEVER));
     };
+    // eslint-disable-next-line
   }, [dispatch]);
 
   //deep copy
@@ -88,6 +89,7 @@ export const Search = () => {
       return aInFlDiff > bInFlDiff ? 1 : -1;
     });
   }
+
   return (
     <div className={classes.searchContainer}>
       <Header />

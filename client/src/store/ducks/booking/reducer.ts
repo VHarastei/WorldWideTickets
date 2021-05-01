@@ -44,5 +44,8 @@ export const bookingReducer = produce((draft: Draft<BookingState>, action: Booki
       draft.bookingTicket = action.payload;
       draft.createTicketState = CreateTicketState.CREATED;
       break;
+    case BookingActionsType.SET_BOOKING_TICKET_STATE:
+      draft.createTicketState = action.payload;
+      break;
   }
 }, initialState);

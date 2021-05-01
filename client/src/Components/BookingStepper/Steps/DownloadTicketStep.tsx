@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
+import ErrorIcon from '@material-ui/icons/ErrorOutline';
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import moment from 'moment';
 import React, { useEffect } from 'react';
@@ -19,6 +20,7 @@ import {
   selectBookingData,
   selectBookingTicket,
   selectIsTicketCreated,
+  selectIsTicketError,
 } from '../../../store/ducks/booking/selectors';
 
 const styles = StyleSheet.create({
@@ -300,7 +302,7 @@ export const DownloadTicketStep: React.FC = () => {
 
   const ticket = useSelector(selectBookingTicket);
   const isCreated = useSelector(selectIsTicketCreated);
-
+  const isError = useSelector(selectIsTicketError);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -311,7 +313,15 @@ export const DownloadTicketStep: React.FC = () => {
     <Container className={classes.ticketContainer} maxWidth="sm">
       <Paper className={classes.ticketPaper}>
         <div className={classes.ticketLoadingProgress}>
-          {!isCreated && (
+          {isCreated && !isError ? (
+            <CheckIcon
+              color="primary"
+              className={classes.checkIcon}
+              style={{ opacity: +isCreated }}
+            />
+          ) : isError ? (
+            <ErrorIcon color="error" className={classes.checkIcon} />
+          ) : (
             <CircularProgress
               color="primary"
               size={58}
@@ -319,15 +329,26 @@ export const DownloadTicketStep: React.FC = () => {
               className={classes.loadingIcon}
             />
           )}
-          <CheckIcon
-            color="primary"
-            className={classes.checkIcon}
-            style={{ opacity: +isCreated }}
-          />
         </div>
-        <Typography gutterBottom color="primary" variant="h4" align="center">
-          Payment successful
-        </Typography>
+        {isCreated && !isError ? (
+          <Typography gutterBottom color="primary" variant="h4" align="center">
+            Payment successful
+          </Typography>
+        ) : isError ? (
+          <div>
+            <Typography color="error" variant="h4" align="center">
+              Payment failed
+            </Typography>
+            <Typography gutterBottom color="textSecondary" variant="h6" align="center">
+              Please try again
+            </Typography>
+          </div>
+        ) : (
+          <Typography gutterBottom variant="h4" align="center">
+            Payment processing
+          </Typography>
+        )}
+
         <PDFDownloadLink
           style={{
             textDecoration: 'none',
@@ -337,7 +358,12 @@ export const DownloadTicketStep: React.FC = () => {
           fileName="ticket.pdf"
         >
           {({ blob, url, loading, error }) => (
-            <Button disabled={loading || !isCreated} variant="contained" color="primary" fullWidth>
+            <Button
+              disabled={loading || !isCreated || isError}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
               Download ticket
             </Button>
           )}

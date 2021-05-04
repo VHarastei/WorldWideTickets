@@ -37,17 +37,17 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Flight.associate = (models) => {
-    //Flight.belongsTo(models.Airplane);
-
     Flight.hasOne(models.Airplane, {
       foreignKey: 'FlightId',
     });
-    // Flight.hasMany(models.Airplane, {
+
+    // Flight.hasMany(models.Ticket, {
     //   foreignKey: 'FlightId',
     // });
-    Flight.hasMany(models.Ticket, {
-      foreignKey: 'FlightId',
-    });
+
+    Flight.belongsToMany(models.Ticket, { through: models.TicketFlight });
+    Flight.hasMany(models.TicketFlight);
+
     Flight.belongsTo(models.Airport, {
       foreignKey: 'departureAirportId',
       as: 'departureAirport',
@@ -61,5 +61,17 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  // Flight.addHook('afterCreate', async (flight, options) => {
+  //   // We can use `options.transaction` to perform some other call
+  //   // using the same transaction of the call that triggered this hook
+  //   // await User.update(
+  //   //   { mood: 'sad' },
+  //   //   {
+  //   //     where: {
+  //   //       id: user.id,
+  //   //     },
+  //   //   }
+  //   // );
+  // });
   return Flight;
 };

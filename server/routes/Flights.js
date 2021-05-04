@@ -1,11 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { Flight } = require('../models');
-const { Seat } = require('../models');
-const { Airplane } = require('../models');
-const { Airport } = require('../models');
-const { Company } = require('../models');
-const { Price } = require('../models');
+const { Flight, Seat, Airplane, Airport, Company, Price, Ticket } = require('../models');
+
+const generateTickets = require('../utils/generators/ticketsGenerator');
+
+router.get('/generateBoarding', async (req, res) => {
+  try {
+    const data = await generateTickets();
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(404).send(err);
+  }
+});
 
 router.get('/', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -42,6 +50,35 @@ router.get('/', async (req, res) => {
         lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 30
       );
       flight.setDataValue('lowestTicketPrice', ticketPrice);
+    });
+
+    if (flights.length) {
+      res.status(200).json(flights);
+    } else {
+      res.status(404).send('Flights Not Found');
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(404).send('Flight Search Error');
+  }
+});
+
+router.get('/ticketFlights', async (req, res) => {
+  try {
+    let flights = await Flight.findAll({
+      attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
+      include: [
+        {
+          model: Ticket,
+          through: {
+            attributes: ['price'],
+          },
+        },
+      ],
+      where: {
+        departureAirportId: 4,
+        arrivalAirportId: 7,
+      },
     });
 
     if (flights.length) {

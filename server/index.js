@@ -19,8 +19,16 @@ const bookingRouter = require('./routes/Booking');
 app.use('/flights', flightsRouter);
 app.use('/booking', bookingRouter);
 
-db.sequelize.sync().then(() => {
+const generateTickets = require('./utils/generators/ticketsGenerator');
+const generateFlights = require('./utils/generators/flightsGenerator');
+// { force: true }
+
+db.sequelize.sync({ force: true }).then(() => {
   app.listen(3001, async () => {
+    //generateTickets();
+    //generateFlights(100);
+    //await db.Test.create({ num1: 1488, num2: 1337 });
+
     console.log('Server is running');
   });
 });

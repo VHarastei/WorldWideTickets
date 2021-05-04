@@ -2,16 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const Ticket = sequelize.define(
     'Ticket',
     {
-      seatNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
       seatClass: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      price: {
-        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
@@ -22,9 +14,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Ticket.associate = (models) => {
     Ticket.belongsTo(models.Passenger);
-    Ticket.belongsTo(models.Flight, {
-      foreignKey: 'FlightId',
-    });
+    // Ticket.belongsTo(models.Flight, {
+    //   foreignKey: 'FlightId',
+    // });
+    Ticket.belongsToMany(models.Flight, { through: models.TicketFlight });
+    Ticket.hasMany(models.TicketFlight);
   };
 
   return Ticket;

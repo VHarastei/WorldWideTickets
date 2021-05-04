@@ -25,23 +25,27 @@ module.exports = generateFlights = async (amount) => {
       const startDate = moment().add(30, 'd');
       const endDate = moment(startDate).add(30, 'd').toDate();
 
-      const departureDate = momentRandom(endDate, startDate).toDate();
+      const departureDate = momentRandom(endDate, startDate).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+
       const shiftArrival = Math.round(120 / company.rating);
-      const arrivalDate = moment(departureDate).add(flightTime).add(shiftArrival, 'm').toDate();
+      const arrivalDate = moment(departureDate)
+        .add(flightTime)
+        .add(shiftArrival, 'm')
+        .format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
       const flight = {
         flightNumber: randFlightNumber(),
         distance,
         departureAirportId,
         arrivalAirportId,
-        departureDate: departureDate.toISOString(),
-        arrivalDate: arrivalDate.toISOString(),
+        departureDate: departureDate,
+        arrivalDate: arrivalDate,
         CompanyId,
       };
       flightsArr.push(flight);
-      //db.Flight.create(flight);
     }
-    //console.log(flightsArr);
+    console.log(flightsArr);
+    return flightsArr;
     setTimeout(() => {
       console.log(JSON.stringify(flightsArr));
     }, 3000);
@@ -65,9 +69,9 @@ const calcCrow = (lat1, lon1, lat2, lon2) => {
   return d;
 };
 
-function toRad(Value) {
+const toRad = (Value) => {
   return (Value * Math.PI) / 180;
-}
+};
 
 function randPairId(min, max) {
   const depId = Math.floor(Math.random() * (max - min) + min);

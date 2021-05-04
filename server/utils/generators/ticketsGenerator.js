@@ -4,6 +4,8 @@ const Op = sequelize.Op;
 
 module.exports = generateTickets = async () => {
   const ticketsArr = [];
+  const ticketFlightsArr = [];
+  const boardingPassesArr = [];
   const freeSeats = await db.Seat.findAll({
     where: {
       seatStatus: true,
@@ -30,26 +32,41 @@ module.exports = generateTickets = async () => {
 
       const ticketPrice = Math.round(
         ticketClassPrice[seat.seatClass] +
-          (airplane.Flight.distance * airplane.Flight.Company.rating) / 30
+          (airplane.Flight.distance * airplane.Flight.Company.rating) / 50
       );
 
       const ticket = {
         id: index + 1,
-        seatNumber: seat.seatNumber,
         seatClass: seat.seatClass,
-        price: ticketPrice,
-        FlightId: airplane.Flight.id, // there
         PassengerId: index + 1,
+        //seatNumber: seat.seatNumber,
+        //price: ticketPrice,
+        //FlightId: airplane.Flight.id, // there
       };
-      //await createTicket(seat.seatNumber, seat.seatClass, ticketPrice, airplane.Flight.id, index);
+
+      const ticketFlight = {
+        FlightId: airplane.Flight.id,
+        TicketId: index + 1,
+        price: ticketPrice,
+      };
+
+      const boardingPass = {
+        FlightId: airplane.Flight.id,
+        TicketId: index + 1,
+        seatNumber: seat.seatNumber,
+      };
 
       ticketsArr.push(ticket);
+      ticketFlightsArr.push(ticketFlight);
+      boardingPassesArr.push(boardingPass);
     }
   });
 
-  setTimeout(() => {
-    console.log(JSON.stringify(ticketsArr));
-  }, 10000);
-
-  return ticketsArr;
+  // setTimeout(() => {
+  //   console.dir(ticketsArr, { maxArrayLength: 610 });
+  //   //console.dir(ticketFlightsArr, { maxArrayLength: 610 });
+  //   console.log(JSON.stringify(ticketFlightsArr));
+  // }, 10000);
+  console.log(boardingPassesArr);
+  return boardingPassesArr;
 };

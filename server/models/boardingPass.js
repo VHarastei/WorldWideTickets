@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       seatNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 111,
+        defaultValue: 0,
       },
     },
     {

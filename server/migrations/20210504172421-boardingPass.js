@@ -5,15 +5,10 @@ module.exports = {
     return queryInterface.createTable(
       'BoardingPass',
       {
-        id: {
-          type: Sequelize.DataTypes.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
         seatNumber: {
           type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
+          dedfaultValue: 0,
         },
       },
       {

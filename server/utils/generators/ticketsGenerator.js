@@ -13,7 +13,6 @@ module.exports = generateTickets = async () => {
   });
 
   const ticketClassPrice = await db.Price.findOne();
-
   freeSeats.forEach(async (seat, index) => {
     if (seat.seatStatus === true) {
       airplane = await db.Airplane.findOne({
@@ -45,14 +44,14 @@ module.exports = generateTickets = async () => {
       };
 
       const ticketFlight = {
+        id: index + 1,
         FlightId: airplane.Flight.id,
         TicketId: index + 1,
         price: ticketPrice,
       };
 
       const boardingPass = {
-        FlightId: airplane.Flight.id,
-        TicketId: index + 1,
+        TicketFlightId: index + 1,
         seatNumber: seat.seatNumber,
       };
 
@@ -62,11 +61,12 @@ module.exports = generateTickets = async () => {
     }
   });
 
-  // setTimeout(() => {
-  //   console.dir(ticketsArr, { maxArrayLength: 610 });
-  //   //console.dir(ticketFlightsArr, { maxArrayLength: 610 });
-  //   console.log(JSON.stringify(ticketFlightsArr));
-  // }, 10000);
-  console.log(boardingPassesArr);
+  setTimeout(() => {
+    console.dir(ticketsArr, { maxArrayLength: 610 });
+    //console.dir(ticketFlightsArr, { maxArrayLength: 610 });
+    console.log(JSON.stringify(ticketFlightsArr));
+    console.log(JSON.stringify(boardingPassesArr));
+  }, 10000);
+
   return boardingPassesArr;
 };

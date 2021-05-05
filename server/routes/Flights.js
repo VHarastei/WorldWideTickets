@@ -7,7 +7,7 @@ const generateTickets = require('../utils/generators/ticketsGenerator');
 router.get('/generateBoarding', async (req, res) => {
   try {
     const data = await generateTickets();
-
+    console.log(data);
     res.status(200).json(data);
   } catch (err) {
     console.log(err);

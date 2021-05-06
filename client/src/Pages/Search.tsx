@@ -61,34 +61,44 @@ export const Search = () => {
     // eslint-disable-next-line
   }, [dispatch]);
 
+  const connectedFlights = [];
+
+  // flights?.connectingFlights.forEach((flights) => {
+  //   flights.forEach((firstFlight) => {
+  //     BC.forEach((lastFlight) => {
+  //       connectingFlights.push({ firstFlight, lastFlight });
+  //     });
+  //   });
+  // });
+
   //deep copy
-  const sortedFlights: Flight[] = JSON.parse(JSON.stringify(flights));
+  // const sortedFlights: Flight[] = JSON.parse(JSON.stringify(flights));
 
-  if (sortBy === 'cheapest') {
-    sortedFlights.sort((a, b) => (a.lowestTicketPrice > b.lowestTicketPrice ? 1 : -1));
-  }
-  if (sortBy === 'earliest') {
-    sortedFlights.sort((a, b) => {
-      const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
-      const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
+  // if (sortBy === 'cheapest') {
+  //   sortedFlights.sort((a, b) => (a.lowestTicketPrice > b.lowestTicketPrice ? 1 : -1));
+  // }
+  // if (sortBy === 'earliest') {
+  //   sortedFlights.sort((a, b) => {
+  //     const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
+  //     const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss').format('X');
 
-      return aDepDate > bDepDate ? 1 : -1;
-    });
-  }
-  if (sortBy === 'fastest') {
-    sortedFlights.sort((a, b) => {
-      const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss');
-      const aArrDate = moment(a.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+  //     return aDepDate > bDepDate ? 1 : -1;
+  //   });
+  // }
+  // if (sortBy === 'fastest') {
+  //   sortedFlights.sort((a, b) => {
+  //     const aDepDate = moment(a.departureDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const aArrDate = moment(a.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
 
-      const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss');
-      const bArrDate = moment(b.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const bDepDate = moment(b.departureDate, 'YYYY-MM-DD hh:mm:ss');
+  //     const bArrDate = moment(b.arrivalDate, 'YYYY-MM-DD hh:mm:ss');
 
-      const aInFlDiff = aArrDate.diff(aDepDate);
-      const bInFlDiff = bArrDate.diff(bDepDate);
+  //     const aInFlDiff = aArrDate.diff(aDepDate);
+  //     const bInFlDiff = bArrDate.diff(bDepDate);
 
-      return aInFlDiff > bInFlDiff ? 1 : -1;
-    });
-  }
+  //     return aInFlDiff > bInFlDiff ? 1 : -1;
+  //   });
+  // }
 
   return (
     <div className={classes.searchContainer}>
@@ -112,7 +122,7 @@ export const Search = () => {
                 <Tab value="fastest" label="Fastest" />
               </SearchFiltersTabs>
             </Paper>
-            {sortedFlights.map((flight) => {
+            {/* {sortedFlights.map((flight) => {
               return (
                 <FlightCard
                   key={flight.flightNumber}
@@ -128,7 +138,7 @@ export const Search = () => {
                   companyRating={flight.Company.rating}
                 />
               );
-            })}
+            })} */}
           </Container>
         </div>
       ) : (

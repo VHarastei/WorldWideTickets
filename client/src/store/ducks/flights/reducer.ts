@@ -3,7 +3,7 @@ import produce, { Draft } from 'immer';
 import { FlightsActions, FlightsActionsType } from './actionCreators';
 
 const initialState: FlightsState = {
-  items: [],
+  items: undefined,
   loadingState: LoadingState.NEVER,
 };
 
@@ -13,8 +13,9 @@ export const flightsReducer = produce((draft: Draft<FlightsState>, action: Fligh
       draft.items = action.payload;
       draft.loadingState = LoadingState.LOADED;
       break;
+
     case FlightsActionsType.FETCH_FLIGHTS:
-      draft.items = [];
+      draft.items = undefined;
       draft.loadingState = LoadingState.LOADING;
       break;
     case FlightsActionsType.SET_LOADING_STATE:

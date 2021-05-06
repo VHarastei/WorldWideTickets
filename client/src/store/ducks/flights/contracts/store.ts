@@ -29,7 +29,14 @@ interface FlightCompany {
   rating: number;
 }
 
+export interface Flights {
+  directFlights: Flight[];
+  connectingFlights: {
+    firstFlights: Flight[];
+    lastFlights: Flight[];
+  };
+}
 export interface FlightsState {
-  items: Flight[];
+  items?: Flights;
   loadingState: LoadingState;
 }

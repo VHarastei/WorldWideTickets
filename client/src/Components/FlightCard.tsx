@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'normal',
     overflow: 'visible',
     '&:before': {
+      backgroundColor: theme.palette.primary.main,
+
       position: 'absolute',
       content: '""',
       top: -3,
@@ -61,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
       background: '#ffffff',
     },
     '&:after': {
+      backgroundColor: theme.palette.primary.main,
+
       position: 'absolute',
       content: '""',
       top: -3,
@@ -72,6 +76,19 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: '5px',
       background: '#ffffff',
     },
+  },
+  flightCardContentTimeLineConnection: {
+    backgroundColor: theme.palette.secondary.main,
+    position: 'absolute',
+    content: '""',
+    top: 5,
+    left: 'inherit',
+    right: '50%',
+    width: 7,
+    height: 7,
+    border: 'solid 1px #ced5e2',
+    borderRadius: '5px',
+    background: '#ffffff',
   },
   flightCardSelect: {
     padding: 10,
@@ -101,8 +118,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type PropsType = {
-  companyLogoSrc: string;
-  // flight: string;
   flightNumber: string;
   airplane: string;
   departureDate: string;
@@ -110,12 +125,13 @@ type PropsType = {
   arrivalDate: string;
   arrivalCity: string;
   price?: number;
+  companyLogoSrc: string;
   companyName: string;
   companyRating?: number;
+  connectionCity?: string;
 };
 
 export const FlightCard: React.FC<PropsType> = ({
-  //flight,
   flightNumber,
   airplane,
   departureDate,
@@ -126,6 +142,7 @@ export const FlightCard: React.FC<PropsType> = ({
   companyLogoSrc,
   companyName,
   companyRating,
+  connectionCity,
 }) => {
   const classes = useStyles();
 
@@ -138,8 +155,9 @@ export const FlightCard: React.FC<PropsType> = ({
   const arrParsedDate = formattedArrDate.format('D MMMM YYYY, dddd');
 
   const inFlDiff = formattedArrDate.diff(formattedDepDate);
-  const inFl = moment.utc(inFlDiff).format('H,m').split(',');
-  const inFlightTime = `${inFl[0]}h ${inFl[1]}min`;
+  const inFl = moment.utc(inFlDiff).format('D,H,m').split(',');
+  //const inFlightTime = `${inFl[0]}h ${inFl[1]}min`;
+  const inFlightTime = `${inFl[0] === '1' ? '' : inFl[0] + 'd'} ${inFl[1]}h ${inFl[2]}min`;
 
   return (
     <Paper className={classes.flightCard}>
@@ -171,7 +189,15 @@ export const FlightCard: React.FC<PropsType> = ({
           </div>
           <span className={classes.flightCardContentTimeLineSpan}>
             <hr className={classes.flightCardContentTimeLine}></hr>
+            {connectionCity && <div className={classes.flightCardContentTimeLineConnection}></div>}
           </span>
+          {connectionCity && (
+            <div>
+              <Typography variant="body2" gutterBottom>
+                1 connection: {connectionCity}
+              </Typography>
+            </div>
+          )}
         </div>
         <FlightDate time={arrParsedTime} date={arrParsedDate} city={arrivalCity} />
       </div>

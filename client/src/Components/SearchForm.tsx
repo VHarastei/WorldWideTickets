@@ -49,9 +49,11 @@ export const SearchForm = () => {
   const classes = useStyles();
   let history = useHistory();
 
-  let parsed = queryString.parse(useLocation().search);
+  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightPayload;
+
   if (!Object.keys(parsed).length) {
-    parsed = { whereFrom: '', whereTo: '', departureDate: '', arrivalDate: '' };
+    parsed = { whereFrom: '', whereTo: '', departureDate: '' };
+    //parsed = { whereFrom: '', whereTo: '', departureDate: '', arrivalDate: '' };
   }
   const dispatch = useDispatch();
 
@@ -60,13 +62,11 @@ export const SearchForm = () => {
       <Formik
         validationSchema={searchSchema}
         initialValues={parsed}
-        onSubmit={(formData) => {
-          const { arrivalDate, ...newData } = formData;
-
-          dispatch(fetchFlights(newData as FetchFlightPayload));
+        onSubmit={(formData: FetchFlightPayload) => {
+          dispatch(fetchFlights(formData));
           history.push({
             pathname: '/search/results',
-            search: queryString.stringify(newData),
+            search: queryString.stringify(formData),
           });
         }}
       >

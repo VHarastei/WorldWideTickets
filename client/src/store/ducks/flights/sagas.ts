@@ -6,13 +6,13 @@ import {
   setFlights,
   setFlightsLoadingState,
 } from './actionCreators';
-import { FlightsState, LoadingState } from './contracts/store';
+import { FlightsPayload, LoadingState } from './contracts/store';
 
 export function* fetchFlightsRequest({ payload }: FetchFlightsActionInterface) {
   try {
-    const items: FlightsState['items'] = yield call(FlightsApi.fetchFlights, payload);
+    const flightsPayload: FlightsPayload = yield call(FlightsApi.fetchFlights, payload);
 
-    yield put(setFlights(items));
+    yield put(setFlights(flightsPayload));
   } catch (err) {
     yield put(setFlightsLoadingState(LoadingState.ERROR));
   }

@@ -29,14 +29,22 @@ interface FlightCompany {
   rating: number;
 }
 
+export interface FlightPair {
+  firstFlight: Flight;
+  lastFlight: Flight;
+}
+
 export interface Flights {
   directFlights: Flight[];
-  connectingFlights: {
-    firstFlights: Flight[];
-    lastFlights: Flight[];
-  };
+  connectingFlights: FlightPair[];
 }
+
+export type FlightsPayload = Omit<FlightsState, 'loadingState'>;
+
 export interface FlightsState {
-  items?: Flights;
+  totalItems?: number;
+  totalPages?: number;
+  currentPage?: number;
+  items: Flights;
   loadingState: LoadingState;
 }

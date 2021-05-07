@@ -12,5 +12,10 @@ export const selectIsFlightsLoaded = (state: RootState) =>
 export const selectIsFlightsLoading = (state: RootState) =>
   selectFlights(state).loadingState === LoadingState.LOADING;
 
+export const selectIsFlightsNever = (state: RootState) =>
+  selectFlights(state).loadingState === LoadingState.NEVER;
+
 export const selectIsFlightsError = (state: RootState) =>
   selectFlights(state).loadingState === LoadingState.ERROR;
+
+export const selectTotalPages = (state: RootState) => selectFlights(state).totalPages;

@@ -4,32 +4,46 @@ const { Flight, Seat, Airplane, Airport, Company, Price, Ticket } = require('../
 
 const generateTickets = require('../utils/generators/ticketsGenerator');
 
-router.get('/generateBoarding', async (req, res) => {
-  try {
-    const data = await generateTickets();
-    console.log(data);
-    res.status(200).json(data);
-  } catch (err) {
-    console.log(err);
-    res.status(404).send(err);
-  }
-});
+// router.get('/generateBoarding', async (req, res) => {
+//   try {
+//     const data = await generateTickets();
+//     console.log(data);
+//     res.status(200).json(data);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(404).send(err);
+//   }
+// });
+
+function paginateFlights(array, size, page) {
+  //page counting start with 1
+  return array.slice((page - 1) * size, page * size);
+}
+
+const setLowestTicketPrice = (flight, classPrice) => {
+  const ticketPrice = Math.round(classPrice + (flight.distance * flight.Company.rating) / 50);
+  flight.setDataValue('lowestTicketPrice', ticketPrice);
+};
 
 router.get('/', async (req, res) => {
   try {
     const departureCity = req.query.departureCity;
     const arrivalCity = req.query.arrivalCity;
+    const size = req.query.size;
+    const page = req.query.page;
     // const departureDate = req.query.departureDate;
 
     const departureAirport = await Airport.findOne({ where: { city: departureCity } });
     const arrivalAirport = await Airport.findOne({ where: { city: arrivalCity } });
-    const lowestTicketClassPrice = await Price.findOne({ attributes: ['economy'] });
+
+    const ticketPriceByClass = await Price.findOne({ attributes: ['economy'] });
 
     let allToArrival = await Flight.findAll({
       attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
       include: [
-        { model: Airport, as: 'departureAirport', attributes: ['city', 'name'] },
-        { model: Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },
+        { model: Airport, as: 'departureAirport', attributes: ['city'] },
+        { model: Airport, as: 'arrivalAirport', attributes: ['city'] },
+        { model: Airplane, attributes: ['model'] },
         { model: Company, attributes: { exclude: ['id'] } },
       ],
       where: {
@@ -42,36 +56,32 @@ router.get('/', async (req, res) => {
     //   /     \
     //  A — — — C
     // AC - direct flight
-
-    let AC = [];
-    let AB = [];
-    let BC = [];
+    // fix Paris to Paris
     let BCCities = [];
+    flightsArr = [];
+    let totalItems = 0;
 
     allToArrival.forEach((flight) => {
-      const ticketPrice = Math.round(
-        lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 50
-      );
-      flight.setDataValue('lowestTicketPrice', ticketPrice);
-
+      setLowestTicketPrice(flight, ticketPriceByClass['economy']);
       if (flight.departureAirport.city !== departureCity) {
-        BC.push(flight); //because no need to group flights by city
         BCCities.push(flight.departureAirport.city);
       } else {
-        AC.push(flight);
+        flightsArr.push(flight); // AC
+        totalItems++;
       }
     });
-    uniqueBCCity = [...new Set(BCCities)];
 
+    uniqueBCCity = [...new Set(BCCities)];
     await Promise.all(
       uniqueBCCity.map(async (city) => {
         const cityAirport = await Airport.findOne({ where: { city: city } });
 
-        let ABFlights = await Flight.findAll({
+        const AB = await Flight.findAll({
           attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
           include: [
-            { model: Airport, as: 'departureAirport', attributes: ['city', 'name'] },
-            { model: Airport, as: 'arrivalAirport', attributes: ['city', 'name'] },
+            { model: Airport, as: 'departureAirport', attributes: ['city'] },
+            { model: Airport, as: 'arrivalAirport', attributes: ['city'] },
+            { model: Airplane, attributes: ['model'] },
             { model: Company, attributes: { exclude: ['id'] } },
           ],
           where: {
@@ -79,34 +89,65 @@ router.get('/', async (req, res) => {
             arrivalAirportId: cityAirport.id,
           },
         });
-        if (ABFlights.length) {
-          ABFlights.forEach((flight) => {
-            const ticketPrice = Math.round(
-              lowestTicketClassPrice['economy'] + (flight.distance * flight.Company.rating) / 50
-            );
-            flight.setDataValue('lowestTicketPrice', ticketPrice);
-            AB.push(flight);
+
+        const BC = await Flight.findAll({
+          attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
+          include: [
+            { model: Airport, as: 'departureAirport', attributes: ['city'] },
+            { model: Airport, as: 'arrivalAirport', attributes: ['city'] },
+            { model: Airplane, attributes: ['model'] },
+            { model: Company, attributes: { exclude: ['id'] } },
+          ],
+          where: {
+            departureAirportId: cityAirport.id,
+            arrivalAirportId: arrivalAirport.id,
+          },
+        });
+
+        AB.forEach((firstFlight) => {
+          setLowestTicketPrice(firstFlight, ticketPriceByClass['economy']);
+          BC.forEach((lastFlight) => {
+            setLowestTicketPrice(lastFlight, ticketPriceByClass['economy']);
+            totalItems++;
+            flightsArr.push({ firstFlight, lastFlight }); // AB + BC
           });
-        }
+        });
       })
     );
 
-    // moved to client, because response is too big
-    // const connectingFlights = [];
-    // AB.forEach((flights) => {
-    //   flights.forEach((firstFlight) => {
-    //     BC.forEach((lastFlight) => {
-    //       connectingFlights.push({ firstFlight, lastFlight });
-    //     });
-    //   });
+    const totalPages = Math.ceil(totalItems / size);
+    if (page > totalPages) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Wrong page number',
+        details: 'Page number greater than total pages',
+      });
+    }
+
+    // flightsArr.sort(function (a, b) {
+    //   return 0.5 - Math.random();
     // });
 
+    paginatedFlightsArr = paginateFlights(flightsArr, size, page);
+
+    const structuredFlights = {
+      directFlights: [],
+      connectingFlights: [],
+    };
+
+    paginatedFlightsArr.forEach((flight) => {
+      if (!flight.firstFlight) {
+        structuredFlights.directFlights.push(flight);
+      } else {
+        structuredFlights.connectingFlights.push(flight);
+      }
+    });
+
     const flights = {
-      directFlights: AC,
-      connectingFlights: {
-        firstFlights: AB,
-        lastFlights: BC,
-      },
+      totalItems,
+      totalPages,
+      currentPage: +page,
+      items: structuredFlights,
     };
 
     res.status(200).json(flights);
@@ -147,33 +188,33 @@ router.get('/:flightNumber', async (req, res) => {
   }
 });
 
-router.get('/ticketFlights', async (req, res) => {
-  try {
-    let flights = await Flight.findAll({
-      attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
-      include: [
-        {
-          model: Ticket,
-          through: {
-            attributes: ['price'],
-          },
-        },
-      ],
-      where: {
-        departureAirportId: 4,
-        arrivalAirportId: 7,
-      },
-    });
+// router.get('/ticketFlights', async (req, res) => {
+//   try {
+//     let flights = await Flight.findAll({
+//       attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
+//       include: [
+//         {
+//           model: Ticket,
+//           through: {
+//             attributes: ['price'],
+//           },
+//         },
+//       ],
+//       where: {
+//         departureAirportId: 4,
+//         arrivalAirportId: 7,
+//       },
+//     });
 
-    if (flights.length) {
-      res.status(200).json(flights);
-    } else {
-      res.status(404).send('Flights Not Found');
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(404).send('Flight Search Error');
-  }
-});
+//     if (flights.length) {
+//       res.status(200).json(flights);
+//     } else {
+//       res.status(404).send('Flights Not Found');
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(404).send('Flight Search Error');
+//   }
+// });
 
 module.exports = router;

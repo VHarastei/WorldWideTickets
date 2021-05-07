@@ -1,4 +1,4 @@
-import { Container, makeStyles, Paper, Tab } from '@material-ui/core';
+import { Button, CircularProgress, Container, makeStyles, Paper, Tab } from '@material-ui/core';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,8 +8,13 @@ import { Preloader } from '../Components/Preloader';
 import { SearchFiltersTabs } from '../Components/SearchFiltersTabs';
 import { SearchForm } from '../Components/SearchForm';
 import { fetchFlights, setFlightsLoadingState } from '../store/ducks/flights/actionCreators';
-import { Flight, LoadingState } from '../store/ducks/flights/contracts/store';
-import { selectFlightsItems, selectIsFlightsLoaded } from '../store/ducks/flights/selectors';
+import { Flight, FlightPair, LoadingState } from '../store/ducks/flights/contracts/store';
+import {
+  selectFlightsItems,
+  selectIsFlightsLoaded,
+  selectIsFlightsNever,
+  selectTotalPages,
+} from '../store/ducks/flights/selectors';
 import queryString from 'query-string';
 import { useLocation } from 'react-router';
 import { FetchFlightPayload } from '../services/api/flightsApi';
@@ -49,28 +54,30 @@ export const Search = () => {
 
   const flights = useSelector(selectFlightsItems);
   const IsFlightsLoaded = useSelector(selectIsFlightsLoaded);
+  const IsFlightsNever = useSelector(selectIsFlightsNever);
+  const totalPages = useSelector(selectTotalPages);
 
-  let parsedQueryString = queryString.parse(useLocation().search) as FetchFlightPayload;
+  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightPayload;
+
+  const [page, setPage] = React.useState<number>(1);
+
+  const fetchFlightsPayload: FetchFlightPayload = {
+    whereFrom: parsed.whereFrom,
+    whereTo: parsed.whereTo,
+    page,
+  };
 
   useEffect(() => {
-    dispatch(fetchFlights(parsedQueryString));
+    dispatch(fetchFlights(fetchFlightsPayload));
 
     return () => {
-      dispatch(setFlightsLoadingState(LoadingState.NEVER));
+      //dispatch(setFlightsLoadingState(LoadingState.NEVER));
     };
     // eslint-disable-next-line
-  }, [dispatch]);
-
-  const connectedFlights = [];
-
-  // flights?.connectingFlights.forEach((flights) => {
-  //   flights.forEach((firstFlight) => {
-  //     BC.forEach((lastFlight) => {
-  //       connectingFlights.push({ firstFlight, lastFlight });
-  //     });
-  //   });
-  // });
-
+  }, [dispatch, page]);
+  const loadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
   //deep copy
   // const sortedFlights: Flight[] = JSON.parse(JSON.stringify(flights));
 
@@ -99,11 +106,11 @@ export const Search = () => {
   //     return aInFlDiff > bInFlDiff ? 1 : -1;
   //   });
   // }
-
+  //if (!flights) return null;
   return (
     <div className={classes.searchContainer}>
       <Header />
-      {IsFlightsLoaded ? (
+      {flights.directFlights.length || flights.connectingFlights.length ? (
         <div>
           <Paper square className={classes.headerForm}>
             <SearchForm />
@@ -122,10 +129,10 @@ export const Search = () => {
                 <Tab value="fastest" label="Fastest" />
               </SearchFiltersTabs>
             </Paper>
-            {/* {sortedFlights.map((flight) => {
+            {flights.directFlights?.map((flight: Flight, index) => {
               return (
                 <FlightCard
-                  key={flight.flightNumber}
+                  key={index}
                   flightNumber={flight.flightNumber}
                   airplane={flight.Airplane.model}
                   departureDate={flight.departureDate}
@@ -138,7 +145,35 @@ export const Search = () => {
                   companyRating={flight.Company.rating}
                 />
               );
-            })} */}
+            })}
+            {flights.connectingFlights?.map((flightPair: FlightPair, index) => {
+              const { firstFlight, lastFlight } = flightPair;
+              return (
+                <FlightCard
+                  key={index}
+                  flightNumber={firstFlight.flightNumber}
+                  airplane={firstFlight.Airplane.model}
+                  departureDate={firstFlight.departureDate}
+                  arrivalDate={lastFlight.arrivalDate}
+                  departureCity={firstFlight.departureAirport.city}
+                  arrivalCity={lastFlight.arrivalAirport.city}
+                  price={firstFlight.lowestTicketPrice + lastFlight.lowestTicketPrice}
+                  companyLogoSrc={firstFlight.Company.logoSrc}
+                  companyName={firstFlight.Company.name}
+                  companyRating={firstFlight.Company.rating}
+                  connectionCity={lastFlight.departureAirport.city}
+                />
+              );
+            })}
+            {totalPages !== page ? (
+              IsFlightsLoaded ? (
+                <Button color="primary" variant="contained" onClick={loadMore}>
+                  Load more
+                </Button>
+              ) : (
+                <CircularProgress />
+              )
+            ) : null}
           </Container>
         </div>
       ) : (

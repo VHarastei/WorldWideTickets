@@ -157,7 +157,7 @@ export const FlightCard: React.FC<PropsType> = ({
   const inFlDiff = formattedArrDate.diff(formattedDepDate);
   const inFl = moment.utc(inFlDiff).format('D,H,m').split(',');
   //const inFlightTime = `${inFl[0]}h ${inFl[1]}min`;
-  const inFlightTime = `${inFl[0] === '1' ? '' : inFl[0] + 'd'} ${inFl[1]}h ${inFl[2]}min`;
+  const inFlightTime = `${inFl[0] === '1' ? '' : +inFl[0] - 1 + 'd'} ${inFl[1]}h ${inFl[2]}min`;
 
   return (
     <Paper className={classes.flightCard}>

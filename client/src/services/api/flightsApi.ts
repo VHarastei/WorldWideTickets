@@ -1,14 +1,6 @@
-import { FlightsPayload, FlightsState } from './../../store/ducks/flights/contracts/store';
-import axios from 'axios';
+import { FlightsPayload } from './../../store/ducks/flights/contracts/store';
 import { BookingState } from '../../store/ducks/booking/contracts/store';
-
-export type FetchFlightPayload = {
-  whereFrom: string;
-  whereTo: string;
-  departureDate?: string;
-  size?: number;
-  page?: number;
-};
+import { FetchFlightsPayload, instanse } from './api';
 
 export const FlightsApi = {
   fetchFlights: ({
@@ -17,15 +9,16 @@ export const FlightsApi = {
     departureDate,
     size = 5,
     page = 1,
-  }: FetchFlightPayload): Promise<FlightsPayload> => {
-    return axios
+    sortBy = 'cheapest',
+  }: FetchFlightsPayload): Promise<FlightsPayload> => {
+    return instanse
       .get(
-        `http://localhost:3001/flights?departureCity=${whereFrom}&arrivalCity=${whereTo}&size=${size}&page=${page}`
+        `flights?departureCity=${whereFrom}&arrivalCity=${whereTo}&size=${size}&page=${page}&sortBy=${sortBy}`
       )
       .then(({ data }) => data);
   },
 
   fetchFlight: (flightNumber: string): Promise<BookingState['bookingFlight']> => {
-    return axios.get(`http://localhost:3001/flights/${flightNumber}`).then(({ data }) => data);
+    return instanse.get(`flights/${flightNumber}`).then(({ data }) => data);
   },
 };

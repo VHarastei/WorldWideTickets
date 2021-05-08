@@ -34,10 +34,12 @@ export interface FlightPair {
   lastFlight: Flight;
 }
 
-export interface Flights {
-  directFlights: Flight[];
-  connectingFlights: FlightPair[];
-}
+// structured variant
+// export interface Flights {
+//   directFlights: Flight[];
+//   connectingFlights: FlightPair[];
+// }
+export type Flights = (Flight | FlightPair)[];
 
 export type FlightsPayload = Omit<FlightsState, 'loadingState'>;
 

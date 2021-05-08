@@ -1,15 +1,16 @@
-import { FlightsState, LoadingState } from './contracts/store';
-import produce, { castDraft, Draft } from 'immer';
+import produce, { Draft } from 'immer';
 import { FlightsActions, FlightsActionsType } from './actionCreators';
+import { FlightsState, LoadingState } from './contracts/store';
 
 const initialState: FlightsState = {
   totalItems: undefined,
   totalPages: undefined,
   currentPage: undefined,
-  items: {
-    directFlights: [],
-    connectingFlights: [],
-  },
+  items: [],
+  // items: {
+  //   directFlights: [],
+  //   connectingFlights: [],
+  // },
   loadingState: LoadingState.NEVER,
 };
 
@@ -19,18 +20,13 @@ export const flightsReducer = produce((draft: Draft<FlightsState>, action: Fligh
       draft.totalItems = action.payload.totalItems;
       draft.totalPages = action.payload.totalPages;
       draft.currentPage = action.payload.currentPage;
-      draft.items.directFlights = [
-        ...draft.items.directFlights,
-        ...action.payload.items.directFlights,
-      ]; // [...old, new]
-      draft.items.connectingFlights = [
-        ...draft.items.connectingFlights,
-        ...action.payload.items.connectingFlights,
-      ]; // [...old, new]
+      draft.items = [...draft.items, ...action.payload.items];
       draft.loadingState = LoadingState.LOADED;
       break;
     case FlightsActionsType.FETCH_FLIGHTS:
-      //draft.items = undefined;
+      if (draft.loadingState === LoadingState.NEVER) {
+        draft.items = [];
+      }
       draft.loadingState = LoadingState.LOADING;
       break;
     case FlightsActionsType.SET_LOADING_STATE:

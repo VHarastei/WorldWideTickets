@@ -6,8 +6,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import * as Yup from 'yup';
-import { FetchFlightPayload } from '../services/api/flightsApi';
-import { fetchFlights } from '../store/ducks/flights/actionCreators';
+import { FetchFlightsPayload } from '../services/api/api';
+import { fetchFlights, setFlightsLoadingState } from '../store/ducks/flights/actionCreators';
+import { LoadingState } from '../store/ducks/flights/contracts/store';
 import { SearchTextField } from './SearchTextField';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +42,11 @@ const useStyles = makeStyles((theme) => ({
 
 const searchSchema = Yup.object().shape({
   whereFrom: Yup.string().min(2, 'Too Short!').max(30, 'Too Long!').required('Required'),
-  whereTo: Yup.string().min(2, 'Too Short!').max(30, 'Too Long!').required('Required'),
+  whereTo: Yup.string()
+    .min(2, 'Too Short!')
+    .max(30, 'Too Long!')
+    .notOneOf([Yup.ref('whereFrom'), null], 'Destination may not match with departure city')
+    .required('Required'),
   departureDate: Yup.string().required('Required'),
 });
 
@@ -49,7 +54,7 @@ export const SearchForm = () => {
   const classes = useStyles();
   let history = useHistory();
 
-  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightPayload;
+  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightsPayload;
 
   if (!Object.keys(parsed).length) {
     parsed = { whereFrom: '', whereTo: '', departureDate: '' };
@@ -62,7 +67,8 @@ export const SearchForm = () => {
       <Formik
         validationSchema={searchSchema}
         initialValues={parsed}
-        onSubmit={(formData: FetchFlightPayload) => {
+        onSubmit={(formData: FetchFlightsPayload) => {
+          dispatch(setFlightsLoadingState(LoadingState.NEVER));
           dispatch(fetchFlights(formData));
           history.push({
             pathname: '/search/results',

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Flight, Seat, Airplane, Airport, Company, Price, Ticket } = require('../models');
 const moment = require('moment');
+
 const paginateFlights = (array, size, page) => {
   //page counting start with 1
   return array.slice((page - 1) * size, page * size);
@@ -148,9 +149,14 @@ router.get('/', async (req, res) => {
         AB.forEach((firstFlight) => {
           setLowestTicketPrice(firstFlight, ticketPriceByClass['economy']);
           BC.forEach((lastFlight) => {
-            setLowestTicketPrice(lastFlight, ticketPriceByClass['economy']);
-            totalItems++;
-            flights.push({ firstFlight, lastFlight }); // AB + BC
+            const firstFlightArrDate = moment(firstFlight.get('arrivalDate'));
+            const lastFlightDepDate = moment(lastFlight.get('departureDate'));
+            const isAfter = lastFlightDepDate.isAfter(firstFlightArrDate);
+            if (isAfter) {
+              setLowestTicketPrice(lastFlight, ticketPriceByClass['economy']);
+              totalItems++;
+              flights.push({ firstFlight, lastFlight }); // AB + BC
+            }
           });
         });
       })
@@ -183,7 +189,7 @@ router.get('/', async (req, res) => {
 router.get('/:flightNumber', async (req, res) => {
   try {
     const flightNumber = req.params.flightNumber;
-
+    console.log(flightNumber);
     const flight = await Flight.findOne({
       attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
       where: { flightNumber: flightNumber },

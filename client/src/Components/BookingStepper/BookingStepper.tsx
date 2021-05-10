@@ -16,10 +16,12 @@ import {
 } from '../../store/ducks/booking/actionCreators';
 import {
   BookingFlight,
+  BookingFlightPair,
   LoadingState,
   PassengerData,
 } from '../../store/ducks/booking/contracts/store';
 import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
+import { isPair } from '../FlightCard/FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
 import { DownloadTicketStep } from './Steps/DownloadTicketStep';
 import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
@@ -72,7 +74,6 @@ export const BookingStepper = () => {
 
   const flight = useSelector(selectBookingFlight);
   const IsFlightLoaded = useSelector(selectIsFlightLoaded);
-
   useEffect(() => {
     if (flightNumber) {
       dispatch(fetchBookingFlight(flightNumber));
@@ -122,7 +123,8 @@ export const BookingStepper = () => {
           </Stepper>
           <div>
             <Typography className={classes.titleTrip}>
-              {flight?.departureAirport.city} → {flight?.arrivalAirport.city}
+              {/* {isPair(flight)? flight.firstFlight.departureAirport.city + ' → ' + flight?.arrivalAirport.city : flight?.departureAirport.city + ' → ' + flight?.arrivalAirport.city
+              } */}
             </Typography>
 
             <div>
@@ -173,7 +175,7 @@ function getStepContent(
   stepIndex: number,
   formRefs: FormRefsType,
   nextStep: () => void,
-  flight?: BookingFlight
+  flight?: BookingFlight | BookingFlightPair
 ) {
   switch (stepIndex) {
     case 0:
@@ -189,7 +191,7 @@ function getStepContent(
     case 2:
       return (
         <SeatingStep
-          initialSeats={flight?.Airplane.Seats}
+        flight={flight}
           formRef={formRefs.seatingForm}
           nextStep={nextStep}
         />

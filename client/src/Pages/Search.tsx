@@ -3,12 +3,11 @@ import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { FlightCard } from '../Components/FlightCard';
+import { FlightCard } from '../Components/FlightCard/FlightCard';
 import { Header } from '../Components/Header';
 import { Preloader } from '../Components/Preloader';
 import { SearchFiltersTabs } from '../Components/SearchFiltersTabs';
 import { SearchForm } from '../Components/SearchForm';
-
 import { FetchFlightsPayload, SortByType } from '../services/api/api';
 import { fetchFlights, setFlightsLoadingState } from '../store/ducks/flights/actionCreators';
 import { Flight, FlightPair, LoadingState } from '../store/ducks/flights/contracts/store';
@@ -66,8 +65,15 @@ export const Search = () => {
   const [page, setPage] = React.useState<number>(1);
 
   const loadMoreItems = (event: any) => {
-    //console.log(event.target.scrollTop + event.target.clientHeight, event.target.scrollHeight);
-    if (event.target.scrollTop + event.target.clientHeight === event.target.scrollHeight) {
+    // console.log(
+    //   Math.round(event.target.scrollTop + event.target.clientHeight),
+    //   Math.round(event.target.scrollHeight)
+    // );
+
+    if (
+      Math.round(event.target.scrollTop + event.target.clientHeight) ===
+      Math.round(event.target.scrollHeight)
+    ) {
       setPage((prevPage) => {
         if (totalPages !== prevPage) return prevPage + 1;
         else return prevPage;
@@ -101,10 +107,6 @@ export const Search = () => {
     setPage(1);
   }, [parsed.whereFrom, parsed.whereTo, sortBy]);
 
-  const isPair = (flightsPair: Flight | FlightPair): flightsPair is FlightPair => {
-    return (flightsPair as FlightPair).firstFlight !== undefined;
-  };
-
   return (
     <div onScroll={loadMoreItems} className={classes.searchContainer}>
       <Header />
@@ -127,43 +129,9 @@ export const Search = () => {
                 <Tab value="fastest" label="Fastest" />
               </SearchFiltersTabs>
             </Paper>
+
             {flights.map((flight: Flight | FlightPair, index) => {
-              if (!isPair(flight)) {
-                return (
-                  <FlightCard
-                    key={index}
-                    flightNumber={flight.flightNumber}
-                    airplane={flight.Airplane.model}
-                    departureDate={flight.departureDate}
-                    arrivalDate={flight.arrivalDate}
-                    departureCity={flight.departureAirport.city}
-                    arrivalCity={flight.arrivalAirport.city}
-                    price={flight.lowestTicketPrice}
-                    companyLogoSrc={flight.Company.logoSrc}
-                    companyName={flight.Company.name}
-                    companyRating={flight.Company.rating}
-                  />
-                );
-              } else {
-                return (
-                  <FlightCard
-                    key={index}
-                    flightNumber={flight.firstFlight.flightNumber}
-                    airplane={flight.firstFlight.Airplane.model}
-                    departureDate={flight.firstFlight.departureDate}
-                    arrivalDate={flight.lastFlight.arrivalDate}
-                    departureCity={flight.firstFlight.departureAirport.city}
-                    arrivalCity={flight.lastFlight.arrivalAirport.city}
-                    price={
-                      flight.firstFlight.lowestTicketPrice + flight.lastFlight.lowestTicketPrice
-                    }
-                    companyLogoSrc={flight.firstFlight.Company.logoSrc}
-                    companyName={flight.firstFlight.Company.name}
-                    companyRating={flight.firstFlight.Company.rating}
-                    connectionCity={flight.lastFlight.departureAirport.city}
-                  />
-                );
-              }
+              return <FlightCard flight={flight} />;
             })}
             {!IsFlightsLoaded && (
               <CircularProgress

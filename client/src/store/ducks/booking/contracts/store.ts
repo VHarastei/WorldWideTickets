@@ -1,4 +1,4 @@
-import { FlightAirplane } from './../../flights/contracts/store';
+import { FlightAirplane, FlightPair } from './../../flights/contracts/store';
 import { Flight } from '../../flights/contracts/store';
 
 export enum LoadingState {
@@ -15,8 +15,26 @@ export enum CreateTicketState {
   NEVER = 'NEVER',
 }
 
-export interface BookingFlight extends Omit<Flight, 'lowestTicketPrice'> {
+export interface BookingFlight extends Flight {
   Airplane: FlightAirplaneWithSeats;
+}
+
+// type Modify<T, R> = Pick<T, Exclude<keyof T, keyof R>> & R;
+// export type BookingFlightPair = Modify<
+//   FlightPair,
+//   {
+//     firstFlight: {
+//       Airplane: FlightAirplaneWithSeats;
+//     };
+//     lastFlight: {
+//       Airplane: FlightAirplaneWithSeats;
+//     };
+//   }
+// >;
+
+export interface BookingFlightPair {
+  firstFlight: BookingFlight;
+  lastFlight: BookingFlight;
 }
 
 interface FlightAirplaneWithSeats extends FlightAirplane {
@@ -61,7 +79,7 @@ export interface BookingTicket {
   seat: SeatData;
 }
 export interface BookingState {
-  bookingFlight?: BookingFlight;
+  bookingFlight?: BookingFlight | BookingFlightPair;
   bookingData: BookingData;
   bookingTicket?: BookingTicket;
   loadingState: LoadingState;

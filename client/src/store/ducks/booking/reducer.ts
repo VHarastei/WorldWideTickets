@@ -20,7 +20,10 @@ export const bookingReducer = produce((draft: Draft<BookingState>, action: Booki
   switch (action.type) {
     case BookingActionsType.SET_BOOKING_FLIGHT:
       draft.bookingFlight = action.payload;
-      draft.bookingData.flightNumber = action.payload?.flightNumber;
+      // if(draft.bookingFlight.firstFlight) {
+
+      //draft.bookingData.flightNumber = action.payload?.flightNumber;
+      //}
       draft.loadingState = LoadingState.LOADED;
       break;
     case BookingActionsType.FETCH_BOOKING_FLIGHT:

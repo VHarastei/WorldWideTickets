@@ -16,7 +16,13 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setBookingSeatData } from '../../../store/ducks/booking/actionCreators';
-import { FlightSeat, SeatClass, SeatData } from '../../../store/ducks/booking/contracts/store';
+import {
+  BookingFlight,
+  BookingFlightPair,
+  FlightSeat,
+  SeatClass,
+  SeatData,
+} from '../../../store/ducks/booking/contracts/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,13 +70,9 @@ const useStyles = makeStyles((theme: Theme) =>
 type SeatingStepPropsType = {
   formRef: React.RefObject<FormikProps<{}>>;
   nextStep: () => void;
-  initialSeats?: FlightSeat[];
+  flight?: BookingFlight | BookingFlightPair;
 };
-export const SeatingStep: React.FC<SeatingStepPropsType> = ({
-  formRef,
-  nextStep,
-  initialSeats,
-}) => {
+export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep, flight }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -95,7 +97,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
   };
 
   const seatClassArr: SeatClass[] = ['economy', 'business', 'first'];
-
+  let initialSeats = false;
   if (!initialSeats) return null;
 
   return (
@@ -176,16 +178,16 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
         </div>
         <List>
           {seatClassArr.map((currentSeatClass, index) => {
-            return (
-              <SeatsByClass
-                key={index}
-                seatClass={seatClass}
-                currentSeatClass={currentSeatClass}
-                choosedSeat={seat}
-                initialSeats={initialSeats}
-                handleSeat={handleSeat}
-              />
-            );
+            //return (
+            // <SeatsByClass
+            //   key={index}
+            //   seatClass={seatClass}
+            //   currentSeatClass={currentSeatClass}
+            //   choosedSeat={seat}
+            //   initialSeats={initialSeats}
+            //   handleSeat={handleSeat}
+            // />
+            //);
           })}
         </List>
       </Paper>

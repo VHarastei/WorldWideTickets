@@ -14,7 +14,17 @@ import { BookingState, LoadingState, CreateTicketState } from './contracts/store
 
 export function* fetchFlightRequest({ payload: flightNumber }: FetchBookingFlightActionInterface) {
   try {
-    const flight: BookingState['bookingFlight'] = yield call(FlightsApi.fetchFlight, flightNumber);
+    let flight: BookingState['bookingFlight'];
+    let [firstFlightNumber, secondFlightNumber] = flightNumber.split('+');
+
+    if (!secondFlightNumber) {
+      flight = yield call(FlightsApi.fetchFlight, firstFlightNumber);
+    } else {
+      flight = {
+        firstFlight: yield call(FlightsApi.fetchFlight, firstFlightNumber),
+        lastFlight: yield call(FlightsApi.fetchFlight, secondFlightNumber),
+      };
+    }
 
     yield put(setBookingFlight(flight));
   } catch (err) {

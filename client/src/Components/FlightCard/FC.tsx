@@ -1,13 +1,33 @@
-import { Button, Divider, makeStyles, Paper, Typography } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  makeStyles,
+  Paper,
+  Slide,
+  Typography,
+} from '@material-ui/core';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FlightIcon from '@material-ui/icons/Flight';
 import { Rating } from '@material-ui/lab';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { TransitionProps } from '@material-ui/core/transitions';
+import { MoreAboutFlightDialog } from './MoreAboutFlightDialog';
 
 const useStyles = makeStyles((theme) => ({
   flightCard: {
     marginTop: 20,
+  },
+  flightCardInfo: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   flightCardContent: {
     padding: '20px 10px',
@@ -124,9 +144,9 @@ type PropsType = {
   departureCity: string;
   arrivalDate: string;
   arrivalCity: string;
-  price?: number;
   companyLogoSrc: string;
   companyName: string;
+  price?: number;
   companyRating?: number;
   connectionCity?: string;
 };
@@ -161,13 +181,16 @@ export const FlightCard: React.FC<PropsType> = ({
 
   return (
     <Paper className={classes.flightCard}>
-      {companyRating && (
-        <div className={classes.flightCardRating}>
-          <FlightIcon className={classes.flightCardRatingIcon} />
-          <Typography className={classes.flightCardRatingText}>{companyName}</Typography>
-          <Rating defaultValue={companyRating} precision={0.5} readOnly color="primary" />
-        </div>
-      )}
+      <div className={classes.flightCardInfo}>
+        {companyRating && (
+          <div className={classes.flightCardRating}>
+            <FlightIcon className={classes.flightCardRatingIcon} />
+            <Typography className={classes.flightCardRatingText}>{companyName}</Typography>
+            <Rating defaultValue={companyRating} precision={0.5} readOnly color="primary" />
+          </div>
+        )}
+        {/* <MoreAboutFlightDialog /> */}
+      </div>
       {price && <Divider />}
 
       <div className={classes.flightCardContent}>

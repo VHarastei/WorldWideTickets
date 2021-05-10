@@ -25,9 +25,9 @@ import InputMask from 'react-input-mask';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { BookingApi } from '../../../services/api/bookingApi';
-import { BookingFlight } from '../../../store/ducks/booking/contracts/store';
+import { BookingFlight, BookingFlightPair } from '../../../store/ducks/booking/contracts/store';
 import { selectBookingData } from '../../../store/ducks/booking/selectors';
-import { FlightCard } from '../../FlightCard';
+import { FlightCard } from '../../FlightCard/FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -109,7 +109,7 @@ const paymentSchema = Yup.object().shape({
 });
 
 type PropsType = {
-  flight?: BookingFlight;
+  flight?: BookingFlight | BookingFlightPair;
   formRef: React.RefObject<FormikProps<PaymentData>>;
   nextStep: () => void;
 };
@@ -129,9 +129,9 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
 
   useEffect(() => {
     if (flight && seatData) {
-      BookingApi.getPrice(flight.flightNumber, seatData.seatClass).then((price) =>
-        setTicketPrice(price)
-      );
+      // BookingApi.getPrice(flight.flightNumber, seatData.seatClass).then((price) =>
+      //   setTicketPrice(price)
+      // );
     }
   }, [flight, seatData]);
 
@@ -145,30 +145,30 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
           <div className={classes.contentArticle}>
             <BusinessOutlinedIcon color="primary" />
             <Typography className={classes.contentArticleData}>
-              Flight company: {flight.Company.name}
+              {/* Flight company: {flight.Company.name} */}
             </Typography>
           </div>
           <div className={classes.contentArticle}>
             <LinearScaleIcon color="primary" />
             <Typography className={classes.contentArticleData}>
-              Flight distance: {flight.distance} km
+              {/* Flight distance: {flight.distance} km */}
             </Typography>
           </div>
           <div className={classes.contentArticle}>
             <FlightTakeoffIcon color="primary" />
             <Typography className={classes.contentArticleData}>
-              Departure airport: {flight.departureAirport.name}
+              {/* Departure airport: {flight.departureAirport.name} */}
             </Typography>
           </div>
           <div className={classes.contentArticle}>
             <FlightLandIcon color="primary" />
             <Typography className={classes.contentArticleData}>
-              Arrival airport: {flight.arrivalAirport.name}
+              {/* Arrival airport: {flight.arrivalAirport.name} */}
             </Typography>
           </div>
 
           <div className={classes.contentFlight}>
-            <FlightCard
+            {/* <FlightCard
               flightNumber={flight.flightNumber}
               airplane={flight.Airplane.model}
               departureDate={flight.departureDate}
@@ -177,7 +177,7 @@ export const OverviewPaymentStep: React.FC<PropsType> = ({ flight, formRef, next
               arrivalCity={flight.arrivalAirport.city}
               companyLogoSrc={flight.Company.logoSrc}
               companyName={flight.Company.name}
-            />
+            /> */}
           </div>
         </div>
         <div>

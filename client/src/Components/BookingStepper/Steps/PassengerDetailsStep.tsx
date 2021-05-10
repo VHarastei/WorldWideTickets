@@ -8,8 +8,12 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { setBookingPassengerData } from '../../../store/ducks/booking/actionCreators';
-import { BookingFlight, PassengerData } from '../../../store/ducks/booking/contracts/store';
-import { FlightCard } from '../../FlightCard';
+import {
+  BookingFlight,
+  BookingFlightPair,
+  PassengerData,
+} from '../../../store/ducks/booking/contracts/store';
+import { FlightCard } from '../../FlightCard/FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +64,7 @@ const passengerDetailsSchema = Yup.object().shape({
 type PassengerDetailsPropsType = {
   formRef: React.RefObject<FormikProps<PassengerData>>;
   nextStep: () => void;
-  flight?: BookingFlight;
+  flight?: BookingFlight | BookingFlightPair;
 };
 
 export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
@@ -81,7 +85,7 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
       <Paper className={classes.passDetailsPaper}>
         <Typography className={classes.passDetailsPaperHeader}>Trip summary</Typography>
         <div style={{ margin: -20 }}>
-          {flight && (
+          {/* {flight && (
             <FlightCard
               flightNumber={flight.flightNumber}
               airplane={flight.Airplane.model}
@@ -93,7 +97,7 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
               companyName={flight.Company.name}
               companyRating={flight.Company.rating}
             />
-          )}
+          )} */}
         </div>
       </Paper>
       <Paper className={classes.passDetailsPaper}>

@@ -65,7 +65,7 @@ export interface PassengerData {
 }
 
 export interface BookingData {
-  flightNumber?: string;
+  flightNumber?: string[];
   passengerData?: PassengerData;
   seatData?: SeatData;
 }

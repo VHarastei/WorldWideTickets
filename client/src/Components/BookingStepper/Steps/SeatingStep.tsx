@@ -14,7 +14,7 @@ import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineN
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setBookingSeatData } from '../../../store/ducks/booking/actionCreators';
 import {
   BookingFlight,
@@ -23,6 +23,7 @@ import {
   SeatClass,
   SeatData,
 } from '../../../store/ducks/booking/contracts/store';
+import { selectBookingFlightSeats } from '../../../store/ducks/booking/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,8 +98,8 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep,
   };
 
   const seatClassArr: SeatClass[] = ['economy', 'business', 'first'];
-  let initialSeats = false;
-  if (!initialSeats) return null;
+  let flightsSeats = useSelector(selectBookingFlightSeats);
+  if (!flightsSeats) return null;
 
   return (
     <div>
@@ -176,20 +177,22 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep,
             )}
           </Formik>
         </div>
-        <List>
-          {seatClassArr.map((currentSeatClass, index) => {
-            //return (
-            // <SeatsByClass
-            //   key={index}
-            //   seatClass={seatClass}
-            //   currentSeatClass={currentSeatClass}
-            //   choosedSeat={seat}
-            //   initialSeats={initialSeats}
-            //   handleSeat={handleSeat}
-            // />
-            //);
+        <div>
+          {flightsSeats.map((flightSeats) => {
+            return seatClassArr.map((currentSeatClass, index) => {
+              return (
+                <SeatsByClass
+                  key={index}
+                  seatClass={seatClass}
+                  currentSeatClass={currentSeatClass}
+                  choosedSeat={seat}
+                  initialSeats={flightSeats}
+                  handleSeat={handleSeat}
+                />
+              );
+            });
           })}
-        </List>
+        </div>
       </Paper>
     </div>
   );

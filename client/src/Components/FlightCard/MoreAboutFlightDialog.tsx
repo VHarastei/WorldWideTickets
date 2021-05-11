@@ -58,27 +58,15 @@ export const MoreAboutFlightDialog: React.FC<PropsType> = ({ flight }) => {
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
-  let firstArrData, lastDepData;
   let departureCity, arrivalCity;
 
   if (isPair(flight)) {
     departureCity = flight.firstFlight.departureAirport.city;
     arrivalCity = flight.lastFlight.arrivalAirport.city;
-
-    firstArrData = flight.firstFlight.arrivalDate;
-    lastDepData = flight.lastFlight.departureDate;
   } else {
     departureCity = flight.departureAirport.city;
     arrivalCity = flight.arrivalAirport.city;
   }
-  const formattedFirstArrDate = moment(firstArrData, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-  const formattedLastDepDate = moment(lastDepData, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-
-  const diff = formattedLastDepDate.diff(formattedFirstArrDate);
-  const connArr = moment.utc(diff).format('D,H,m').split(',');
-  const connectionTime = `${connArr[0] === '1' ? '' : +connArr[0] - 1 + 'd'} ${connArr[1]}h ${
-    connArr[2]
-  }min`;
 
   return (
     <div className={classes.dialog}>
@@ -116,25 +104,7 @@ export const MoreAboutFlightDialog: React.FC<PropsType> = ({ flight }) => {
           )}
           <span className={classes.dialogTripTitle}>{arrivalCity}</span>
         </DialogContent>
-        <div className={classes.dialogFlightContainer}>
-          {isPair(flight) ? (
-            <div>
-              <FlightCard flight={flight.firstFlight} simplified />
-              <DialogContent>
-                <Typography
-                  variant="h5"
-                  color="textSecondary"
-                  className={classes.dialogConnectionTime}
-                >
-                  Connection time {connectionTime}
-                </Typography>
-              </DialogContent>
-              <FlightCard flight={flight.lastFlight} simplified />
-            </div>
-          ) : (
-            <FlightCard flight={flight} simplified />
-          )}
-        </div>
+        <AboutFlight flight={flight} />
       </Dialog>
     </div>
   );
@@ -146,3 +116,40 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+export const AboutFlight: React.FC<PropsType> = ({ flight }) => {
+  const classes = useStyles();
+
+  let firstArrData, lastDepData;
+
+  if (isPair(flight)) {
+    firstArrData = flight.firstFlight.arrivalDate;
+    lastDepData = flight.lastFlight.departureDate;
+  }
+  const formattedFirstArrDate = moment(firstArrData, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  const formattedLastDepDate = moment(lastDepData, 'YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+  const diff = formattedLastDepDate.diff(formattedFirstArrDate);
+  const connArr = moment.utc(diff).format('D,H,m').split(',');
+  const connectionTime = `${connArr[0] === '1' ? '' : +connArr[0] - 1 + 'd'} ${connArr[1]}h ${
+    connArr[2]
+  }min`;
+
+  return (
+    <div className={classes.dialogFlightContainer}>
+      {isPair(flight) ? (
+        <div>
+          <FlightCard flight={flight.firstFlight} simplified />
+          <DialogContent>
+            <Typography variant="h5" color="textSecondary" className={classes.dialogConnectionTime}>
+              Connection time {connectionTime}
+            </Typography>
+          </DialogContent>
+          <FlightCard flight={flight.lastFlight} simplified />
+        </div>
+      ) : (
+        <FlightCard flight={flight} simplified />
+      )}
+    </div>
+  );
+};

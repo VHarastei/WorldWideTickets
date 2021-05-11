@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { isPair } from '../../../Components/FlightCard/FlightCard';
 import { RootState } from '../../store';
 import { CreateTicketState, LoadingState } from './contracts/store';
 
@@ -9,10 +10,15 @@ export const selectBookingFlight = createSelector(
   (booking) => booking.bookingFlight
 );
 
-export const selectBookingFlightSeats = createSelector(
-  selectBookingFlight,
-  (bookingFlight) => bookingFlight?.Airplane.Seats
-);
+export const selectBookingFlightSeats = createSelector(selectBookingFlight, (bookingFlight) => {
+  if (bookingFlight) {
+    if (isPair(bookingFlight)) {
+      return [bookingFlight.firstFlight.Airplane.Seats, bookingFlight.lastFlight.Airplane.Seats];
+    } else {
+      return [bookingFlight.Airplane.Seats];
+    }
+  }
+});
 
 export const selectIsFlightLoaded = (state: RootState) =>
   selectBooking(state).loadingState === LoadingState.LOADED;

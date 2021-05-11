@@ -189,13 +189,7 @@ function getStepContent(
         />
       );
     case 2:
-      return (
-        <SeatingStep
-        flight={flight}
-          formRef={formRefs.seatingForm}
-          nextStep={nextStep}
-        />
-      );
+      return <SeatingStep flight={flight} formRef={formRefs.seatingForm} nextStep={nextStep} />;
     case 3:
       return (
         <OverviewPaymentStep flight={flight} formRef={formRefs.paymentForm} nextStep={nextStep} />

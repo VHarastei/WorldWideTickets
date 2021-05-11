@@ -13,7 +13,8 @@ import {
   BookingFlightPair,
   PassengerData,
 } from '../../../store/ducks/booking/contracts/store';
-import { FlightCard } from '../../FlightCard/FlightCard';
+import { FlightCard, isPair } from '../../FlightCard/FlightCard';
+import { AboutFlight } from '../../FlightCard/MoreAboutFlightDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +42,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const letterRegExp = /^[A-Za-z]+$/;
 
 const passengerDetailsSchema = Yup.object().shape({
@@ -85,18 +87,14 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
       <Paper className={classes.passDetailsPaper}>
         <Typography className={classes.passDetailsPaperHeader}>Trip summary</Typography>
         <div style={{ margin: -20 }}>
-          {/* {flight && (
-            <FlightCard
-              flightNumber={flight.flightNumber}
-              airplane={flight.Airplane.model}
-              departureDate={flight.departureDate}
-              arrivalDate={flight.arrivalDate}
-              departureCity={flight.departureAirport.city}
-              arrivalCity={flight.arrivalAirport.city}
-              companyLogoSrc={flight.Company.logoSrc}
-              companyName={flight.Company.name}
-              companyRating={flight.Company.rating}
-            />
+          {flight && <AboutFlight flight={flight} />}
+          {/* {flight && isPair(flight) ? (
+            <div>
+              <FlightCard flight={flight.firstFlight} simplified />
+              <FlightCard flight={flight.lastFlight} simplified />
+            </div>
+          ) : (
+            flight && <FlightCard flight={flight} simplified />
           )} */}
         </div>
       </Paper>

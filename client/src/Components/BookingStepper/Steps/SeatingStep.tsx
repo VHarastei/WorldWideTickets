@@ -13,7 +13,7 @@ import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/s
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBookingSeatData } from '../../../store/ducks/booking/actionCreators';
 import {
@@ -24,6 +24,7 @@ import {
   SeatData,
 } from '../../../store/ducks/booking/contracts/store';
 import { selectBookingFlightSeats } from '../../../store/ducks/booking/selectors';
+import { isPair } from '../../FlightCard/FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: 20,
     },
     seatingHeader: {
-      fontSize: 24,
+      fontSize: 20,
       fontWeight: 500,
       paddingBottom: 10,
     },
@@ -65,17 +66,85 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       bottom: -24,
     },
+    seatingInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    seatingInfoDescriptionContainer: {
+      //display: 'flex',
+      maxWidth: 400,
+      textAlign: 'center',
+    },
+    seatingInfoDescription: {
+      width: 200,
+      padding: 16,
+      display: 'inline',
+      margin: 'auto',
+    },
   })
 );
 
 type SeatingStepPropsType = {
-  formRef: React.RefObject<FormikProps<{}>>;
+  flight: BookingFlight | BookingFlightPair;
+  activeStep: number;
   nextStep: () => void;
-  flight?: BookingFlight | BookingFlightPair;
+  handleBack: () => void;
 };
-export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep, flight }) => {
+
+export const SeatingStep: React.FC<SeatingStepPropsType> = ({
+  flight,
+  activeStep,
+  nextStep,
+  handleBack,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  console.log(flight);
+
+  let choosedSeats: SeatData[] = [];
+
+  if (isPair(flight)) {
+    choosedSeats = [
+      { flightNumber: flight.firstFlight.flightNumber, seatNumber: 0, seatClass: 'economy' },
+      { flightNumber: flight.lastFlight.flightNumber, seatNumber: 0, seatClass: 'economy' },
+    ];
+  } else {
+    choosedSeats = [{ flightNumber: flight.flightNumber, seatNumber: 0, seatClass: 'economy' }];
+  }
+
+  const handleChooseSeat = (choosedSeat: SeatData) => {
+    choosedSeats.forEach((defaultSeat, index, arr) => {
+      if (defaultSeat.flightNumber === choosedSeat.flightNumber) {
+        arr[index] = choosedSeat;
+      }
+    });
+    //console.log('push', choosedSeats);
+    //choosedSeats.push(choosedSeat);
+  };
+
+  return (
+    <div>
+      {isPair(flight) ? (
+        <div>
+          <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.firstFlight} />
+          <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.lastFlight} />
+        </div>
+      ) : (
+        <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight} />
+      )}
+    </div>
+  );
+};
+
+type ChooseSeatFormPropsType = {
+  flight: BookingFlight;
+  handleChooseSeat: (choosedSeat: SeatData) => void;
+};
+
+export const ChooseSeatForm: React.FC<ChooseSeatFormPropsType> = ({ flight, handleChooseSeat }) => {
+  const classes = useStyles();
 
   const [seat, setSeat] = useState<number | null>(null);
 
@@ -94,38 +163,21 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep,
 
   const handleChangeSeatClass = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSeat(null);
+    handleChooseSeat({ flightNumber: flight.flightNumber, seatNumber: 0, seatClass: 'economy' });
     setSeatClass(event.target.value as SeatClass);
   };
 
+  if (seat && seatClass) {
+    handleChooseSeat({ flightNumber: flight.flightNumber, seatNumber: seat, seatClass });
+  }
+
   const seatClassArr: SeatClass[] = ['economy', 'business', 'first'];
-  let flightsSeats = useSelector(selectBookingFlightSeats);
-  if (!flightsSeats) return null;
 
   return (
     <div>
       <Paper className={classes.seatingPaper}>
-        <Typography className={classes.seatingHeader}>Select a seat on the map</Typography>
-        <div>
-          <div>
-            <StyledToggleButton>
-              <AirlineSeatReclineNormalIcon />
-            </StyledToggleButton>
-            <span> — free seating</span>
-          </div>
-          <div>
-            <StyledToggleButton selected>
-              <AirlineSeatReclineNormalIcon />
-            </StyledToggleButton>
-            <span> — choosed seating</span>
-          </div>
-          <div>
-            <StyledToggleButton disabled>
-              <AirlineSeatReclineNormalIcon />
-            </StyledToggleButton>
-            <span> — occupied seating</span>
-          </div>
-        </div>
-        <div className={classes.formContainer}>
+        <div className={classes.seatingInfo}>
+          <Typography className={classes.seatingHeader}>Select a seat on the map</Typography>
           <FormControl variant="outlined">
             <InputLabel className={classes.formFieldLabel}>Seat class</InputLabel>
             <Select
@@ -141,56 +193,39 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({ formRef, nextStep,
               <MenuItem value="first">First</MenuItem>
             </Select>
           </FormControl>
-          <Formik
-            innerRef={formRef}
-            initialValues={{}}
-            onSubmit={async (d, { setStatus }) => {
-              if (seat) {
-                const data: SeatData = {
-                  seatNumber: seat,
-                  seatClass,
-                };
-                dispatch(setBookingSeatData(data));
-                nextStep();
-              } else {
-                setStatus({ empty: true });
-              }
-            }}
-          >
-            {({ status = { empty: false } }) => (
-              <Form>
-                <Field
-                  color="primary"
-                  as={TextField}
-                  variant="outlined"
-                  label="Seat"
-                  name="seat"
-                  value={seat !== null ? seat : 'Choose your seat!'}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  className={classes.formField}
-                  error={!!!seat && !!status.empty}
-                  helperText={!!!seat && !!status.empty ? 'You must choose seat!' : ''}
-                />
-              </Form>
-            )}
-          </Formik>
+          <div className={classes.seatingInfoDescriptionContainer}>
+            <div className={classes.seatingInfoDescription}>
+              <StyledToggleButton>
+                <AirlineSeatReclineNormalIcon />
+              </StyledToggleButton>
+              <span> — free seating</span>
+            </div>
+            <div className={classes.seatingInfoDescription}>
+              <StyledToggleButton selected>
+                <AirlineSeatReclineNormalIcon />
+              </StyledToggleButton>
+              <span> — choosed seating</span>
+            </div>
+            <div className={classes.seatingInfoDescription}>
+              <StyledToggleButton disabled>
+                <AirlineSeatReclineNormalIcon />
+              </StyledToggleButton>
+              <span> — occupied seating</span>
+            </div>
+          </div>
         </div>
         <div>
-          {flightsSeats.map((flightSeats) => {
-            return seatClassArr.map((currentSeatClass, index) => {
-              return (
-                <SeatsByClass
-                  key={index}
-                  seatClass={seatClass}
-                  currentSeatClass={currentSeatClass}
-                  choosedSeat={seat}
-                  initialSeats={flightSeats}
-                  handleSeat={handleSeat}
-                />
-              );
-            });
+          {seatClassArr.map((currentSeatClass, index) => {
+            return (
+              <SeatsByClass
+                key={index}
+                seatClass={seatClass}
+                currentSeatClass={currentSeatClass}
+                choosedSeat={seat}
+                initialSeats={flight.Airplane.Seats}
+                handleSeat={handleSeat}
+              />
+            );
           })}
         </div>
       </Paper>

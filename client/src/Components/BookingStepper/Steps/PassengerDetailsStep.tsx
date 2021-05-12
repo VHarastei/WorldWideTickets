@@ -2,10 +2,10 @@ import { Paper, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React, { ChangeEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { setBookingPassengerData } from '../../../store/ducks/booking/actionCreators';
 import {
@@ -13,8 +13,8 @@ import {
   BookingFlightPair,
   PassengerData,
 } from '../../../store/ducks/booking/contracts/store';
-import { FlightCard, isPair } from '../../FlightCard/FlightCard';
 import { AboutFlight } from '../../FlightCard/MoreAboutFlightDialog';
+import { NavigationButtons } from '../NavigationButtons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +38,16 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: 10,
         fontSize: 18,
       },
+    },
+    buttonsContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    backButton: {
+      marginRight: theme.spacing(1),
+    },
+    link: {
+      textDecoration: 'none',
     },
   })
 );
@@ -64,15 +74,17 @@ const passengerDetailsSchema = Yup.object().shape({
 });
 
 type PassengerDetailsPropsType = {
-  formRef: React.RefObject<FormikProps<PassengerData>>;
-  nextStep: () => void;
   flight?: BookingFlight | BookingFlightPair;
+  activeStep: number;
+  nextStep: () => void;
+  handleBack: () => void;
 };
 
 export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
-  formRef,
-  nextStep,
   flight,
+  activeStep,
+  nextStep,
+  handleBack
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -82,45 +94,38 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
     history.push({ search: `step=${1}` });
   }, [history]);
 
+  const params: { flightNumber: string } = useParams();
+  const flightNumber = params.flightNumber;
+
   return (
     <div>
       <Paper className={classes.passDetailsPaper}>
         <Typography className={classes.passDetailsPaperHeader}>Trip summary</Typography>
-        <div style={{ margin: -20 }}>
-          {flight && <AboutFlight flight={flight} />}
-          {/* {flight && isPair(flight) ? (
-            <div>
-              <FlightCard flight={flight.firstFlight} simplified />
-              <FlightCard flight={flight.lastFlight} simplified />
-            </div>
-          ) : (
-            flight && <FlightCard flight={flight} simplified />
-          )} */}
-        </div>
+        <div style={{ margin: -20 }}>{flight && <AboutFlight flight={flight} />}</div>
       </Paper>
-      <Paper className={classes.passDetailsPaper}>
-        <Typography className={classes.passDetailsPaperHeader}>Passenger details</Typography>
-        <Formik
-          validationSchema={passengerDetailsSchema}
-          innerRef={formRef}
-          initialValues={
-            {
-              firstName: '',
-              lastName: '',
-              country: '',
-              dateOfBirth: '',
-              email: '',
-              phone: '',
-            } as PassengerData
-          }
-          onSubmit={(passData: PassengerData, { setSubmitting }) => {
-            dispatch(setBookingPassengerData(passData));
-            setSubmitting(false);
-            nextStep();
-          }}
-        >
-          {({ setFieldValue, errors, touched }) => (
-            <Form>
+
+      <Formik
+        validationSchema={passengerDetailsSchema}
+        initialValues={
+          {
+            firstName: '',
+            lastName: '',
+            country: '',
+            dateOfBirth: '',
+            email: '',
+            phone: '',
+          } as PassengerData
+        }
+        onSubmit={(passData: PassengerData) => {
+          alert('SUBMIT');
+          dispatch(setBookingPassengerData(passData));
+          nextStep();
+        }}
+      >
+        {({ setFieldValue, errors, touched }) => (
+          <Form>
+            <Paper className={classes.passDetailsPaper}>
+              <Typography className={classes.passDetailsPaperHeader}>Passenger details</Typography>
               <div className={classes.passDetailsFormFields}>
                 <Field
                   className={classes.passDetailsFormField}
@@ -233,10 +238,15 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
                   />
                 </div>
               </div>
-            </Form>
-          )}
-        </Formik>
-      </Paper>
+            </Paper>
+            <NavigationButtons
+              handleBack={handleBack}
+              activeStep={activeStep}
+              flightNumber={flightNumber}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

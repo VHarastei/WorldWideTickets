@@ -49,6 +49,7 @@ export interface FlightSeat {
 }
 
 export interface SeatData {
+  flightNumber: string;
   seatNumber: number;
   seatClass: SeatClass;
 }

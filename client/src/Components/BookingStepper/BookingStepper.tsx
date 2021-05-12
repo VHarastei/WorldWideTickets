@@ -23,8 +23,8 @@ import {
 import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
 import { isPair } from '../FlightCard/FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
-import { DownloadTicketStep } from './Steps/DownloadTicketStep';
-import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
+//import { DownloadTicketStep } from './Steps/DownloadTicketStep';
+//import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
 import { PassengerDetailsStep } from './Steps/PassengerDetailsStep';
 import { SeatingStep } from './Steps/SeatingStep';
 
@@ -86,29 +86,17 @@ export const BookingStepper = () => {
   const [activeStep, setActiveStep] = React.useState(1);
   const steps = ['Search', 'Passenger details', 'Seating', 'Overview & Payment'];
 
-  const formRefs: FormRefsType = {
-    passengerDetailsForm: useRef<FormikProps<PassengerData>>(null),
-    seatingForm: useRef<FormikProps<{}>>(null),
-    paymentForm: useRef<FormikProps<PaymentData>>(null),
-  };
-
   const nextStep = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleNext = () => {
-    if (formRefs.passengerDetailsForm.current) formRefs.passengerDetailsForm.current.handleSubmit();
-    if (formRefs.seatingForm.current) formRefs.seatingForm.current.handleSubmit();
-    if (formRefs.paymentForm.current) formRefs.paymentForm.current.handleSubmit();
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  if (activeStep === steps.length) {
-    return <DownloadTicketStep />;
-  }
+  // if (activeStep === steps.length) {
+  //   return <DownloadTicketStep />;
+  // }
 
   return (
     <Container className={classes.root}>
@@ -129,31 +117,7 @@ export const BookingStepper = () => {
 
             <div>
               <div className={classes.content}>
-                {getStepContent(activeStep, formRefs, nextStep, flight)}
-              </div>
-              <div className={classes.buttonsContainer}>
-                <Link
-                  to={`/booking/${flightNumber}?step=${activeStep - 1}`}
-                  className={classes.link}
-                >
-                  <Button
-                    disabled={activeStep === 1}
-                    onClick={handleBack}
-                    className={classes.backButton}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Back
-                  </Button>
-                </Link>
-                <Link
-                  to={`/booking/${flightNumber}?step=${activeStep + 1}`}
-                  className={classes.link}
-                >
-                  <Button variant="contained" color="primary" onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? `Pay` : 'Next'}
-                  </Button>
-                </Link>
+                {flight && getStepContent(activeStep, nextStep, handleBack, flight)}
               </div>
             </div>
           </div>
@@ -165,17 +129,11 @@ export const BookingStepper = () => {
   );
 };
 
-type FormRefsType = {
-  passengerDetailsForm: React.RefObject<FormikProps<PassengerData>>;
-  seatingForm: React.RefObject<FormikProps<{}>>;
-  paymentForm: React.RefObject<FormikProps<PaymentData>>;
-};
-
 function getStepContent(
   stepIndex: number,
-  formRefs: FormRefsType,
   nextStep: () => void,
-  flight?: BookingFlight | BookingFlightPair
+  handleBack: () => void,
+  flight: BookingFlight | BookingFlightPair
 ) {
   switch (stepIndex) {
     case 0:
@@ -184,16 +142,24 @@ function getStepContent(
       return (
         <PassengerDetailsStep
           flight={flight}
-          formRef={formRefs.passengerDetailsForm}
           nextStep={nextStep}
+          handleBack={handleBack}
+          activeStep={stepIndex}
         />
       );
     case 2:
-      return <SeatingStep flight={flight} formRef={formRefs.seatingForm} nextStep={nextStep} />;
-    case 3:
       return (
-        <OverviewPaymentStep flight={flight} formRef={formRefs.paymentForm} nextStep={nextStep} />
+        <SeatingStep
+          flight={flight}
+          nextStep={nextStep}
+          handleBack={handleBack}
+          activeStep={stepIndex}
+        />
       );
+    // case 3:
+    //   return (
+    //     <OverviewPaymentStep flight={flight} formRef={formRefs.paymentForm} nextStep={nextStep} />
+    //   );
     default:
       return 'Unknown step';
   }

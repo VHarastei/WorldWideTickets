@@ -117,7 +117,6 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
           } as PassengerData
         }
         onSubmit={(passData: PassengerData) => {
-          alert('SUBMIT');
           dispatch(setBookingPassengerData(passData));
           nextStep();
         }}

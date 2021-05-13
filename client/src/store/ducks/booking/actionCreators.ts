@@ -45,7 +45,7 @@ export interface SetBookingPassengerDataActionInterface extends Action<BookingAc
 
 export interface SetBookingSeatDataActionInterface extends Action<BookingActionsType> {
   type: BookingActionsType.SET_BOOKING_SEAT_DATA;
-  payload: SeatData;
+  payload: SeatData[];
 }
 
 export interface CreateBookingTicketActionInterface extends Action<BookingActionsType> {
@@ -72,7 +72,7 @@ export const setBookingPassengerData = (
   payload,
 });
 
-export const setBookingSeatData = (payload: SeatData): SetBookingSeatDataActionInterface => ({
+export const setBookingSeatData = (payload: SeatData[]): SetBookingSeatDataActionInterface => ({
   type: BookingActionsType.SET_BOOKING_SEAT_DATA,
   payload,
 });

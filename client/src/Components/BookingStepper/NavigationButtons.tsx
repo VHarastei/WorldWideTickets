@@ -18,12 +18,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type PropsType = {
-  flightNumber: string;
+  handleNext?: () => void;
   handleBack: () => void;
+  flightNumber: string;
   activeStep: number;
 };
 
 export const NavigationButtons: React.FC<PropsType> = ({
+  handleNext,
   flightNumber,
   handleBack,
   activeStep,
@@ -40,7 +42,7 @@ export const NavigationButtons: React.FC<PropsType> = ({
       >
         Back
       </Button>
-      <Button type="submit" variant="contained" color="primary">
+      <Button type="submit" variant="contained" color="primary" onClick={handleNext}>
         {activeStep === 3 ? `Pay` : 'Next'}
         {/* {activeStep === steps.length - 1 ? `Pay` : 'Next'} */}
       </Button>

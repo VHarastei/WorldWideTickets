@@ -111,8 +111,11 @@ export const BookingStepper = () => {
           </Stepper>
           <div>
             <Typography className={classes.titleTrip}>
-              {/* {isPair(flight)? flight.firstFlight.departureAirport.city + ' → ' + flight?.arrivalAirport.city : flight?.departureAirport.city + ' → ' + flight?.arrivalAirport.city
-              } */}
+              {flight && isPair(flight)
+                ? flight.firstFlight.departureAirport.city +
+                  ' → ' +
+                  flight.lastFlight.arrivalAirport.city
+                : flight?.departureAirport.city + ' → ' + flight?.arrivalAirport.city}
             </Typography>
 
             <div>
@@ -138,7 +141,7 @@ function getStepContent(
   switch (stepIndex) {
     case 0:
       return 'Search';
-    case 1:
+    case 2:
       return (
         <PassengerDetailsStep
           flight={flight}
@@ -147,7 +150,7 @@ function getStepContent(
           activeStep={stepIndex}
         />
       );
-    case 2:
+    case 1:
       return (
         <SeatingStep
           flight={flight}

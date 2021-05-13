@@ -6,7 +6,7 @@ import { isPair } from '../../../Components/FlightCard/FlightCard';
 const initialBookingData: BookingData = {
   flightNumber: undefined,
   passengerData: undefined,
-  seatData: undefined,
+  seatData: [],
 };
 
 const initialState: BookingState = {

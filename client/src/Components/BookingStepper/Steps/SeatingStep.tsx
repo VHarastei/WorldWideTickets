@@ -1,21 +1,20 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   FormControl,
   InputLabel,
-  List,
   ListItem,
   MenuItem,
   Paper,
   Select,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import { Field, Form, Formik, FormikProps } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBookingSeatData } from '../../../store/ducks/booking/actionCreators';
+import { useDispatch } from 'react-redux';
 import {
   BookingFlight,
   BookingFlightPair,
@@ -23,12 +22,17 @@ import {
   SeatClass,
   SeatData,
 } from '../../../store/ducks/booking/contracts/store';
-import { selectBookingFlightSeats } from '../../../store/ducks/booking/selectors';
 import { isPair } from '../../FlightCard/FlightCard';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import { useParams } from 'react-router';
+import { NavigationButtons } from '../NavigationButtons';
+import { setBookingSeatData } from '../../../store/ducks/booking/actionCreators';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     seatingPaper: {
+      margin: 'auto',
       marginBottom: 20,
       padding: 20,
     },
@@ -83,6 +87,32 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'inline',
       margin: 'auto',
     },
+    flightAccordion: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      //flexDirection: 'column',
+    },
+    flightAccordionTitle: {
+      lineHeight: '24px',
+      fontSize: 20,
+      fontWeight: 600,
+    },
+    flightAccordionTitleContainer: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    flightAccordionSelectedSeat: {
+      display: 'flex',
+      backgroundColor: '#f4f4f4',
+
+      border: '1px solid',
+      borderRadius: 8,
+      padding: '4px 8px',
+      borderColor: theme.palette.primary.main,
+      marginRight: 6,
+    },
   })
 );
 
@@ -101,39 +131,166 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  console.log(flight);
 
-  let choosedSeats: SeatData[] = [];
+  const params: { flightNumber: string } = useParams();
+  const flightNumber = params.flightNumber;
 
+  let defaultChoosedSeats: SeatData[] = [];
   if (isPair(flight)) {
-    choosedSeats = [
+    defaultChoosedSeats = [
       { flightNumber: flight.firstFlight.flightNumber, seatNumber: 0, seatClass: 'economy' },
       { flightNumber: flight.lastFlight.flightNumber, seatNumber: 0, seatClass: 'economy' },
     ];
   } else {
-    choosedSeats = [{ flightNumber: flight.flightNumber, seatNumber: 0, seatClass: 'economy' }];
+    defaultChoosedSeats = [
+      { flightNumber: flight.flightNumber, seatNumber: 0, seatClass: 'economy' },
+    ];
   }
 
+  const [choosedSeats, setChoosedSeats] = React.useState<SeatData[]>(defaultChoosedSeats);
+
   const handleChooseSeat = (choosedSeat: SeatData) => {
-    choosedSeats.forEach((defaultSeat, index, arr) => {
-      if (defaultSeat.flightNumber === choosedSeat.flightNumber) {
-        arr[index] = choosedSeat;
+    choosedSeats.forEach((defaultSeat) => {
+      // check if new choosedSeat !== prev
+      if (
+        defaultSeat.flightNumber === choosedSeat.flightNumber &&
+        defaultSeat.seatNumber !== choosedSeat.seatNumber
+      ) {
+        setChoosedSeats((prevChoosedSeats) => {
+          return prevChoosedSeats.map((prevDefaultSeat) => {
+            // change the seat that we need
+            if (prevDefaultSeat.flightNumber === choosedSeat.flightNumber) {
+              return choosedSeat;
+            }
+            return prevDefaultSeat;
+          });
+        });
       }
     });
-    //console.log('push', choosedSeats);
-    //choosedSeats.push(choosedSeat);
+  };
+
+  const [chooseSeatErrors, setChooseSeatErrors] = React.useState<number[]>([]);
+  const handleNext = () => {
+    choosedSeats.forEach((seatData, index) => {
+      if (seatData.seatNumber === 0) {
+        if (!chooseSeatErrors.includes(index)) {
+          setChooseSeatErrors((prev) => [...prev, index]);
+        }
+      } else {
+        setChooseSeatErrors((prev) => {
+          if (prev.length > 1) {
+            prev.splice(index, 1);
+            return prev;
+          } else return [];
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (!chooseSeatErrors.length) {
+      console.log('set');
+      //dispatch(setBookingSeatData(choosedSeats));
+      //nextStep();
+    }
+  }, [chooseSeatErrors]);
+  const [expanded, setExpanded] = React.useState<string | false>('panel1');
+
+  const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
     <div>
       {isPair(flight) ? (
         <div>
-          <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.firstFlight} />
-          <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.lastFlight} />
+          <Accordion expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
+            <AccordionSummary>
+              <div className={classes.flightAccordion}>
+                <div>
+                  <Typography gutterBottom variant="subtitle2" color="textSecondary">
+                    Flight 1 of 2
+                  </Typography>
+                  <div className={classes.flightAccordionTitleContainer}>
+                    <img src={flight.firstFlight.Company.logoSrc} width={75} />
+                    <span className={classes.flightAccordionTitle}>
+                      {flight.firstFlight.departureAirport.city +
+                        ' → ' +
+                        flight.firstFlight.arrivalAirport.city}
+                    </span>
+                  </div>
+                </div>
+                {choosedSeats[0].seatNumber !== 0 ? (
+                  <div className={classes.flightAccordionSelectedSeat}>
+                    <CheckCircleIcon color="primary" style={{ marginRight: 6 }} />
+                    <Typography color="primary">
+                      You selected seat {choosedSeats[0].seatNumber}
+                    </Typography>
+                  </div>
+                ) : chooseSeatErrors.includes(0) ? (
+                  <div
+                    className={classes.flightAccordionSelectedSeat}
+                    style={{ borderColor: 'red' }}
+                  >
+                    <ErrorIcon color="error" style={{ marginRight: 6 }} />
+                    <Typography color="error">You must select seat</Typography>
+                  </div>
+                ) : null}
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.firstFlight} />
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion expanded={expanded === 'panel2'} onChange={handleExpand('panel2')}>
+            <AccordionSummary>
+              <div className={classes.flightAccordion}>
+                <div>
+                  <Typography gutterBottom variant="subtitle2" color="textSecondary">
+                    Flight 2 of 2
+                  </Typography>
+                  <div className={classes.flightAccordionTitleContainer}>
+                    <img src={flight.lastFlight.Company.logoSrc} width={75} />
+                    <span className={classes.flightAccordionTitle}>
+                      {flight.lastFlight.departureAirport.city +
+                        ' → ' +
+                        flight.lastFlight.arrivalAirport.city}
+                    </span>
+                  </div>
+                </div>
+                {choosedSeats[1].seatNumber !== 0 ? (
+                  <div className={classes.flightAccordionSelectedSeat}>
+                    <CheckCircleIcon color="primary" style={{ marginRight: 6 }} />
+                    <Typography color="primary">
+                      You selected seat {choosedSeats[1].seatNumber}
+                    </Typography>
+                  </div>
+                ) : chooseSeatErrors.includes(1) ? (
+                  <div
+                    className={classes.flightAccordionSelectedSeat}
+                    style={{ borderColor: 'red' }}
+                  >
+                    <ErrorIcon color="error" style={{ marginRight: 6 }} />
+                    <Typography color="error">You must select seat</Typography>
+                  </div>
+                ) : null}
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight.lastFlight} />
+            </AccordionDetails>
+          </Accordion>
         </div>
       ) : (
         <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight} />
       )}
+      <NavigationButtons
+        handleNext={handleNext}
+        handleBack={handleBack}
+        activeStep={activeStep}
+        flightNumber={flightNumber}
+      />
     </div>
   );
 };
@@ -174,62 +331,60 @@ export const ChooseSeatForm: React.FC<ChooseSeatFormPropsType> = ({ flight, hand
   const seatClassArr: SeatClass[] = ['economy', 'business', 'first'];
 
   return (
-    <div>
-      <Paper className={classes.seatingPaper}>
-        <div className={classes.seatingInfo}>
-          <Typography className={classes.seatingHeader}>Select a seat on the map</Typography>
-          <FormControl variant="outlined">
-            <InputLabel className={classes.formFieldLabel}>Seat class</InputLabel>
-            <Select
-              value={seatClass}
-              onChange={handleChangeSeatClass}
-              variant="outlined"
-              color="primary"
-              label="Seat class"
-              className={classes.formSelect}
-            >
-              <MenuItem value="economy">Economy</MenuItem>
-              <MenuItem value="business">Business</MenuItem>
-              <MenuItem value="first">First</MenuItem>
-            </Select>
-          </FormControl>
-          <div className={classes.seatingInfoDescriptionContainer}>
-            <div className={classes.seatingInfoDescription}>
-              <StyledToggleButton>
-                <AirlineSeatReclineNormalIcon />
-              </StyledToggleButton>
-              <span> — free seating</span>
-            </div>
-            <div className={classes.seatingInfoDescription}>
-              <StyledToggleButton selected>
-                <AirlineSeatReclineNormalIcon />
-              </StyledToggleButton>
-              <span> — choosed seating</span>
-            </div>
-            <div className={classes.seatingInfoDescription}>
-              <StyledToggleButton disabled>
-                <AirlineSeatReclineNormalIcon />
-              </StyledToggleButton>
-              <span> — occupied seating</span>
-            </div>
+    <Paper className={classes.seatingPaper}>
+      <div className={classes.seatingInfo}>
+        <Typography className={classes.seatingHeader}>Select a seat on the map</Typography>
+        <FormControl variant="outlined">
+          <InputLabel className={classes.formFieldLabel}>Seat class</InputLabel>
+          <Select
+            value={seatClass}
+            onChange={handleChangeSeatClass}
+            variant="outlined"
+            color="primary"
+            label="Seat class"
+            className={classes.formSelect}
+          >
+            <MenuItem value="economy">Economy</MenuItem>
+            <MenuItem value="business">Business</MenuItem>
+            <MenuItem value="first">First</MenuItem>
+          </Select>
+        </FormControl>
+        <div className={classes.seatingInfoDescriptionContainer}>
+          <div className={classes.seatingInfoDescription}>
+            <StyledToggleButton>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — free seating</span>
+          </div>
+          <div className={classes.seatingInfoDescription}>
+            <StyledToggleButton selected>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — choosed seating</span>
+          </div>
+          <div className={classes.seatingInfoDescription}>
+            <StyledToggleButton disabled>
+              <AirlineSeatReclineNormalIcon />
+            </StyledToggleButton>
+            <span> — occupied seating</span>
           </div>
         </div>
-        <div>
-          {seatClassArr.map((currentSeatClass, index) => {
-            return (
-              <SeatsByClass
-                key={index}
-                seatClass={seatClass}
-                currentSeatClass={currentSeatClass}
-                choosedSeat={seat}
-                initialSeats={flight.Airplane.Seats}
-                handleSeat={handleSeat}
-              />
-            );
-          })}
-        </div>
-      </Paper>
-    </div>
+      </div>
+      <div>
+        {seatClassArr.map((currentSeatClass, index) => {
+          return (
+            <SeatsByClass
+              key={index}
+              seatClass={seatClass}
+              currentSeatClass={currentSeatClass}
+              choosedSeat={seat}
+              initialSeats={flight.Airplane.Seats}
+              handleSeat={handleSeat}
+            />
+          );
+        })}
+      </div>
+    </Paper>
   );
 };
 

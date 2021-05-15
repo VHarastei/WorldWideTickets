@@ -1,15 +1,12 @@
 import { Container } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { FormikProps } from 'formik';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 import {
   fetchBookingFlight,
   setBookingLoadingState,
@@ -18,15 +15,14 @@ import {
   BookingFlight,
   BookingFlightPair,
   LoadingState,
-  PassengerData,
 } from '../../store/ducks/booking/contracts/store';
 import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
 import { isPair } from '../FlightCard/FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
 //import { DownloadTicketStep } from './Steps/DownloadTicketStep';
 //import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
-import { PassengerDetailsStep } from './Steps/PassengerDetailsStep';
-import { SeatingStep } from './Steps/SeatingStep';
+import { PassengerDetailsStep } from './Steps/PassengerDetailsStep/index';
+import { SeatingStep } from './Steps/SeatingStep/index';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

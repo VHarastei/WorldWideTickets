@@ -1,7 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
@@ -13,7 +10,6 @@ import {
 } from '../../../../store/ducks/booking/contracts/store';
 import { isPair } from '../../../FlightCard/FlightCard';
 import { NavigationButtons } from '../../NavigationButtons';
-import { ChooseSeatForm } from './Components/ChooseSeatForm';
 import { SeatsAccordion } from './Components/SeatsAccordion';
 
 const useStyles = makeStyles((theme: Theme) =>

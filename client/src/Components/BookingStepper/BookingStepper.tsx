@@ -20,7 +20,7 @@ import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/boo
 import { isPair } from '../FlightCard/FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
 //import { DownloadTicketStep } from './Steps/DownloadTicketStep';
-//import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep';
+import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep/index';
 import { PassengerDetailsStep } from './Steps/PassengerDetailsStep/index';
 import { SeatingStep } from './Steps/SeatingStep/index';
 
@@ -137,7 +137,7 @@ function getStepContent(
   switch (stepIndex) {
     case 0:
       return 'Search';
-    case 2:
+    case 1:
       return (
         <PassengerDetailsStep
           flight={flight}
@@ -146,7 +146,7 @@ function getStepContent(
           activeStep={stepIndex}
         />
       );
-    case 1:
+    case 2:
       return (
         <SeatingStep
           flight={flight}
@@ -155,10 +155,15 @@ function getStepContent(
           activeStep={stepIndex}
         />
       );
-    // case 3:
-    //   return (
-    //     <OverviewPaymentStep flight={flight} formRef={formRefs.paymentForm} nextStep={nextStep} />
-    //   );
+    case 3:
+      return (
+        <OverviewPaymentStep
+          flight={flight}
+          nextStep={nextStep}
+          handleBack={handleBack}
+          activeStep={stepIndex}
+        />
+      );
     default:
       return 'Unknown step';
   }

@@ -1,19 +1,20 @@
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
 import React, { ChangeEvent } from 'react';
 import { BookingFlight, SeatData } from '../../../../../store/ducks/booking/contracts/store';
-import { AccordionTitle } from './AccordionTitle';
-import { ChooseSeatForm } from './ChooseSeatForm';
+import { AboutFlight } from '../../../../FlightCard/MoreAboutFlightDialog';
+import { AccordionTitle } from '../../SeatingStep/Components/AccordionTitle';
+import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
+import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
+import { FlightCard } from '../../../../FlightCard/FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     flightAccordion: {
       width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      // display: 'flex',
+      // alignItems: 'center',
+      // justifyContent: 'space-between',
     },
     flightAccordionTitle: {
       lineHeight: '24px',
@@ -33,31 +34,45 @@ const useStyles = makeStyles((theme: Theme) =>
       borderColor: theme.palette.primary.main,
       marginRight: 6,
     },
+    contentSubTitle: {
+      fontSize: 18,
+      fontWeight: 500,
+      //paddingTop: 8,
+    },
+    contentArticle: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '5px 10px',
+    },
+    contentArticleData: {
+      marginLeft: 6,
+      paddingBottom: 2,
+    },
+    seating: {
+      marginBottom: -20,
+      marginLeft: 20,
+    },
   })
 );
 
 type PropsType = {
   flight: BookingFlight;
-  handleChooseSeat: (choosedSeat: SeatData) => void;
   handleExpand: (
     panel: string
   ) => ((event: ChangeEvent<{}>, expanded: boolean) => void) | undefined;
   expanded: string | false;
   index: number;
-  choosedSeat: number;
-  chooseSeatErrors: number[];
   totalItems: number;
+  seatData: SeatData;
 };
 
-export const SeatsAccordion: React.FC<PropsType> = ({
+export const FlightAccordion: React.FC<PropsType> = ({
   flight,
-  handleChooseSeat,
   handleExpand,
   expanded,
   index,
-  choosedSeat,
-  chooseSeatErrors,
   totalItems,
+  seatData,
 }) => {
   const classes = useStyles();
 
@@ -71,26 +86,30 @@ export const SeatsAccordion: React.FC<PropsType> = ({
           <AccordionTitle
             currentItem={index + 1}
             totalItems={totalItems}
-            logoSrc={flight.Company.logoSrc}
             departureCity={flight.departureAirport.city}
             arrivalCity={flight.arrivalAirport.city}
           />
-          {choosedSeat !== 0 ? (
-            <div className={classes.flightAccordionSelectedSeat}>
-              <CheckCircleIcon color="primary" style={{ marginRight: 6 }} />
-              <Typography color="primary">You selected seat {choosedSeat}</Typography>
-            </div>
-          ) : chooseSeatErrors.includes(index) ? (
-            <div className={classes.flightAccordionSelectedSeat} style={{ borderColor: 'red' }}>
-              <ErrorIcon color="error" style={{ marginRight: 6 }} />
-              <Typography color="error">You must select seat</Typography>
-            </div>
-          ) : null}
         </div>
       </AccordionSummary>
-      <AccordionDetails>
-        <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight} />
-      </AccordionDetails>
+      <div>
+        <div className={classes.seating}>
+          <Typography className={classes.contentSubTitle}>Seating</Typography>
+          <div className={classes.contentArticle}>
+            <ClassOutlinedIcon color="primary" />
+            <Typography className={classes.contentArticleData}>
+              Class: {seatData.seatClass}
+            </Typography>
+          </div>
+          <div className={classes.contentArticle}>
+            <AirlineSeatIcon color="primary" />
+            <Typography className={classes.contentArticleData}>
+              Seat: {seatData.seatNumber}
+            </Typography>
+          </div>
+        </div>
+        <FlightCard flight={flight} simplified />
+        {/* <AboutFlight flight={flight} /> */}
+      </div>
     </Accordion>
   );
 };

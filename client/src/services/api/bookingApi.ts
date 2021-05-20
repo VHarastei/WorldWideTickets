@@ -3,7 +3,7 @@ import { BookingState, SeatClass } from '../../store/ducks/booking/contracts/sto
 import { BookingData } from './../../store/ducks/booking/contracts/store';
 
 export const BookingApi = {
-  createTicket: (payload: BookingData): Promise<BookingState['bookingTicket']> => {
+  createTickets: (payload: BookingData): Promise<BookingState['bookingTickets']> => {
     return instanse.post(`booking`, payload).then(({ data }) => data);
   },
   getPrice: (flightNumber: string, seatClass: SeatClass): Promise<number> => {

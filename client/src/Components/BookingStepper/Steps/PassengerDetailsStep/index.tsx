@@ -250,6 +250,3 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
     </div>
   );
 };
-
-
-

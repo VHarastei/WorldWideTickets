@@ -1,5 +1,3 @@
-
-
 export const countryToFlag = (isoCode: string)  =>{
   return typeof String.fromCodePoint !== 'undefined'
     ? isoCode

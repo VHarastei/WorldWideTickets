@@ -1,10 +1,6 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import React, { ChangeEvent } from 'react';
-import { BookingFlight, SeatData } from '../../../../../store/ducks/booking/contracts/store';
-import { ChooseSeatForm } from './ChooseSeatForm';
+import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +39,7 @@ export const AccordionTitle: React.FC<PropsType> = ({
         {`Flight ${currentItem} of ${totalItems}`}
       </Typography>
       <div className={classes.flightAccordionTitleContainer}>
-        {logoSrc && <img src={logoSrc} width={75} />}
+        {logoSrc && <img src={logoSrc} width={75} alt="logo" />}
         <span className={classes.flightAccordionTitle}>{departureCity + ' → ' + arrivalCity}</span>
       </div>
     </div>

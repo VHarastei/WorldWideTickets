@@ -3,14 +3,14 @@ import { BookingApi } from '../../../services/api/bookingApi';
 import { FlightsApi } from '../../../services/api/flightsApi';
 import {
   BookingActionsType,
-  CreateBookingTicketActionInterface,
+  CreateBookingTicketsActionInterface,
   FetchBookingFlightActionInterface,
   setBookingFlight,
   setBookingLoadingState,
-  setBookingTicket,
-  setCreateBookingTicketState,
+  setBookingTickets,
+  setCreateBookingTicketsState,
 } from './actionCreators';
-import { BookingState, LoadingState, CreateTicketState } from './contracts/store';
+import { BookingState, LoadingState, CreateTicketsState } from './contracts/store';
 
 export function* fetchFlightRequest({ payload: flightNumber }: FetchBookingFlightActionInterface) {
   try {
@@ -32,17 +32,17 @@ export function* fetchFlightRequest({ payload: flightNumber }: FetchBookingFligh
   }
 }
 
-export function* createTicketRequest({ payload }: CreateBookingTicketActionInterface) {
+export function* createTicketsRequest({ payload }: CreateBookingTicketsActionInterface) {
   try {
-    const ticket: BookingState['bookingTicket'] = yield call(BookingApi.createTicket, payload);
+    const tickets: BookingState['bookingTickets'] = yield call(BookingApi.createTickets, payload);
 
-    yield put(setBookingTicket(ticket));
+    yield put(setBookingTickets(tickets));
   } catch (err) {
-    yield put(setCreateBookingTicketState(CreateTicketState.ERROR));
+    yield put(setCreateBookingTicketsState(CreateTicketsState.ERROR));
   }
 }
 
 export function* bookingSaga() {
   yield takeLatest(BookingActionsType.FETCH_BOOKING_FLIGHT, fetchFlightRequest);
-  yield takeLatest(BookingActionsType.CREATE_BOOKING_TICKET, createTicketRequest);
+  yield takeLatest(BookingActionsType.CREATE_BOOKING_TICKETS, createTicketsRequest);
 }

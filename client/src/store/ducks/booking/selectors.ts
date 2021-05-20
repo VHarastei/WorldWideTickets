@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { isPair } from '../../../Components/FlightCard/FlightCard';
 import { RootState } from '../../store';
-import { CreateTicketState, LoadingState } from './contracts/store';
+import { CreateTicketsState, LoadingState } from './contracts/store';
 
 export const selectBooking = (state: RootState) => state.booking;
 
@@ -25,13 +25,13 @@ export const selectIsFlightLoaded = (state: RootState) =>
 
 export const selectBookingData = createSelector(selectBooking, (booking) => booking.bookingData);
 
-export const selectBookingTicket = createSelector(
+export const selectBookingTickets = createSelector(
   selectBooking,
-  (booking) => booking.bookingTicket
+  (booking) => booking.bookingTickets
 );
 
-export const selectIsTicketCreated = (state: RootState) =>
-  selectBooking(state).createTicketState === CreateTicketState.CREATED;
+export const selectIsTicketsCreated = (state: RootState) =>
+  selectBooking(state).createTicketsState === CreateTicketsState.CREATED;
 
-export const selectIsTicketError = (state: RootState) =>
-  selectBooking(state).createTicketState === CreateTicketState.ERROR;
+export const selectIsTicketsError = (state: RootState) =>
+  selectBooking(state).createTicketsState === CreateTicketsState.ERROR;

@@ -45,7 +45,7 @@ const searchSchema = Yup.object().shape({
   whereTo: Yup.string()
     .min(2, 'Too Short!')
     .max(30, 'Too Long!')
-    .notOneOf([Yup.ref('whereFrom'), null], 'Destination may not match with departure city')
+    .notOneOf([Yup.ref('whereFrom'), null], 'Destination & departure matched') //'Destination may not match with departure city'
     .required('Required'),
   departureDate: Yup.string().required('Required'),
 });
@@ -54,7 +54,7 @@ export const SearchForm = () => {
   const classes = useStyles();
   let history = useHistory();
 
-  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightsPayload;
+  let parsed = queryString.parse(useLocation().search) as unknown as FetchFlightsPayload;
 
   if (!Object.keys(parsed).length) {
     parsed = { whereFrom: '', whereTo: '', departureDate: '' };
@@ -107,6 +107,7 @@ export const SearchForm = () => {
                 variant="outlined"
                 name="departureDate"
                 type="date"
+                label="Departure date"
                 className={classes.formTextField}
                 InputLabelProps={{
                   shrink: true,
@@ -120,6 +121,7 @@ export const SearchForm = () => {
                 variant="outlined"
                 name="arrivalDate"
                 type="date"
+                label="Arrival date"
                 className={classes.formTextField}
                 InputLabelProps={{
                   shrink: true,

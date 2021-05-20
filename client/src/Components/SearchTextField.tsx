@@ -3,12 +3,10 @@ import { TextField, withStyles } from '@material-ui/core';
 export const SearchTextField = withStyles((theme) => ({
   root: {
     '& label.MuiFormLabel-filled': {
-      //color: theme.palette.secondary.main,
       color: 'white',
       top: -10,
     },
     '& label.Mui-focused': {
-      //color: theme.palette.secondary.main,
       color: 'white',
       top: -10,
     },
@@ -24,7 +22,6 @@ export const SearchTextField = withStyles((theme) => ({
       paddingLeft: 14,
       marginBottom: -22,
     },
-
     '& .MuiOutlinedInput-root': {
       backgroundColor: 'white',
       borderRadius: 8,
@@ -37,6 +34,10 @@ export const SearchTextField = withStyles((theme) => ({
         '& fieldset': {
           borderColor: theme.palette.secondary.main,
         },
+        '& .MuiInputLabel-outlined': {
+          color: 'white',
+          top: -10,
+        },
       },
       '& fieldset': {
         borderWidth: 1,
@@ -45,6 +46,10 @@ export const SearchTextField = withStyles((theme) => ({
     '& .MuiOutlinedInput-input': {
       padding: '12px 14px 14px 5px',
       backgroundColor: 'white',
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      color: 'white',
+      top: -10,
     },
   },
 }))(TextField);

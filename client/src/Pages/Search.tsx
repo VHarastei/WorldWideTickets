@@ -60,19 +60,15 @@ export const Search = () => {
   const IsFlightsLoaded = useSelector(selectIsFlightsLoaded);
   const totalPages = useSelector(selectTotalPages);
 
-  let parsed = (queryString.parse(useLocation().search) as unknown) as FetchFlightsPayload;
+  let parsed = queryString.parse(useLocation().search) as unknown as FetchFlightsPayload;
 
   const [page, setPage] = React.useState<number>(1);
 
   const loadMoreItems = (event: any) => {
-    // console.log(
-    //   Math.round(event.target.scrollTop + event.target.clientHeight),
-    //   Math.round(event.target.scrollHeight)
-    // );
-
     if (
-      Math.round(event.target.scrollTop + event.target.clientHeight) ===
-      Math.round(event.target.scrollHeight)
+      Math.ceil(event.target.scrollTop + event.target.clientHeight) >=
+        Math.floor(event.target.scrollHeight) &&
+      IsFlightsLoaded
     ) {
       setPage((prevPage) => {
         if (totalPages !== prevPage) return prevPage + 1;
@@ -131,16 +127,17 @@ export const Search = () => {
             </Paper>
 
             {flights.map((flight: Flight | FlightPair, index) => {
-              return <FlightCard flight={flight} />;
+              return <FlightCard key={index} flight={flight} />;
             })}
-            {!IsFlightsLoaded && (
-              <CircularProgress
-                thickness={5}
-                size={50}
-                color="primary"
-                className={classes.loadMoreItemsProgress}
-              />
-            )}
+            {!IsFlightsLoaded &&
+              null
+              // <CircularProgress
+              //   thickness={5}
+              //   size={50}
+              //   color="primary"
+              //   className={classes.loadMoreItemsProgress}
+              // />
+            }
           </Container>
         </div>
       ) : (

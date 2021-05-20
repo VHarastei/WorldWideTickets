@@ -1,5 +1,5 @@
 import { BookingActions, BookingActionsType } from './actionCreators';
-import { BookingState, LoadingState, BookingData, CreateTicketState } from './contracts/store';
+import { BookingState, LoadingState, BookingData, CreateTicketsState } from './contracts/store';
 import produce, { Draft } from 'immer';
 import { isPair } from '../../../Components/FlightCard/FlightCard';
 
@@ -13,8 +13,8 @@ const initialState: BookingState = {
   bookingFlight: undefined,
   bookingData: initialBookingData,
   loadingState: LoadingState.NEVER,
-  bookingTicket: undefined,
-  createTicketState: CreateTicketState.NEVER,
+  bookingTickets: [],
+  createTicketsState: CreateTicketsState.NEVER,
 };
 
 export const bookingReducer = produce((draft: Draft<BookingState>, action: BookingActions) => {
@@ -46,16 +46,16 @@ export const bookingReducer = produce((draft: Draft<BookingState>, action: Booki
     case BookingActionsType.SET_BOOKING_SEAT_DATA:
       draft.bookingData.seatData = action.payload;
       break;
-    case BookingActionsType.CREATE_BOOKING_TICKET:
-      draft.bookingTicket = undefined;
-      draft.createTicketState = CreateTicketState.CREATING;
+    case BookingActionsType.CREATE_BOOKING_TICKETS:
+      draft.bookingTickets = [];
+      draft.createTicketsState = CreateTicketsState.CREATING;
       break;
-    case BookingActionsType.SET_BOOKING_TICKET:
-      draft.bookingTicket = action.payload;
-      draft.createTicketState = CreateTicketState.CREATED;
+    case BookingActionsType.SET_BOOKING_TICKETS:
+      draft.bookingTickets = action.payload;
+      draft.createTicketsState = CreateTicketsState.CREATED;
       break;
-    case BookingActionsType.SET_BOOKING_TICKET_STATE:
-      draft.createTicketState = action.payload;
+    case BookingActionsType.SET_BOOKING_TICKETS_STATE:
+      draft.createTicketsState = action.payload;
       break;
   }
 }, initialState);

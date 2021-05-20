@@ -133,6 +133,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
         Object.values(flight).map((fl, index) => {
           return (
             <SeatsAccordion
+              key={index}
               flight={fl}
               handleChooseSeat={handleChooseSeat}
               handleExpand={handleExpand}

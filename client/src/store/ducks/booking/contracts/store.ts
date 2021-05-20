@@ -1,5 +1,5 @@
-import { FlightAirplane, FlightPair } from './../../flights/contracts/store';
 import { Flight } from '../../flights/contracts/store';
+import { FlightAirplane } from './../../flights/contracts/store';
 
 export enum LoadingState {
   LOADED = 'LOADED',
@@ -8,7 +8,7 @@ export enum LoadingState {
   NEVER = 'NEVER',
 }
 
-export enum CreateTicketState {
+export enum CreateTicketsState {
   CREATED = 'CREATED',
   CREATING = 'CREATING',
   ERROR = 'ERROR',
@@ -82,7 +82,7 @@ export interface BookingTicket {
 export interface BookingState {
   bookingFlight?: BookingFlight | BookingFlightPair;
   bookingData: BookingData;
-  bookingTicket?: BookingTicket;
+  bookingTickets: BookingTicket[];
   loadingState: LoadingState;
-  createTicketState: CreateTicketState;
+  createTicketsState: CreateTicketsState;
 }

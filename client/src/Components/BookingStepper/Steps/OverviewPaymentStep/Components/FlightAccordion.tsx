@@ -1,12 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
+import { Accordion, AccordionSummary, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React, { ChangeEvent } from 'react';
-import { BookingFlight, SeatData } from '../../../../../store/ducks/booking/contracts/store';
-import { AboutFlight } from '../../../../FlightCard/MoreAboutFlightDialog';
-import { AccordionTitle } from '../../SeatingStep/Components/AccordionTitle';
 import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined';
 import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
+import React, { ChangeEvent } from 'react';
+import { BookingFlight, SeatData } from '../../../../../store/ducks/booking/contracts/store';
 import { FlightCard } from '../../../../FlightCard/FlightCard';
+import { AccordionTitle } from '../../SeatingStep/Components/AccordionTitle';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

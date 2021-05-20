@@ -19,8 +19,8 @@ import {
 import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
 import { isPair } from '../FlightCard/FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
-//import { DownloadTicketStep } from './Steps/DownloadTicketStep';
-import { OverviewPaymentStep, PaymentData } from './Steps/OverviewPaymentStep/index';
+import { DownloadTicketStep } from './Steps/DownloadTicketStep/index';
+import { OverviewPaymentStep } from './Steps/OverviewPaymentStep/index';
 import { PassengerDetailsStep } from './Steps/PassengerDetailsStep/index';
 import { SeatingStep } from './Steps/SeatingStep/index';
 
@@ -90,9 +90,9 @@ export const BookingStepper = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  // if (activeStep === steps.length) {
-  //   return <DownloadTicketStep />;
-  // }
+  if (activeStep === steps.length) {
+    return <DownloadTicketStep />;
+  }
 
   return (
     <Container className={classes.root}>

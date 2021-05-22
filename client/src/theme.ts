@@ -26,7 +26,6 @@ export const theme = createMuiTheme({
       main: '#f6a62d',
       contrastText: '#fff',
     },
-
     error: {
       main: red[500],
     },
@@ -35,18 +34,10 @@ export const theme = createMuiTheme({
     },
     text: {
       primary: '#14171a',
-      //secondary: '#a09f9f',
     },
   },
   shadows: [],
   overrides: {
-    // MuiRipple: {
-    //   // Name of the rule
-    //   child: {
-    //     // Some CSS
-    //     backgroundColor: "red"
-    //   }
-    // },
     MuiIconButton: {
       root: {
         '&:hover': {
@@ -75,50 +66,7 @@ export const theme = createMuiTheme({
         paddingLeft: 20,
         paddingRight: 20,
       },
-      // outlinedPrimary: {
-      //  border: 'none'
-      // },
     },
-    // MuiFilledInput: {
-    //   underline: {
-    //     '&:after': {
-    //       borderBottomWidth: '2px',
-    //     },
-    //     '&:before': {
-    //       borderColor: '#000',
-    //       borderBottomWidth: '2px',
-    //     },
-    //   },
-    //   input: {
-    //     backgroundColor: 'rgb(245, 248, 250)',
-    //   },
-    // },
-    // MuiDialog: {
-    //   paper: {
-    //     borderRadius: 15,
-    //   },
-    // },
-    // MuiDialogActions: {
-    //   root: {
-    //     marginBottom: 8,
-    //   },
-    // },
-    // MuiDialogTitle: {
-    //   root: {
-    //     borderBottom: '1px solid rgb(204, 214, 221)',
-    //     marginBottom: 10,
-    //     padding: '10px 15px',
-    //     '& h2': {
-    //       display: 'flex',
-    //       alignItems: 'center',
-    //       fontWeight: 800,
-    //     },
-    //     '& button': {
-    //       padding: 8,
-    //       marginRight: 20,
-    //     },
-    //   },
-    // },
   },
 });
 

@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     TicketFlight.belongsTo(models.Ticket);
     TicketFlight.belongsTo(models.Flight);
     TicketFlight.hasOne(models.BoardingPass);
+    TicketFlight.belongsTo(models.User);
   };
 
   // db.Ticket.belongsToMany(db.Flight, { through: TicketFlight }); //

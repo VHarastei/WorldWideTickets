@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const app = express();
 
 const cors = require('cors');
@@ -13,6 +14,10 @@ dotenv.config();
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./utils/passport')(passport);
 
 const db = require('./models');
 

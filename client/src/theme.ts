@@ -47,11 +47,9 @@ export const theme = createMuiTheme({
     },
     MuiButton: {
       contained: {
-        color: '#2cb162',
         backgroundColor: '#eeeeee',
       },
       outlined: {
-        color: '#2cb162',
         backgroundColor: '#eeeeee',
         borderColor: 'transparent',
       },
@@ -61,10 +59,12 @@ export const theme = createMuiTheme({
         textTransform: 'none',
         fontSize: 20,
         height: 42,
+        '&:hover': {
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        },
       },
       textPrimary: {
-        paddingLeft: 20,
-        paddingRight: 20,
+        padding: '10px 20px',
       },
     },
   },

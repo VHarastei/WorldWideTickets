@@ -1,7 +1,8 @@
 import { Avatar, Button, Container, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { SignInDialog } from './SignInDialog';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,6 +50,15 @@ const useStyles = makeStyles((theme) => ({
 export const Header = () => {
   const classes = useStyles();
 
+  const [signInDialog, setSignInDialog] = useState(false);
+
+  const handleOpenSignInDialog = () => {
+    setSignInDialog(true);
+  };
+  const handleCloseSignInDialog = () => {
+    setSignInDialog(false);
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.header}>
@@ -59,16 +69,25 @@ export const Header = () => {
             src="https://i.ibb.co/BVqZR6J/lastLogo.png"
           />
         </Link>
-        <Link to="/user" style={{ textDecoration: 'none' }}>
+        {/* <Link to="/user" style={{ textDecoration: 'none' }}>
           <Button>
             <div className={classes.login}>
-              <span className={classes.loginText}>Sign In</span>
-              {/* <span className={classes.loginText}>VHarastei</span> */}
+              <span className={classes.loginText}>VHarastei</span>
               <AccountCircleIcon className={classes.loginIcon} style={{ color: 'orange' }} />
             </div>
           </Button>
-        </Link>
+        </Link> 
+      */}
+
+        <Button onClick={handleOpenSignInDialog}>
+          <div className={classes.login}>
+            <span className={classes.loginText}>Sign In</span>
+            {/* <span className={classes.loginText}>VHarastei</span> */}
+            <AccountCircleIcon className={classes.loginIcon} style={{ color: 'orange' }} />
+          </div>
+        </Button>
       </div>
+      <SignInDialog isOpen={signInDialog} handleClose={handleCloseSignInDialog} />
     </div>
   );
 };

@@ -36,8 +36,6 @@ module.exports = (passport) => {
         jwtFromRequest: ExtractJwt.fromHeader('token'),
       },
       async (payload, done) => {
-        console.log('catch');
-
         try {
           const user = await db.User.findByPk(payload.data.id);
           if (user) {

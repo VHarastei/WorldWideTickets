@@ -1,4 +1,4 @@
-import { FetchUserPayload } from './../../../services/api/authApi';
+import { SignInPropsType } from './../../../services/api/authApi';
 import { Action } from 'redux';
 import { FetchFlightsPayload } from '../../../services/api/api';
 import { LoadingState, UserState } from './contracts/store';
@@ -16,7 +16,7 @@ export interface SetUserDataActionInterface extends Action<UserActionsType> {
 
 export interface FetchSignInActionInterface extends Action<UserActionsType> {
   type: UserActionsType.FETCH_SIGN_IN;
-  payload: FetchUserPayload;
+  payload: SignInPropsType;
 }
 
 export interface SetUserLoadingStateActionInterface extends Action<UserActionsType> {
@@ -29,7 +29,7 @@ export const setUserData = (payload: UserState['data']): SetUserDataActionInterf
   payload,
 });
 
-export const fetchSignIn = (payload: FetchUserPayload): FetchSignInActionInterface => ({
+export const fetchSignIn = (payload: SignInPropsType): FetchSignInActionInterface => ({
   type: UserActionsType.FETCH_SIGN_IN,
   payload,
 });

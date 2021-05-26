@@ -39,9 +39,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 20,
   },
   dialogConnectionTime: {
-    //backgroundColor: theme.palette.secondary.main,
     backgroundColor: '#e8e8e8',
-    //color: 'white',
     borderRadius: 8,
     textAlign: 'center',
   },

@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { SignInDialog } from './SignInDialog';
+import { useSelector } from 'react-redux';
+import { selectIsAuth, selectUserData } from '../store/ducks/user/selectors';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,14 +52,8 @@ const useStyles = makeStyles((theme) => ({
 export const Header = () => {
   const classes = useStyles();
 
-  const [signInDialog, setSignInDialog] = useState(false);
-
-  const handleOpenSignInDialog = () => {
-    setSignInDialog(true);
-  };
-  const handleCloseSignInDialog = () => {
-    setSignInDialog(false);
-  };
+  const isAuth = useSelector(selectIsAuth);
+  const userData = useSelector(selectUserData);
 
   return (
     <div className={classes.container}>
@@ -69,25 +65,19 @@ export const Header = () => {
             src="https://i.ibb.co/BVqZR6J/lastLogo.png"
           />
         </Link>
-        {/* <Link to="/user" style={{ textDecoration: 'none' }}>
-          <Button>
-            <div className={classes.login}>
-              <span className={classes.loginText}>VHarastei</span>
-              <AccountCircleIcon className={classes.loginIcon} style={{ color: 'orange' }} />
-            </div>
-          </Button>
-        </Link> 
-      */}
-
-        <Button onClick={handleOpenSignInDialog}>
-          <div className={classes.login}>
-            <span className={classes.loginText}>Sign In</span>
-            {/* <span className={classes.loginText}>VHarastei</span> */}
-            <AccountCircleIcon className={classes.loginIcon} style={{ color: 'orange' }} />
-          </div>
-        </Button>
+        {isAuth ? (
+          <Link to="/user" style={{ textDecoration: 'none' }}>
+            <Button>
+              <div className={classes.login}>
+                <span className={classes.loginText}>{userData?.username}</span>
+                <AccountCircleIcon className={classes.loginIcon} style={{ color: 'orange' }} />
+              </div>
+            </Button>
+          </Link>
+        ) : (
+          <SignInDialog />
+        )}
       </div>
-      <SignInDialog isOpen={signInDialog} handleClose={handleCloseSignInDialog} />
     </div>
   );
 };

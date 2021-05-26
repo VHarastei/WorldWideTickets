@@ -1,13 +1,20 @@
 import { UserState } from './../../store/ducks/user/contracts/store';
 import { instanse } from './api';
 
-export type FetchUserPayload = {
+export type SignInPropsType = {
   email: string;
   password: string;
 };
 
+export type SignUpPropsType = {
+  email: string;
+  username: string;
+  phone: string;
+  password: string;
+};
+
 export const AuthApi = {
-  signIn: (payload: FetchUserPayload): Promise<UserState['data']> => {
+  signIn: (payload: SignInPropsType): Promise<UserState['data']> => {
     return instanse
       .post(`auth/login`, { username: payload.email, password: payload.password })
       .then(({ data }) => data.data);

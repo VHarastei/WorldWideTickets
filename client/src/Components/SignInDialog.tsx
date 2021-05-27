@@ -4,23 +4,22 @@ import {
   DialogContent,
   Divider,
   IconButton,
-  Link,
   makeStyles,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloseIcon from '@material-ui/icons/Close';
-import { FormikErrors, FormikTouched, useFormik } from 'formik';
-import React, { ChangeEvent, MouseEventHandler } from 'react';
+import { useFormik } from 'formik';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { SignInPropsType } from '../services/api/authApi';
 import { fetchSignIn } from '../store/ducks/user/actionCreators';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { selectIsSignInError } from '../store/ducks/user/selectors';
+import { selectIsAuthError } from '../store/ducks/user/selectors';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
+import { VerifyDialog } from './VerifyDialog';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -55,9 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
   error: {
     marginTop: 10,
-    //marginBottom: 20,
     padding: 10,
-    //border: '1px solid red',
     color: 'red',
     backgroundColor: 'rgba(255, 0, 0, 0.15)',
     borderRadius: 8,
@@ -75,7 +72,7 @@ const signInSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
 });
-export type AuthDialogs = 'signIn' | 'signUp';
+export type AuthDialogs = 'signIn' | 'signUp' | 'verify';
 
 type PropsType = {
   simplified?: boolean;
@@ -85,7 +82,7 @@ export const SignInDialog: React.FC<PropsType> = ({ simplified }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const IsSignInError = useSelector(selectIsSignInError);
+  const IsSignInError = useSelector(selectIsAuthError);
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -120,15 +117,15 @@ export const SignInDialog: React.FC<PropsType> = ({ simplified }) => {
       {openDialog !== undefined && (
         <Dialog maxWidth="xs" onClose={handleCloseDialog} open={true}>
           <DialogTitle onClose={handleCloseDialog}>
-            {openDialog === 'signIn' ? 'Continue to your account' : 'Create Account'}
+            {openDialog === 'signIn' && 'Continue to your account'}
+            {openDialog === 'signUp' && 'Create Account'}
+            {openDialog === 'verify' && 'Verify your email address'}
           </DialogTitle>
           <Divider />
           <DialogContent>
-            {openDialog === 'signIn' ? (
-              <SignInForm handleOpenDialog={handleOpenDialog} />
-            ) : (
-              <SignUpForm handleOpenDialog={handleOpenDialog} />
-            )}
+            {openDialog === 'signIn' && <SignInForm handleOpenDialog={handleOpenDialog} />}
+            {openDialog === 'signUp' && <SignUpForm handleOpenDialog={handleOpenDialog} />}
+            {openDialog === 'verify' && <VerifyDialog handleCloseDialog={handleCloseDialog} />}
           </DialogContent>
         </Dialog>
       )}

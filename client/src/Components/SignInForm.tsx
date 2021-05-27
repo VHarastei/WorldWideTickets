@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { SignInPropsType } from '../services/api/authApi';
 import { fetchSignIn } from '../store/ducks/user/actionCreators';
-import { selectIsSignInError } from '../store/ducks/user/selectors';
+import { selectIsAuthError, selectIsSignInLoading } from '../store/ducks/user/selectors';
 import { AuthDialogs } from './SignInDialog';
 import { SignInTextField } from './SignInTextField';
 
@@ -42,7 +42,8 @@ export const SignInForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const IsSignInError = useSelector(selectIsSignInError);
+  const IsSignInError = useSelector(selectIsAuthError);
+  const IsSignInLoading = useSelector(selectIsSignInLoading);
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -70,7 +71,14 @@ export const SignInForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
         touched={formik.touched.password}
         errors={formik.errors.password}
       />
-      <Button fullWidth variant="contained" autoFocus type="submit" color="primary">
+      <Button
+        disabled={IsSignInLoading}
+        fullWidth
+        variant="contained"
+        autoFocus
+        type="submit"
+        color="primary"
+      >
         Sign In
       </Button>
       {IsSignInError && <div className={classes.error}>Invalid email or password</div>}

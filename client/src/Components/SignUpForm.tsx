@@ -1,9 +1,11 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { SignUpPropsType } from '../services/api/authApi';
+import { AuthApi, SignUpPropsType } from '../services/api/authApi';
+import { fetchSignUp } from '../store/ducks/user/actionCreators';
+import { selectIsAuthError, selectIsAuthSuccess } from '../store/ducks/user/selectors';
 import { AuthDialogs } from './SignInDialog';
 import { SignInTextField } from './SignInTextField';
 
@@ -46,12 +48,24 @@ type PropsType = {
 
 export const SignUpForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
+  interface SignUpForm extends SignUpPropsType {
+    passwordConfirmation: string;
+  }
   const formik = useFormik({
     initialValues: { email: '', username: '', phone: '', password: '', passwordConfirmation: '' },
     validationSchema: signUpSchema,
-    onSubmit: (data: SignUpPropsType) => {
-      console.log(data);
+    onSubmit: async (data: SignUpForm, { setFieldError }) => {
+      //dispatch(fetchSignUp(data));
+
+      AuthApi.signUp(data)
+        .then(() => {
+          handleOpenDialog('verify');
+        })
+        .catch(() => {
+          setFieldError('email', 'Email already in use');
+        });
     },
   });
 

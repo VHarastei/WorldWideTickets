@@ -18,7 +18,7 @@ module.exports = (passport) => {
           return done(null, false, { message: 'Incorrect username.' });
         }
 
-        if (user.password === generateMD5(password + process.env.SECRET_KEY)) {
+        if (user.confirmed && user.password === generateMD5(password + process.env.SECRET_KEY)) {
           return done(null, user);
         } else {
           return done(null, false, { message: 'Incorrect password.' });

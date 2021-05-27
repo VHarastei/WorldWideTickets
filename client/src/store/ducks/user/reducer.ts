@@ -14,6 +14,8 @@ export const userReducer = produce((draft: Draft<UserState>, action: UserActions
       draft.loadingState = LoadingState.SUCCESS;
       break;
     case UserActionsType.FETCH_SIGN_IN:
+    case UserActionsType.FETCH_SIGN_UP:
+    case UserActionsType.FETCH_USER_DATA:
       draft.data = undefined;
       draft.loadingState = LoadingState.LOADING;
       break;

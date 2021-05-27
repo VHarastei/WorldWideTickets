@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { UserState } from './../../store/ducks/user/contracts/store';
 import { instanse } from './api';
 
@@ -19,8 +20,14 @@ export const AuthApi = {
       .post(`auth/login`, { username: payload.email, password: payload.password })
       .then(({ data }) => data.data);
   },
+  signUp: (payload: SignUpPropsType): Promise<UserState['data']> => {
+    return instanse.post(`auth/register`, payload).then(({ data }) => data.data);
+  },
   getMe: (): Promise<UserState['data']> => {
     return instanse.get(`auth/me`).then(({ data }) => data.data);
+  },
+  verify: (hash: string): Promise<AxiosResponse> => {
+    return instanse.get(`auth/verify?hash=${hash}`);
   },
 };
 

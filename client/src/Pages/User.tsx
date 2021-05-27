@@ -22,6 +22,9 @@ import { selectIsAuth, selectUserData } from '../store/ducks/user/selectors';
 import WaitIcon from '@material-ui/icons/PanToolOutlined';
 
 import { SignInDialog } from '../Components/SignInDialog';
+import { setUserData, setUserLoadingState } from '../store/ducks/user/actionCreators';
+import { useHistory } from 'react-router';
+import { LoadingState } from '../store/ducks/user/contracts/store';
 
 const useStyles = makeStyles((theme) => ({
   titleContainer: {
@@ -81,6 +84,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const User = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [currentTab, setCurrentTab] = React.useState(0);
 
@@ -88,7 +93,12 @@ export const User = () => {
     setCurrentTab(newCurrentTab);
   };
 
-  const dispatch = useDispatch();
+  const handleSignOut = () => {
+    dispatch(setUserData(undefined));
+    dispatch(setUserLoadingState(LoadingState.NEVER));
+    window.localStorage.removeItem('token');
+    history.push('/');
+  };
 
   const flight = useSelector(selectBookingFlight);
   const isAuth = useSelector(selectIsAuth);
@@ -118,7 +128,7 @@ export const User = () => {
                   </Typography>
                 </div>
               </div>
-              <Button variant="contained" color="secondary">
+              <Button variant="contained" color="secondary" onClick={handleSignOut}>
                 <span style={{ marginRight: 6 }}>Sign Out</span>
                 <ExitToAppIcon />
               </Button>

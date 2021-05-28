@@ -110,7 +110,7 @@ exports.flight = async (req, res) => {
     if (flight) {
       res.status(200).json(flight);
     } else {
-      res.status(200).send('Flight Not Found');
+      res.status(404).send('Flight Not Found');
     }
   } catch (err) {
     console.log(err);

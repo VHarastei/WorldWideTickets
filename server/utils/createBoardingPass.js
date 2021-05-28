@@ -1,6 +1,13 @@
-const db = require('../../models');
+const db = require('../models');
 
-module.exports = createBoardingPass = async (flight, passenger, seatNumber, seatClass, price) => {
+module.exports = createBoardingPass = async (
+  flight,
+  passenger,
+  seatNumber,
+  seatClass,
+  price,
+  user
+) => {
   const ticketData = {
     seatClass,
     PassengerId: passenger.id,
@@ -11,6 +18,7 @@ module.exports = createBoardingPass = async (flight, passenger, seatNumber, seat
     price,
     FlightId: flight.id,
     TicketId: ticket.id,
+    UserId: (user && user.id) || null,
   };
   const ticketFlight = await db.TicketFlight.create(ticketFlightData);
 

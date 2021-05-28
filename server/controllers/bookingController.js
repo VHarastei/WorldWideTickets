@@ -1,20 +1,54 @@
 const db = require('../models');
-const createBoardingPass = require('../utils/creators/createBoardingPass');
-
-const getTicketPrice = async (flight, seatClass) => {
-  const ticketClassPrice = await db.Price.findOne({ attributes: [seatClass] });
-  const ticketPrice = Math.round(
-    ticketClassPrice[seatClass] + (flight.distance * flight.Company.rating) / 50
-  );
-  return ticketPrice;
-};
+const createBoardingPass = require('../utils/createBoardingPass');
+const jwt = require('jsonwebtoken');
+const getTicketPrice = require('../utils/getTicketPrice');
 
 exports.booking = async (req, res) => {
   try {
-    const { passengerData, seatData } = req.body;
+    let user;
+    if (req.headers && req.headers.token) {
+      user = jwt.verify(req.headers.token, process.env.SECRET_KEY || 'qwerty').data;
+    } // check if booking with account
+
+    const { passengerData } = req.body;
+    const validData = res.locals.validData; // valid seatData (all seats exist and free, booking flight also exist)
 
     const boardingPasses = [];
-    const passenger = await db.Passenger.create(passengerData);
+
+    let passenger = await db.Passenger.findOne({ where: passengerData }); // check if passenger already exist
+    if (!passenger) passenger = await db.Passenger.create(passengerData);
+
+    await Promise.all(
+      validData.map(async (data) => {
+        data.seat.seatStatus = true;
+        await data.seat.save();
+
+        const boardingPass = await createBoardingPass(
+          data.flight,
+          passenger,
+          data.seat.seatNumber,
+          data.seat.seatClass,
+          data.ticketPrice,
+          user
+        );
+        boardingPasses.push(boardingPass);
+      })
+    );
+
+    res.status(201).json(boardingPasses);
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({
+      status: 'error',
+      message: 'Ticket not created',
+    });
+  }
+};
+
+exports.validateBookingData = async (req, res, next) => {
+  try {
+    const { seatData } = req.body;
+    let validData = [];
 
     await Promise.all(
       seatData.map(async (data) => {
@@ -29,6 +63,14 @@ exports.booking = async (req, res) => {
           ],
         });
 
+        if (!flight) {
+          return res.status(404).json({
+            status: 'error',
+            message: 'Ticket not created',
+            details: `Incorrect data, flight ${data.flightNumber} not found`,
+          });
+        }
+
         const seat = await db.Seat.findOne({
           where: {
             AirplaneId: flight.Airplane.id,
@@ -37,38 +79,34 @@ exports.booking = async (req, res) => {
           },
         });
 
-        if (seat) {
-          seat.seatStatus = true;
-          await seat.save();
-        } else {
+        if (!seat) {
           return res.status(404).json({
             status: 'error',
             message: 'Ticket not created',
             details: 'Incorrect data, seat not found',
           });
         }
-
+        if (seat.seatStatus === true) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Ticket not created',
+            details: 'Incorrect data, seat already occupied',
+          });
+        }
         const ticketPrice = await getTicketPrice(flight, data.seatClass);
-        const boardingPass = await createBoardingPass(
-          flight,
-          passenger,
-          data.seatNumber,
-          data.seatClass,
-          ticketPrice
-        );
 
-        boardingPasses.push(boardingPass);
+        validData.push({
+          flight,
+          seat,
+          ticketPrice,
+        });
       })
     );
 
-    res.status(201).json(boardingPasses);
+    res.locals.validData = validData;
+    next();
   } catch (err) {
     console.log(err);
-    res.status(404).json({
-      status: err.parent.code || 'error',
-      message: 'Ticket not created',
-      details: err.parent.sqlMessage || 'error',
-    });
   }
 };
 

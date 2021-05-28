@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./utils/passport')(passport);
+require('./core/passport')(passport);
 
 const db = require('./models');
 

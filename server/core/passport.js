@@ -5,7 +5,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const db = require('../models');
 const { Op } = require('sequelize');
-const { generateMD5 } = require('./generateHash');
+const { generateMD5 } = require('../utils/generateHash');
 module.exports = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {

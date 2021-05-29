@@ -24,9 +24,11 @@ const db = require('./models');
 const flightsRouter = require('./routes/Flights');
 const bookingRouter = require('./routes/Booking');
 const authRouter = require('./routes/Auth');
+const userRouter = require('./routes/User');
 app.use('/flights', flightsRouter);
 app.use('/booking', bookingRouter);
 app.use('/auth', authRouter);
+app.use('/user', userRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(process.env.PORT, async () => {

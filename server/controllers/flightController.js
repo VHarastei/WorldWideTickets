@@ -1,5 +1,6 @@
 const { Flight, Seat, Airplane, Airport, Company, Price } = require('../models');
 const moment = require('moment');
+const findFlights = require('../utils/findFlights');
 
 exports.flightList = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ exports.flightList = async (req, res) => {
     const arrivalAirport = await Airport.findOne({ where: { city: arrivalCity } });
 
     const ticketPriceByClass = await Price.findOne({ attributes: ['economy'] });
-    const allToArrival = await findFlight({ arrivalAirportId: arrivalAirport.id });
+    const allToArrival = await findFlights({ arrivalAirportId: arrivalAirport.id });
 
     //      B
     //    /   \
@@ -40,11 +41,11 @@ exports.flightList = async (req, res) => {
       uniqueBCCity.map(async (city) => {
         const cityAirport = await Airport.findOne({ where: { city: city } });
 
-        const AB = await findFlight({
+        const AB = await findFlights({
           departureAirportId: departureAirport.id,
           arrivalAirportId: cityAirport.id,
         });
-        const BC = await findFlight({
+        const BC = await findFlights({
           departureAirportId: cityAirport.id,
           arrivalAirportId: arrivalAirport.id,
         });
@@ -116,20 +117,6 @@ exports.flight = async (req, res) => {
     console.log(err);
     res.status(404).send(err);
   }
-};
-
-const findFlight = async (condition) => {
-  const flight = await Flight.findAll({
-    attributes: ['flightNumber', 'departureDate', 'arrivalDate', 'distance'],
-    where: condition,
-    include: [
-      { model: Airport, as: 'departureAirport', attributes: ['city'] },
-      { model: Airport, as: 'arrivalAirport', attributes: ['city'] },
-      { model: Airplane, attributes: ['model'] },
-      { model: Company, attributes: { exclude: ['id'] } },
-    ],
-  });
-  return flight;
 };
 
 const paginateFlights = (array, size, page) => {

@@ -1,4 +1,3 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
@@ -11,35 +10,6 @@ import {
 import { isPair } from '../../../FlightCard/FlightCard';
 import { NavigationButtons } from '../../NavigationButtons';
 import { SeatsAccordion } from './Components/SeatsAccordion';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    flightAccordion: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    flightAccordionTitle: {
-      lineHeight: '24px',
-      fontSize: 20,
-      fontWeight: 600,
-    },
-    flightAccordionTitleContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    flightAccordionSelectedSeat: {
-      display: 'flex',
-      backgroundColor: '#f4f4f4',
-      border: '1px solid',
-      borderRadius: 8,
-      padding: '4px 8px',
-      borderColor: theme.palette.primary.main,
-      marginRight: 6,
-    },
-  })
-);
 
 type SeatingStepPropsType = {
   flight: BookingFlight | BookingFlightPair;
@@ -54,7 +24,6 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
   nextStep,
   handleBack,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   const params: { flightNumber: string } = useParams();
@@ -119,7 +88,8 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
         nextStep();
       }
     }
-  }, [dispatch, chooseSeatErrors]);
+    // eslint-disable-next-line
+  }, [dispatch, chooseSeatErrors, nextStep]);
 
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 

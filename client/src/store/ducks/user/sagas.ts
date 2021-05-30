@@ -1,3 +1,4 @@
+import { UserApi } from './../../../services/api/userApi';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { AuthApi } from './../../../services/api/authApi';
 import {
@@ -5,9 +6,10 @@ import {
   FetchSignUpActionInterface,
   setUserData,
   setUserLoadingState,
+  setUserOrders,
   UserActionsType,
 } from './actionCreators';
-import { LoadingState, User } from './contracts/store';
+import { LoadingState, User, Order } from './contracts/store';
 
 export function* fetchSignInRequest({ payload }: FetchSignInActionInterface) {
   try {
@@ -37,8 +39,18 @@ export function* fetchUserDataRequest() {
   }
 }
 
+export function* fetchUserOrdersRequest() {
+  try {
+    const orders: Order[] = yield call(UserApi.fetchOrders);
+    yield put(setUserOrders(orders));
+  } catch (err) {
+    yield put(setUserLoadingState(LoadingState.NEVER));
+  }
+}
+
 export function* userSaga() {
   yield takeLatest(UserActionsType.FETCH_SIGN_IN, fetchSignInRequest);
   yield takeLatest(UserActionsType.FETCH_SIGN_UP, fetchSignUpRequest);
   yield takeLatest(UserActionsType.FETCH_USER_DATA, fetchUserDataRequest);
+  yield takeLatest(UserActionsType.FETCH_USER_ORDERS, fetchUserOrdersRequest);
 }

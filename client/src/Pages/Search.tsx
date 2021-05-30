@@ -1,4 +1,4 @@
-import { CircularProgress, Container, makeStyles, Paper, Tab } from '@material-ui/core';
+import { Container, makeStyles, Paper, Tab } from '@material-ui/core';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import { Flight, FlightPair, LoadingState } from '../store/ducks/flights/contrac
 import {
   selectFlightsItems,
   selectIsFlightsLoaded,
-  selectTotalPages,
+  selectTotalPages
 } from '../store/ducks/flights/selectors';
 
 const useStyles = makeStyles((theme) => ({

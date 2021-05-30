@@ -10,13 +10,7 @@ import {
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloseIcon from '@material-ui/icons/Close';
-import { useFormik } from 'formik';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Yup from 'yup';
-import { SignInPropsType } from '../services/api/authApi';
-import { fetchSignIn } from '../store/ducks/user/actionCreators';
-import { selectIsAuthError } from '../store/ducks/user/selectors';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { VerifyDialog } from './VerifyDialog';
@@ -68,10 +62,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const signInSchema = Yup.object().shape({
-  password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-});
 export type AuthDialogs = 'signIn' | 'signUp' | 'verify';
 
 type PropsType = {
@@ -80,18 +70,6 @@ type PropsType = {
 
 export const SignInDialog: React.FC<PropsType> = ({ simplified }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-
-  const IsSignInError = useSelector(selectIsAuthError);
-
-  const formik = useFormik({
-    initialValues: { email: '', password: '' },
-    validationSchema: signInSchema,
-    onSubmit: (data: SignInPropsType) => {
-      console.log(data);
-      dispatch(fetchSignIn(data));
-    },
-  });
 
   const [openDialog, setOpenDialog] = React.useState<AuthDialogs>();
   const handleOpenDialog = (dialog: AuthDialogs) => {

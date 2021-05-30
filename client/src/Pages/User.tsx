@@ -1,30 +1,22 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  makeStyles,
-  Tab,
-  Tabs,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { Header } from '../Components/Header';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Avatar, Button, makeStyles, Tab, Typography } from '@material-ui/core';
 import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
-import { TabPanel } from '@material-ui/lab';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookingFlight } from '../store/ducks/booking/actionCreators';
-import { FlightCard } from '../Components/FlightCard/FlightCard';
-import { selectBookingFlight } from '../store/ducks/booking/selectors';
-import { selectIsAuth, selectUserData } from '../store/ducks/user/selectors';
-import WaitIcon from '@material-ui/icons/PanToolOutlined';
-
-import { SignInDialog } from '../Components/SignInDialog';
-import { setUserData, setUserLoadingState } from '../store/ducks/user/actionCreators';
 import { useHistory } from 'react-router';
-import { LoadingState } from '../store/ducks/user/contracts/store';
+import { AuthWarning } from '../Components/AuthWarning';
+import { Header } from '../Components/Header';
+import { LinearPreloader } from '../Components/LinearPreloader';
+import { OrderCard } from '../Components/OrderCard';
+import { UserStyledTabs } from '../Components/UserStyledTabs';
+import { fetchUserOrders, signOut } from '../store/ducks/user/actionCreators';
+import {
+  selectIsAuth,
+  selectIsStartedAuth,
+  selectUserData,
+  selectUserOrders,
+} from '../store/ducks/user/selectors';
 
 const useStyles = makeStyles((theme) => ({
   titleContainer: {
@@ -64,21 +56,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1032,
     display: 'flex',
     flexDirection: 'column',
-  },
-  auth: {
-    marginTop: 70,
-    display: 'flex',
-    margin: 'auto',
-    width: '40%',
-  },
-  authIcon: {
-    fontSize: 125,
-    fontWeight: 100,
-    marginRight: 20,
-  },
-  authSubTitle: {
-    marginBottom: 20,
-    fontWeight: 500,
+    marginTop: 20,
   },
 }));
 
@@ -94,26 +72,26 @@ export const User = () => {
   };
 
   const handleSignOut = () => {
-    dispatch(setUserData(undefined));
-    dispatch(setUserLoadingState(LoadingState.NEVER));
+    dispatch(signOut());
     window.localStorage.removeItem('token');
     history.push('/');
   };
 
-  const flight = useSelector(selectBookingFlight);
-  const isAuth = useSelector(selectIsAuth);
   const userData = useSelector(selectUserData);
+  const userOrders = useSelector(selectUserOrders);
+  const isStartedAuth = useSelector(selectIsStartedAuth);
+  const isAuth = useSelector(selectIsAuth);
 
   useEffect(() => {
-    dispatch(fetchBookingFlight('FO-1496'));
+    dispatch(fetchUserOrders());
   }, [dispatch]);
-
-  if (!flight) return null;
 
   return (
     <div>
       <Header />
-      {isAuth ? (
+      {isStartedAuth ? (
+        <LinearPreloader />
+      ) : isAuth ? (
         <div>
           <div className={classes.titleContainer}>
             <div className={classes.title}>
@@ -134,7 +112,6 @@ export const User = () => {
               </Button>
             </div>
             <div className={classes.title}>
-              {/* <AppBar position="static" color="default"> */}
               <UserStyledTabs
                 value={currentTab}
                 onChange={handleChange}
@@ -144,60 +121,21 @@ export const User = () => {
                 <Tab label="My orders" icon={<TicketIcon />} />
                 <Tab label="Account settings" icon={<SettingsOutlinedIcon />} />
               </UserStyledTabs>
-              {/* </AppBar> */}
             </div>
           </div>
           <div className={classes.content}>
             {currentTab === 0 && (
               <div>
-                <FlightCard flight={flight} simplified />
+                {userOrders.map((order, index) => {
+                  return <OrderCard key={index} order={order} />;
+                })}
               </div>
             )}
           </div>
         </div>
       ) : (
-        <div className={classes.auth}>
-          <WaitIcon className={classes.authIcon} color="primary" />
-          <div>
-            <Typography className={classes.titleTitle}>Sign in to visit your account</Typography>
-            <Typography className={classes.authSubTitle} color="textSecondary">
-              You'll be able to access your trips, price alerts, and settings.
-            </Typography>
-            <SignInDialog simplified />
-          </div>
-        </div>
+        <AuthWarning />
       )}
     </div>
   );
 };
-
-export const UserStyledTabs = withStyles((theme) => ({
-  root: {
-    '& .MuiTab-root': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginRight: 16,
-      textTransform: 'none',
-      fontSize: 18,
-      fontWeight: 500,
-      minHeight: 48,
-      '& .MuiTab-wrapper': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        padding: '0px 12px',
-        margin: 0,
-        '& .MuiSvgIcon-root': {
-          margin: 0,
-          marginRight: 6,
-        },
-      },
-      '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.02);',
-        transition: '0.3s',
-      },
-    },
-  },
-}))(Tabs);

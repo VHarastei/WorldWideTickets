@@ -1,13 +1,14 @@
-import { Button, Link, makeStyles, TextField } from '@material-ui/core';
+import { Link, makeStyles } from '@material-ui/core';
 import { useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { SignInPropsType } from '../services/api/authApi';
 import { fetchSignIn } from '../store/ducks/user/actionCreators';
-import { selectIsAuthError, selectIsSignInLoading } from '../store/ducks/user/selectors';
+import { selectIsAuthError, selectIsAuthLoading } from '../store/ducks/user/selectors';
 import { AuthDialogs } from './SignInDialog';
 import { SignInTextField } from './SignInTextField';
+import { SubmitButton } from './SubmitButton';
 
 const useStyles = makeStyles((theme) => ({
   form: { margin: '20px 0px' },
@@ -27,6 +28,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     cursor: 'pointer',
   },
+  buttonProgress: {
+    color: theme.palette.primary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 const signInSchema = Yup.object().shape({
@@ -43,7 +52,7 @@ export const SignInForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
   const dispatch = useDispatch();
 
   const IsSignInError = useSelector(selectIsAuthError);
-  const IsSignInLoading = useSelector(selectIsSignInLoading);
+  const IsSignInLoading = useSelector(selectIsAuthLoading);
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -71,16 +80,7 @@ export const SignInForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
         touched={formik.touched.password}
         errors={formik.errors.password}
       />
-      <Button
-        disabled={IsSignInLoading}
-        fullWidth
-        variant="contained"
-        autoFocus
-        type="submit"
-        color="primary"
-      >
-        Sign In
-      </Button>
+      <SubmitButton name={'Sign In'} isLoading={IsSignInLoading} />
       {IsSignInError && <div className={classes.error}>Invalid email or password</div>}
       <Link variant="h6" onClick={() => handleOpenDialog('signUp')} className={classes.link}>
         Don`t have an account? Sign Up here

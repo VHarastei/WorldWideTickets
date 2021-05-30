@@ -1,13 +1,15 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { AuthApi, SignUpPropsType } from '../services/api/authApi';
-import { fetchSignUp } from '../store/ducks/user/actionCreators';
-import { selectIsAuthError, selectIsAuthSuccess } from '../store/ducks/user/selectors';
+import { setUserLoadingState } from '../store/ducks/user/actionCreators';
+import { LoadingState } from '../store/ducks/user/contracts/store';
+import { selectIsAuthLoading } from '../store/ducks/user/selectors';
 import { AuthDialogs } from './SignInDialog';
 import { SignInTextField } from './SignInTextField';
+import { SubmitButton } from './SubmitButton';
 
 const useStyles = makeStyles((theme) => ({
   form: { margin: '20px 0px' },
@@ -50,21 +52,26 @@ export const SignUpForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const IsSignUpLoading = useSelector(selectIsAuthLoading);
+
   interface SignUpForm extends SignUpPropsType {
     passwordConfirmation: string;
   }
+
   const formik = useFormik({
     initialValues: { email: '', username: '', phone: '', password: '', passwordConfirmation: '' },
     validationSchema: signUpSchema,
     onSubmit: async (data: SignUpForm, { setFieldError }) => {
       //dispatch(fetchSignUp(data));
-
+      dispatch(setUserLoadingState(LoadingState.LOADING));
       AuthApi.signUp(data)
         .then(() => {
+          dispatch(setUserLoadingState(LoadingState.SUCCESS));
           handleOpenDialog('verify');
         })
         .catch(() => {
           setFieldError('email', 'Email already in use');
+          dispatch(setUserLoadingState(LoadingState.ERROR));
         });
     },
   });
@@ -110,9 +117,7 @@ export const SignUpForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
         touched={formik.touched.passwordConfirmation}
         errors={formik.errors.passwordConfirmation}
       />
-      <Button fullWidth variant="contained" autoFocus type="submit" color="primary">
-        Sign Up
-      </Button>
+      <SubmitButton name={'Sign Up'} isLoading={IsSignUpLoading} />
     </form>
   );
 };

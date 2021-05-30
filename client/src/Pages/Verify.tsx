@@ -32,7 +32,7 @@ export const Verify = () => {
     if (hash) {
       AuthApi.verify(hash);
     }
-  }, []);
+  }, [hash]);
 
   return (
     <div className={classes.container}>

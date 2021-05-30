@@ -30,6 +30,7 @@ app.use('/booking', bookingRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 
+//{ force: true }
 db.sequelize.sync().then(() => {
   app.listen(process.env.PORT, async () => {
     console.log('Server is running');

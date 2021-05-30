@@ -1,10 +1,10 @@
-import { Avatar, Button, Container, makeStyles, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Button, makeStyles } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { SignInDialog } from './SignInDialog';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectIsAuth, selectUserData } from '../store/ducks/user/selectors';
+import { Link } from 'react-router-dom';
+import { selectUserData } from '../store/ducks/user/selectors';
+import { SignInDialog } from './SignInDialog';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,8 +51,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = () => {
   const classes = useStyles();
-
-  const isAuth = useSelector(selectIsAuth);
   const userData = useSelector(selectUserData);
 
   return (
@@ -65,7 +63,7 @@ export const Header = () => {
             src="https://i.ibb.co/BVqZR6J/lastLogo.png"
           />
         </Link>
-        {isAuth ? (
+        {!!userData ? (
           <Link to="/user" style={{ textDecoration: 'none' }}>
             <Button>
               <div className={classes.login}>

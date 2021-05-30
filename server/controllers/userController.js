@@ -49,7 +49,7 @@ exports.orders = async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: 'Orders search error',
-      details: `An unknown error occurred`,
+      details: err,
     });
   }
 };

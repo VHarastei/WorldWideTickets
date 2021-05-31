@@ -58,7 +58,6 @@ export const SignInForm: React.FC<PropsType> = ({ handleOpenDialog }) => {
     initialValues: { email: '', password: '' },
     validationSchema: signInSchema,
     onSubmit: (data: SignInPropsType) => {
-      console.log(data);
       dispatch(fetchSignIn(data));
     },
   });

@@ -6,7 +6,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import * as Yup from 'yup';
-import { FetchFlightsPayload } from '../services/api/api';
+import { FetchFlightsPayload } from '../services/api/flightsApi';
 import { fetchFlights, setFlightsLoadingState } from '../store/ducks/flights/actionCreators';
 import { LoadingState } from '../store/ducks/flights/contracts/store';
 import { SearchTextField } from './SearchTextField';

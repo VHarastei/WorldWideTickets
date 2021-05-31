@@ -2,21 +2,16 @@ import { Avatar, Button, makeStyles, Tab, Typography } from '@material-ui/core';
 import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { AuthWarning } from '../Components/AuthWarning';
 import { Header } from '../Components/Header';
 import { LinearPreloader } from '../Components/LinearPreloader';
-import { OrderCard } from '../Components/OrderCard';
+import { UserOrders } from '../Components/UserOrders';
 import { UserStyledTabs } from '../Components/UserStyledTabs';
-import { fetchUserOrders, signOut } from '../store/ducks/user/actionCreators';
-import {
-  selectIsAuth,
-  selectIsStartedAuth,
-  selectUserData,
-  selectUserOrders,
-} from '../store/ducks/user/selectors';
+import { signOut } from '../store/ducks/user/actionCreators';
+import { selectIsAuth, selectIsAuthLoading, selectUserData } from '../store/ducks/user/selectors';
 
 const useStyles = makeStyles((theme) => ({
   titleContainer: {
@@ -78,18 +73,13 @@ export const User = () => {
   };
 
   const userData = useSelector(selectUserData);
-  const userOrders = useSelector(selectUserOrders);
-  const isStartedAuth = useSelector(selectIsStartedAuth);
+  const isAuthLoading = useSelector(selectIsAuthLoading);
   const isAuth = useSelector(selectIsAuth);
-
-  useEffect(() => {
-    dispatch(fetchUserOrders());
-  }, [dispatch]);
 
   return (
     <div>
       <Header />
-      {isStartedAuth ? (
+      {isAuthLoading ? (
         <LinearPreloader />
       ) : isAuth ? (
         <div>
@@ -123,15 +113,7 @@ export const User = () => {
               </UserStyledTabs>
             </div>
           </div>
-          <div className={classes.content}>
-            {currentTab === 0 && (
-              <div>
-                {userOrders.map((order, index) => {
-                  return <OrderCard key={index} order={order} />;
-                })}
-              </div>
-            )}
-          </div>
+          <div className={classes.content}>{currentTab === 0 && <UserOrders />}</div>
         </div>
       ) : (
         <AuthWarning />

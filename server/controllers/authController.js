@@ -29,12 +29,12 @@ exports.register = async (req, res) => {
     sendEmail({
       from: 'wwtAdmin@gmail.com',
       to: data.email,
-      //http://localhost:3000/user/verify/c4454629755096c4d3f8b878a9afa29b
       subject: 'Email confirmation for WorldWideTickets',
       html: `To confirm your email, go to <a href="http://localhost:3000/user/verify/${data.confirmHash}">this link</a>`,
       callback: (err) => {
         if (err) {
-          res.status(404).json({
+          console.log(err);
+          res.status(500).json({
             status: 'error',
             message: 'Error when sending email',
             details: err,
@@ -53,7 +53,6 @@ exports.register = async (req, res) => {
         }
       },
     });
-    //const hash = await bcrypt.hash(password, 10);
   } catch (err) {
     console.log(err);
     res.status(500).send('Register error');
@@ -62,7 +61,6 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    //const { username, password } = req.body;
     const user = {
       id: req.user.id,
       username: req.user.username,

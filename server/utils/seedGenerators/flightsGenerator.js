@@ -46,9 +46,6 @@ module.exports = generateFlights = async (amount) => {
     }
     console.log(flightsArr);
     return flightsArr;
-    setTimeout(() => {
-      console.log(JSON.stringify(flightsArr));
-    }, 3000);
   } catch (err) {
     console.log(err);
   }

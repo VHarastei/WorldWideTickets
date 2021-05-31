@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { FetchFlightsPayload } from '../../../services/api/api';
+import { FetchFlightsPayload } from '../../../services/api/flightsApi';
 import { FlightsPayload, LoadingState } from './contracts/store';
 
 export enum FlightsActionsType {

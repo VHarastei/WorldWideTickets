@@ -1,18 +1,15 @@
 import axios from 'axios';
 
-axios.defaults.headers.common = { token: window.localStorage.getItem('token') };
+//axios.defaults.headers.common = { token: window.localStorage.getItem('token') };
 
-export const instanse = axios.create({
-  baseURL: 'http://localhost:3001/',
+const instance = axios.create({
+  baseURL: 'http://localhost:3001/api/',
 });
 
-export type FetchFlightsPayload = {
-  whereFrom: string;
-  whereTo: string;
-  departureDate?: string;
-  size?: number;
-  page?: number;
-  sortBy?: SortByType;
-};
+instance.interceptors.request.use(function (config) {
+  const token = window.localStorage.getItem('token');
+  config.headers.token = token ? token : '';
+  return config;
+});
 
-export type SortByType = 'cheapest' | 'earliest' | 'fastest';
+export { instance };

@@ -18,11 +18,16 @@ export interface Order {
   price: number;
   seatNumber: number;
   seatClass: SeatClass;
-  flight: Flight
+  flight: Flight;
+}
+
+export interface Orders {
+  items: Order[];
+  loadingState: LoadingState;
 }
 
 export interface UserState {
   data: User | undefined;
-  orders: Order[]
+  orders: Orders;
   loadingState: LoadingState;
 }

@@ -7,6 +7,7 @@ import {
   setUserData,
   setUserLoadingState,
   setUserOrders,
+  setUserOrdersLoadingState,
   UserActionsType,
 } from './actionCreators';
 import { LoadingState, User, Order } from './contracts/store';
@@ -44,7 +45,7 @@ export function* fetchUserOrdersRequest() {
     const orders: Order[] = yield call(UserApi.fetchOrders);
     yield put(setUserOrders(orders));
   } catch (err) {
-    yield put(setUserLoadingState(LoadingState.NEVER));
+    yield put(setUserOrdersLoadingState(LoadingState.ERROR));
   }
 }
 

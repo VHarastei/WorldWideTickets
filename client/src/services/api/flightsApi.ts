@@ -1,6 +1,17 @@
 import { FlightsPayload } from './../../store/ducks/flights/contracts/store';
 import { BookingState } from '../../store/ducks/booking/contracts/store';
-import { FetchFlightsPayload, instanse } from './api';
+import { instance } from './api';
+
+export type FetchFlightsPayload = {
+  whereFrom: string;
+  whereTo: string;
+  departureDate?: string;
+  size?: number;
+  page?: number;
+  sortBy?: SortByType;
+};
+
+export type SortByType = 'cheapest' | 'earliest' | 'fastest';
 
 export const FlightsApi = {
   fetchFlights: ({
@@ -11,7 +22,7 @@ export const FlightsApi = {
     page = 1,
     sortBy = 'cheapest',
   }: FetchFlightsPayload): Promise<FlightsPayload> => {
-    return instanse
+    return instance
       .get(
         `flights?departureCity=${whereFrom}&arrivalCity=${whereTo}&size=${size}&page=${page}&sortBy=${sortBy}`
       )
@@ -19,6 +30,6 @@ export const FlightsApi = {
   },
 
   fetchFlight: (flightNumber: string): Promise<BookingState['bookingFlight']> => {
-    return instanse.get(`flights/${flightNumber}`).then(({ data }) => data);
+    return instance.get(`flights/${flightNumber}`).then(({ data }) => data);
   },
 };

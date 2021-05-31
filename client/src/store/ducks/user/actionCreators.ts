@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { SignInPropsType, SignUpPropsType } from './../../../services/api/authApi';
-import { LoadingState, UserState } from './contracts/store';
+import { LoadingState, UserState, Order } from './contracts/store';
 
 export enum UserActionsType {
   SET_USER_DATA = 'user/SET_USER_DATA',
@@ -11,6 +11,7 @@ export enum UserActionsType {
   SET_LOADING_STATE = 'user/SET_LOADING_STATE',
   FETCH_USER_ORDERS = 'user/FETCH_USER_ORDERS',
   SET_USER_ORDERS = 'user/SET_USER_ORDERS',
+  SET_USER_ORDERS_LOADING_STATE = 'user/SET_USER_ORDERS_LOADING_STATE',
 }
 
 export interface SetUserDataActionInterface extends Action<UserActionsType> {
@@ -46,7 +47,12 @@ export interface FetchUserOrdersActionInterface extends Action<UserActionsType> 
 
 export interface SetUserOrdersActionInterface extends Action<UserActionsType> {
   type: UserActionsType.SET_USER_ORDERS;
-  payload: UserState['orders'];
+  payload: Order[];
+}
+
+export interface SetUserOrdersLoadingStateActionInterface extends Action<UserActionsType> {
+  type: UserActionsType.SET_USER_ORDERS_LOADING_STATE;
+  payload: LoadingState;
 }
 
 export const setUserData = (payload: UserState['data']): SetUserDataActionInterface => ({
@@ -70,18 +76,24 @@ export const signOut = (): SignOutActionInterface => ({
 export const fetchUserData = (): FetchUserDataActionInterface => ({
   type: UserActionsType.FETCH_USER_DATA,
 });
+export const setUserLoadingState = (payload: LoadingState): SetUserLoadingStateActionInterface => ({
+  type: UserActionsType.SET_LOADING_STATE,
+  payload,
+});
 
 export const fetchUserOrders = (): FetchUserOrdersActionInterface => ({
   type: UserActionsType.FETCH_USER_ORDERS,
 });
 
-export const setUserOrders = (payload: UserState['orders']): SetUserOrdersActionInterface => ({
+export const setUserOrders = (payload: Order[]): SetUserOrdersActionInterface => ({
   type: UserActionsType.SET_USER_ORDERS,
   payload,
 });
 
-export const setUserLoadingState = (payload: LoadingState): SetUserLoadingStateActionInterface => ({
-  type: UserActionsType.SET_LOADING_STATE,
+export const setUserOrdersLoadingState = (
+  payload: LoadingState
+): SetUserOrdersLoadingStateActionInterface => ({
+  type: UserActionsType.SET_USER_ORDERS_LOADING_STATE,
   payload,
 });
 
@@ -93,4 +105,5 @@ export type UserActions =
   | FetchUserDataActionInterface
   | SetUserLoadingStateActionInterface
   | SetUserOrdersActionInterface
-  | FetchUserOrdersActionInterface;
+  | FetchUserOrdersActionInterface
+  | SetUserOrdersLoadingStateActionInterface;

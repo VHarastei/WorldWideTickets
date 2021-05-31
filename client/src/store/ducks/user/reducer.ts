@@ -4,7 +4,10 @@ import { UserState, LoadingState } from './contracts/store';
 
 const initialState: UserState = {
   data: undefined,
-  orders: [],
+  orders: {
+    items: [],
+    loadingState: LoadingState.NEVER,
+  },
   loadingState: LoadingState.NEVER,
 };
 
@@ -15,8 +18,8 @@ export const userReducer = produce((draft: Draft<UserState>, action: UserActions
       draft.loadingState = LoadingState.SUCCESS;
       break;
     case UserActionsType.SET_USER_ORDERS:
-      draft.orders = action.payload;
-      draft.loadingState = LoadingState.SUCCESS;
+      draft.orders.items = action.payload;
+      draft.orders.loadingState = LoadingState.SUCCESS;
       break;
     case UserActionsType.FETCH_SIGN_IN:
     case UserActionsType.FETCH_SIGN_UP:
@@ -26,12 +29,15 @@ export const userReducer = produce((draft: Draft<UserState>, action: UserActions
       break;
     case UserActionsType.SIGN_OUT:
       draft.data = undefined;
-      draft.orders = [];
+      draft.orders.items = [];
       draft.loadingState = LoadingState.NEVER;
       break;
     case UserActionsType.FETCH_USER_ORDERS:
-      draft.orders = [];
-      draft.loadingState = LoadingState.LOADING;
+      draft.orders.items = [];
+      draft.orders.loadingState = LoadingState.LOADING;
+      break;
+    case UserActionsType.SET_USER_ORDERS_LOADING_STATE:
+      draft.orders.loadingState = action.payload;
       break;
     case UserActionsType.SET_LOADING_STATE:
       draft.loadingState = action.payload;

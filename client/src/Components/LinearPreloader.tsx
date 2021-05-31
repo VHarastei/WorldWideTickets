@@ -3,7 +3,9 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   preloader: {
+    margin: 'auto',
     marginTop: 25,
+    width: 1032,
   },
   preloaderContent: {
     padding: 20,

@@ -8,13 +8,13 @@ import { Header } from '../Components/Header';
 import { Preloader } from '../Components/Preloader';
 import { SearchFiltersTabs } from '../Components/SearchFiltersTabs';
 import { SearchForm } from '../Components/SearchForm';
-import { FetchFlightsPayload, SortByType } from '../services/api/api';
+import { FetchFlightsPayload, SortByType } from '../services/api/flightsApi';
 import { fetchFlights, setFlightsLoadingState } from '../store/ducks/flights/actionCreators';
 import { Flight, FlightPair, LoadingState } from '../store/ducks/flights/contracts/store';
 import {
   selectFlightsItems,
   selectIsFlightsLoaded,
-  selectTotalPages
+  selectTotalPages,
 } from '../store/ducks/flights/selectors';
 
 const useStyles = makeStyles((theme) => ({
@@ -129,8 +129,8 @@ export const Search = () => {
             {flights.map((flight: Flight | FlightPair, index) => {
               return <FlightCard key={index} flight={flight} />;
             })}
-            {!IsFlightsLoaded &&
-              null
+            {
+              !IsFlightsLoaded && null
               // <CircularProgress
               //   thickness={5}
               //   size={50}

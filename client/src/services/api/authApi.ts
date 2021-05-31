@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { UserState } from './../../store/ducks/user/contracts/store';
-import { instanse } from './api';
+import { instance } from './api';
 
 export type SignInPropsType = {
   email: string;
@@ -16,20 +16,17 @@ export type SignUpPropsType = {
 
 export const AuthApi = {
   signIn: (payload: SignInPropsType): Promise<UserState['data']> => {
-    return instanse
+    return instance
       .post(`auth/login`, { username: payload.email, password: payload.password })
       .then(({ data }) => data.data);
   },
   signUp: (payload: SignUpPropsType): Promise<UserState['data']> => {
-    return instanse.post(`auth/register`, payload).then(({ data }) => data.data);
+    return instance.post(`auth/register`, payload).then(({ data }) => data.data);
   },
   getMe: (): Promise<UserState['data']> => {
-    return instanse.get(`auth/me`).then(({ data }) => data.data);
+    return instance.get(`auth/me`).then(({ data }) => data.data);
   },
   verify: (hash: string): Promise<AxiosResponse> => {
-    return instanse.get(`auth/verify?hash=${hash}`);
+    return instance.get(`auth/verify?hash=${hash}`);
   },
 };
-
-//@ts-ignore
-window.AuthApi = AuthApi;

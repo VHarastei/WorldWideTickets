@@ -26,8 +26,13 @@ const routes = require('./routes/index');
 app.use('/api', routes);
 
 //{ force: true }
-db.sequelize.sync().then(() => {
-  app.listen(process.env.PORT, async () => {
-    console.log('Server is running');
+db.sequelize
+  .sync()
+  .then(() => {
+    app.listen(process.env.PORT || 3001, async () => {
+      console.log('Server is running');
+    });
+  })
+  .catch((err) => {
+    console.log('sync err', err);
   });
-});

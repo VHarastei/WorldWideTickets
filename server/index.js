@@ -27,7 +27,7 @@ app.use('/api', routes);
 
 //{ force: true }
 db.sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     app.listen(process.env.PORT || 3001, async () => {
       console.log('Server is running');

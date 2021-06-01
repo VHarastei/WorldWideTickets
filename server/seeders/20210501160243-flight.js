@@ -1,7 +1,10 @@
 'use strict';
+
+const { transformSeeder } = require("../utils/transformSeeder");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('flights', [
+    return queryInterface.bulkInsert('flights', transformSeeder([
       {
         flightNumber: 'ZO-8469',
         distance: 13021,
@@ -902,7 +905,7 @@ module.exports = {
         arrivalDate: '2021-07-03T06:26:30.368+03:00',
         CompanyId: 14,
       },
-    ]);
+    ]));
   },
 
   down: async (queryInterface, Sequelize) => {

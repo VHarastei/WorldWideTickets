@@ -1,8 +1,9 @@
 'use strict';
+const { transformSeeder } = require('../utils/transformSeeder');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('seats', [
+    return queryInterface.bulkInsert('seats', transformSeeder([
       { id: 1, seatClass: 'economy', seatNumber: 1, seatStatus: false, AirplaneId: 1 },
       { id: 2, seatClass: 'economy', seatNumber: 2, seatStatus: false, AirplaneId: 1 },
       { id: 3, seatClass: 'economy', seatNumber: 3, seatStatus: false, AirplaneId: 1 },
@@ -6003,7 +6004,7 @@ module.exports = {
       { id: 5998, seatClass: 'first', seatNumber: 58, seatStatus: false, AirplaneId: 100 },
       { id: 5999, seatClass: 'first', seatNumber: 59, seatStatus: false, AirplaneId: 100 },
       { id: 6000, seatClass: 'first', seatNumber: 60, seatStatus: false, AirplaneId: 100 },
-    ]);
+    ]));
   },
 
   down: async (queryInterface, Sequelize) => {

@@ -27,10 +27,11 @@ app.use('/api', routes);
 
 //{ force: true }
 db.sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     app.listen(process.env.PORT || 3001, async () => {
       console.log('Server is running');
+      console.log(process.env.NODEMAILER_HOST);
     });
   })
   .catch((err) => {

@@ -6,6 +6,7 @@ const app = express();
 const cors = require('cors');
 const corsOptions = {
   //origin: 'http://localhost:3000',
+  origin: 'https://worldwidetickets.netlify.app',
   credentials: true,
   optionSuccessStatus: 200,
 };

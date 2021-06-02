@@ -5,7 +5,7 @@ const app = express();
 
 const cors = require('cors');
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  //origin: 'http://localhost:3000',
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -31,7 +31,6 @@ db.sequelize
   .then(() => {
     app.listen(process.env.PORT || 3001, async () => {
       console.log('Server is running');
-      console.log(process.env.NODEMAILER_HOST);
     });
   })
   .catch((err) => {

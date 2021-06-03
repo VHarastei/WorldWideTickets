@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
       from: 'wwtAdmin@gmail.com',
       to: data.email,
       subject: 'Email confirmation for WorldWideTickets',
-      html: `To confirm your email, go to <a href="http://localhost:3000/user/verify/${data.confirmHash}">this link</a>`,
+      html: `To confirm your email, go to <a href="https://worldwidetickets.netlify.app/user/verify/${data.confirmHash}">this link</a>`,
       callback: (err) => {
         if (err) {
           console.log(err);

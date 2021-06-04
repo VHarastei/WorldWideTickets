@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectUserData } from '../store/ducks/user/selectors';
-import { SignInDialog } from './SignInDialog';
+import { SignInDialog } from './SignInDialog/index';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Header = () => {
+export const Header = React.memo(() => {
   const classes = useStyles();
   const userData = useSelector(selectUserData);
 
@@ -78,4 +78,4 @@ export const Header = () => {
       </div>
     </div>
   );
-};
+});

@@ -4,17 +4,12 @@ import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined
 import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
 import React, { ChangeEvent } from 'react';
 import { BookingFlight, SeatData } from '../../../../../store/ducks/booking/contracts/store';
-import { FlightCard } from '../../../../FlightCard/FlightCard';
+import { FlightCard } from '../../../../FlightCard/index';
 import { AccordionTitle } from '../../SeatingStep/Components/AccordionTitle';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    flightAccordion: {
-      width: '100%',
-      // display: 'flex',
-      // alignItems: 'center',
-      // justifyContent: 'space-between',
-    },
+    flightAccordion: { width: '100%' },
     flightAccordionTitle: {
       lineHeight: '24px',
       fontSize: 20,
@@ -36,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     contentSubTitle: {
       fontSize: 18,
       fontWeight: 500,
-      //paddingTop: 8,
     },
     contentArticle: {
       display: 'flex',

@@ -21,32 +21,27 @@ const useStyles = makeStyles((theme: Theme) =>
 type PropsType = {
   handleNext?: () => void;
   handleBack: () => void;
-  flightNumber: string;
   activeStep: number;
 };
 
-export const NavigationButtons: React.FC<PropsType> = ({
-  handleNext,
-  flightNumber,
-  handleBack,
-  activeStep,
-}) => {
-  const classes = useStyles();
-  return (
-    <div className={classes.buttonsContainer}>
-      <Button
-        disabled={activeStep === 1}
-        onClick={handleBack}
-        className={classes.backButton}
-        variant="contained"
-        color="primary"
-      >
-        Back
-      </Button>
-      <Button type="submit" variant="contained" color="primary" onClick={handleNext}>
-        {activeStep === 3 ? `Pay` : 'Next'}
-        {/* {activeStep === steps.length - 1 ? `Pay` : 'Next'} */}
-      </Button>
-    </div>
-  );
-};
+export const NavigationButtons: React.FC<PropsType> = React.memo(
+  ({ handleNext, handleBack, activeStep }) => {
+    const classes = useStyles();
+    return (
+      <div className={classes.buttonsContainer}>
+        <Button
+          disabled={activeStep === 1}
+          onClick={handleBack}
+          className={classes.backButton}
+          variant="contained"
+          color="primary"
+        >
+          Back
+        </Button>
+        <Button type="submit" variant="contained" color="primary" onClick={handleNext}>
+          {activeStep === 3 ? `Pay` : 'Next'}
+        </Button>
+      </div>
+    );
+  }
+);

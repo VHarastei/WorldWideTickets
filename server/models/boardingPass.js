@@ -18,8 +18,6 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   BoardingPass.associate = (models) => {
-    //BoardingPass.belongsTo(models.Ticket);
-    //BoardingPass.belongsTo(models.Flight);
     BoardingPass.belongsTo(models.TicketFlight);
   };
 

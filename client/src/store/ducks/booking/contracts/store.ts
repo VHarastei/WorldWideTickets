@@ -19,19 +19,6 @@ export interface BookingFlight extends Flight {
   Airplane: FlightAirplaneWithSeats;
 }
 
-// type Modify<T, R> = Pick<T, Exclude<keyof T, keyof R>> & R;
-// export type BookingFlightPair = Modify<
-//   FlightPair,
-//   {
-//     firstFlight: {
-//       Airplane: FlightAirplaneWithSeats;
-//     };
-//     lastFlight: {
-//       Airplane: FlightAirplaneWithSeats;
-//     };
-//   }
-// >;
-
 export interface BookingFlightPair {
   firstFlight: BookingFlight;
   lastFlight: BookingFlight;

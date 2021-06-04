@@ -3,11 +3,11 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { AuthApi, SignUpPropsType } from '../services/api/authApi';
-import { setUserLoadingState } from '../store/ducks/user/actionCreators';
-import { LoadingState } from '../store/ducks/user/contracts/store';
-import { selectIsAuthLoading } from '../store/ducks/user/selectors';
-import { AuthDialogs } from './SignInDialog';
+import { AuthApi, SignUpPropsType } from '../../services/api/authApi';
+import { setUserLoadingState } from '../../store/ducks/user/actionCreators';
+import { LoadingState } from '../../store/ducks/user/contracts/store';
+import { selectIsAuthLoading } from '../../store/ducks/user/selectors';
+import { AuthDialogs } from '.';
 import { SignInTextField } from './SignInTextField';
 import { SubmitButton } from './SubmitButton';
 

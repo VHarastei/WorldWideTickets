@@ -1,7 +1,7 @@
 import { BookingActions, BookingActionsType } from './actionCreators';
 import { BookingState, LoadingState, BookingData, CreateTicketsState } from './contracts/store';
 import produce, { Draft } from 'immer';
-import { isPair } from '../../../Components/FlightCard/FlightCard';
+import { isPair } from '../../../Components/FlightCard';
 
 const initialBookingData: BookingData = {
   flightNumber: undefined,

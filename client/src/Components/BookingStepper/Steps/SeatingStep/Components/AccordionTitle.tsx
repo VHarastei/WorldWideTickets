@@ -24,24 +24,22 @@ type PropsType = {
   arrivalCity: string;
 };
 
-export const AccordionTitle: React.FC<PropsType> = ({
-  currentItem,
-  totalItems,
-  logoSrc,
-  departureCity,
-  arrivalCity,
-}) => {
-  const classes = useStyles();
+export const AccordionTitle: React.FC<PropsType> = React.memo(
+  ({ currentItem, totalItems, logoSrc, departureCity, arrivalCity }) => {
+    const classes = useStyles();
 
-  return (
-    <div>
-      <Typography gutterBottom variant="subtitle2" color="textSecondary">
-        {`Flight ${currentItem} of ${totalItems}`}
-      </Typography>
-      <div className={classes.flightAccordionTitleContainer}>
-        {logoSrc && <img src={logoSrc} width={75} alt="logo" />}
-        <span className={classes.flightAccordionTitle}>{departureCity + ' → ' + arrivalCity}</span>
+    return (
+      <div>
+        <Typography gutterBottom variant="subtitle2" color="textSecondary">
+          {`Flight ${currentItem} of ${totalItems}`}
+        </Typography>
+        <div className={classes.flightAccordionTitleContainer}>
+          {logoSrc && <img src={logoSrc} width={75} alt="logo" />}
+          <span className={classes.flightAccordionTitle}>
+            {departureCity + ' → ' + arrivalCity}
+          </span>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);

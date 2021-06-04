@@ -49,48 +49,50 @@ type PropsType = {
   totalItems: number;
 };
 
-export const SeatsAccordion: React.FC<PropsType> = ({
-  flight,
-  handleChooseSeat,
-  handleExpand,
-  expanded,
-  index,
-  choosedSeat,
-  chooseSeatErrors,
-  totalItems,
-}) => {
-  const classes = useStyles();
+export const SeatsAccordion: React.FC<PropsType> = React.memo(
+  ({
+    flight,
+    handleChooseSeat,
+    handleExpand,
+    expanded,
+    index,
+    choosedSeat,
+    chooseSeatErrors,
+    totalItems,
+  }) => {
+    const classes = useStyles();
 
-  return (
-    <Accordion
-      expanded={expanded === `panel${index + 1}`}
-      onChange={handleExpand(`panel${index + 1}`)}
-    >
-      <AccordionSummary>
-        <div className={classes.flightAccordion}>
-          <AccordionTitle
-            currentItem={index + 1}
-            totalItems={totalItems}
-            logoSrc={flight.Company.logoSrc}
-            departureCity={flight.departureAirport.city}
-            arrivalCity={flight.arrivalAirport.city}
-          />
-          {choosedSeat !== 0 ? (
-            <div className={classes.flightAccordionSelectedSeat}>
-              <CheckCircleIcon color="primary" style={{ marginRight: 6 }} />
-              <Typography color="primary">You selected seat {choosedSeat}</Typography>
-            </div>
-          ) : chooseSeatErrors.includes(index) ? (
-            <div className={classes.flightAccordionSelectedSeat} style={{ borderColor: 'red' }}>
-              <ErrorIcon color="error" style={{ marginRight: 6 }} />
-              <Typography color="error">You must select seat</Typography>
-            </div>
-          ) : null}
-        </div>
-      </AccordionSummary>
-      <AccordionDetails>
-        <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight} />
-      </AccordionDetails>
-    </Accordion>
-  );
-};
+    return (
+      <Accordion
+        expanded={expanded === `panel${index + 1}`}
+        onChange={handleExpand(`panel${index + 1}`)}
+      >
+        <AccordionSummary>
+          <div className={classes.flightAccordion}>
+            <AccordionTitle
+              currentItem={index + 1}
+              totalItems={totalItems}
+              logoSrc={flight.Company.logoSrc}
+              departureCity={flight.departureAirport.city}
+              arrivalCity={flight.arrivalAirport.city}
+            />
+            {choosedSeat !== 0 ? (
+              <div className={classes.flightAccordionSelectedSeat}>
+                <CheckCircleIcon color="primary" style={{ marginRight: 6 }} />
+                <Typography color="primary">You selected seat {choosedSeat}</Typography>
+              </div>
+            ) : chooseSeatErrors.includes(index) ? (
+              <div className={classes.flightAccordionSelectedSeat} style={{ borderColor: 'red' }}>
+                <ErrorIcon color="error" style={{ marginRight: 6 }} />
+                <Typography color="error">You must select seat</Typography>
+              </div>
+            ) : null}
+          </div>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ChooseSeatForm handleChooseSeat={handleChooseSeat} flight={flight} />
+        </AccordionDetails>
+      </Accordion>
+    );
+  }
+);

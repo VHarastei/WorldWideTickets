@@ -10,7 +10,6 @@ import PaymentOutlinedIcon from '@material-ui/icons/PaymentOutlined';
 import valid from 'card-validator';
 import { Form, Formik } from 'formik';
 import React from 'react';
-import { useParams } from 'react-router';
 import * as Yup from 'yup';
 import { NavigationButtons } from '../../../NavigationButtons';
 import { PaymentField } from './PaymentField';
@@ -76,8 +75,6 @@ export const PaymentForm: React.FC<PropsType> = ({
 }) => {
   const classes = useStyles();
 
-  const params: { flightNumber: string } = useParams();
-  const flightNumber = params.flightNumber;
   return (
     <Formik
       validationSchema={paymentSchema}
@@ -144,11 +141,7 @@ export const PaymentForm: React.FC<PropsType> = ({
               />
             </div>
           </Paper>
-          <NavigationButtons
-            handleBack={handleBack}
-            activeStep={activeStep}
-            flightNumber={flightNumber}
-          />
+          <NavigationButtons handleBack={handleBack} activeStep={activeStep} />
         </Form>
       )}
     </Formik>

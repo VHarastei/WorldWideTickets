@@ -50,12 +50,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type ChooseSeatFormPropsType = {
+type PropsType = {
   flight: BookingFlight;
   handleChooseSeat: (choosedSeat: SeatData) => void;
 };
 
-export const ChooseSeatForm: React.FC<ChooseSeatFormPropsType> = ({ flight, handleChooseSeat }) => {
+export const ChooseSeatForm: React.FC<PropsType> = ({ flight, handleChooseSeat }) => {
   const classes = useStyles();
 
   const [seat, setSeat] = useState<number | null>(null);

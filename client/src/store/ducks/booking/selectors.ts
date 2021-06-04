@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { isPair } from '../../../Components/FlightCard/FlightCard';
+import { isPair } from '../../../Components/FlightCard';
 import { RootState } from '../../store';
 import { CreateTicketsState, LoadingState } from './contracts/store';
 

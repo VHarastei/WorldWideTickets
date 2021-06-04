@@ -3,10 +3,10 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { SignInPropsType } from '../services/api/authApi';
-import { fetchSignIn } from '../store/ducks/user/actionCreators';
-import { selectIsAuthError, selectIsAuthLoading } from '../store/ducks/user/selectors';
-import { AuthDialogs } from './SignInDialog';
+import { SignInPropsType } from '../../services/api/authApi';
+import { fetchSignIn } from '../../store/ducks/user/actionCreators';
+import { selectIsAuthError, selectIsAuthLoading } from '../../store/ducks/user/selectors';
+import { AuthDialogs } from '.';
 import { SignInTextField } from './SignInTextField';
 import { SubmitButton } from './SubmitButton';
 

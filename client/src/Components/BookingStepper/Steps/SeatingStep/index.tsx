@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router';
 import { setBookingSeatData } from '../../../../store/ducks/booking/actionCreators';
 import {
   BookingFlight,
   BookingFlightPair,
   SeatData,
 } from '../../../../store/ducks/booking/contracts/store';
-import { isPair } from '../../../FlightCard/FlightCard';
+import { isPair } from '../../../FlightCard';
 import { NavigationButtons } from '../../NavigationButtons';
 import { SeatsAccordion } from './Components/SeatsAccordion';
 
@@ -25,10 +24,6 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
   handleBack,
 }) => {
   const dispatch = useDispatch();
-
-  const params: { flightNumber: string } = useParams();
-  const flightNumber = params.flightNumber;
-
   let defaultChoosedSeats: SeatData[] = [];
   if (isPair(flight)) {
     defaultChoosedSeats = [
@@ -127,12 +122,7 @@ export const SeatingStep: React.FC<SeatingStepPropsType> = ({
           totalItems={1}
         />
       )}
-      <NavigationButtons
-        handleNext={handleNext}
-        handleBack={handleBack}
-        activeStep={activeStep}
-        flightNumber={flightNumber}
-      />
+      <NavigationButtons handleNext={handleNext} handleBack={handleBack} activeStep={activeStep} />
     </div>
   );
 };

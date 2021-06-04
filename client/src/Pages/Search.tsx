@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { FlightCard } from '../Components/FlightCard/FlightCard';
+import { FlightCard } from '../Components/FlightCard';
 import { Header } from '../Components/Header';
 import { Preloader } from '../Components/Preloader';
 import { SearchFiltersTabs } from '../Components/SearchFiltersTabs';
@@ -86,10 +86,6 @@ export const Search = () => {
 
   useEffect(() => {
     dispatch(fetchFlights(fetchFlightsPayload));
-
-    return () => {
-      //dispatch(setFlightsLoadingState(LoadingState.NEVER));
-    };
     // eslint-disable-next-line
   }, [dispatch, page]);
 
@@ -102,6 +98,7 @@ export const Search = () => {
   useEffect(() => {
     setPage(1);
   }, [parsed.whereFrom, parsed.whereTo, sortBy]);
+
 
   return (
     <div onScroll={loadMoreItems} className={classes.searchContainer}>

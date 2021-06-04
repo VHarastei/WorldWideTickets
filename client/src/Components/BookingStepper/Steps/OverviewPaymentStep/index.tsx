@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { BookingApi } from '../../../../services/api/bookingApi';
 import { BookingFlight, BookingFlightPair } from '../../../../store/ducks/booking/contracts/store';
 import { selectBookingData } from '../../../../store/ducks/booking/selectors';
-import { isPair } from '../../../FlightCard/FlightCard';
+import { isPair } from '../../../FlightCard';
 import { FlightAccordion } from './Components/FlightAccordion';
 import { PaymentForm } from './Components/PaymentForm';
 

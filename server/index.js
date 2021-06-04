@@ -26,7 +26,6 @@ const db = require('./models');
 const routes = require('./routes/index');
 app.use('/api', routes);
 
-//{ force: true }
 db.sequelize
   .sync()
   .then(() => {

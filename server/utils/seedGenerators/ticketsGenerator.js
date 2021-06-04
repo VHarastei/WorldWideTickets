@@ -38,9 +38,6 @@ module.exports = generateTickets = async () => {
         id: index + 1,
         seatClass: seat.seatClass,
         PassengerId: index + 1,
-        //seatNumber: seat.seatNumber,
-        //price: ticketPrice,
-        //FlightId: airplane.Flight.id, // there
       };
 
       const ticketFlight = {
@@ -63,7 +60,6 @@ module.exports = generateTickets = async () => {
 
   setTimeout(() => {
     console.dir(ticketsArr, { maxArrayLength: 610 });
-    //console.dir(ticketFlightsArr, { maxArrayLength: 610 });
     console.log(JSON.stringify(ticketFlightsArr));
     console.log(JSON.stringify(boardingPassesArr));
   }, 10000);

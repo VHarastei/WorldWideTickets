@@ -5,12 +5,11 @@ import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Flight, FlightPair } from '../../store/ducks/flights/contracts/store';
+import { FlightDate } from './FlightTime';
 import { MoreAboutFlightDialog } from './MoreAboutFlightDialog';
 
 const useStyles = makeStyles((theme) => ({
-  flightCard: {
-    marginTop: 20,
-  },
+  flightCard: { marginTop: 20 },
   flightCardInfo: {
     width: '100%',
     display: 'flex',
@@ -25,19 +24,12 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   flightCardCompanyLogo: { padding: '0px 10px' },
-  flightCardContentTime: {
-    fontWeight: 500,
-    fontSize: 26,
-    lineHeight: '30px',
-  },
   flightCardContentTimeLineContainer: {
     height: '100%',
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
     marginTop: 15,
-    //marginLeft: -20,
-    //marginRight: -20,
   },
   flightCardContentTimeLineSpan: {
     position: 'relative',
@@ -127,8 +119,7 @@ type PropsType = {
   flight: Flight | FlightPair;
   simplified?: boolean;
 };
-
-export const FlightCard: React.FC<PropsType> = ({ flight, simplified }) => {
+export const FlightCard: React.FC<PropsType> = React.memo(({ flight, simplified }) => {
   const classes = useStyles();
 
   let flightNumber,
@@ -181,7 +172,6 @@ export const FlightCard: React.FC<PropsType> = ({ flight, simplified }) => {
 
   const inFlDiff = formattedArrDate.diff(formattedDepDate);
   const inFl = moment.utc(inFlDiff).format('D,H,m').split(',');
-  //const inFlightTime = `${inFl[0]}h ${inFl[1]}min`;
   const inFlightTime = `${inFl[0] === '1' ? '' : +inFl[0] - 1 + 'd'} ${inFl[1]}h ${inFl[2]}min`;
 
   return (
@@ -248,28 +238,4 @@ export const FlightCard: React.FC<PropsType> = ({ flight, simplified }) => {
       )}
     </Paper>
   );
-};
-
-type FlightDatePropsType = {
-  time: string;
-  date: string;
-  city: string;
-};
-
-const FlightDate: React.FC<FlightDatePropsType> = ({ time, date, city }) => {
-  const classes = useStyles();
-
-  return (
-    <div style={{ padding: '0px 10px', width: 160 }}>
-      <Typography variant="h5" className={classes.flightCardContentTime}>
-        {time}
-      </Typography>
-      <Typography color="textSecondary" variant="body2">
-        {date}
-      </Typography>
-      <Typography color="textSecondary" variant="body2">
-        {city}
-      </Typography>
-    </div>
-  );
-};
+});

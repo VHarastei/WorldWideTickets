@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const Home = () => {
   const classes = useStyles();
-
   return (
     <div className={classes.homeContainer}>
       <Header />

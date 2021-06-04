@@ -1,7 +1,6 @@
 import { Button, Container, makeStyles } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 import queryString from 'query-string';
-//import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
@@ -30,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     margin: '8px 3px',
     marginBottom: 0,
     width: 200,
-    //boxShadow: `0 10px 20px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
   },
   formSumbmitBtn: {
     boxShadow: `0 10px 20px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.15)`,
@@ -134,7 +132,6 @@ export const SearchForm = () => {
                 className={classes.formSumbmitBtn}
               >
                 Search
-                {/* <FlightTakeoffIcon/> */}
               </Button>
             </Form>
           </Container>

@@ -3,15 +3,14 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
 import { Field, Form, Formik } from 'formik';
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { setBookingPassengerData } from '../../../../store/ducks/booking/actionCreators';
 import {
   BookingFlight,
   BookingFlightPair,
-  PassengerData,
+  PassengerData
 } from '../../../../store/ducks/booking/contracts/store';
 import { selectUserData } from '../../../../store/ducks/user/selectors';
 import { AboutFlight } from '../../../FlightCard/MoreAboutFlightDialog';
@@ -40,16 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: 10,
         fontSize: 18,
       },
-    },
-    buttonsContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    backButton: {
-      marginRight: theme.spacing(1),
-    },
-    link: {
-      textDecoration: 'none',
     },
   })
 );
@@ -90,14 +79,6 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  const history = useHistory();
-  useEffect(() => {
-    history.push({ search: `step=${1}` });
-  }, [history]);
-
-  const params: { flightNumber: string } = useParams();
-  const flightNumber = params.flightNumber;
 
   const userData = useSelector(selectUserData);
 
@@ -245,7 +226,6 @@ export const PassengerDetailsStep: React.FC<PassengerDetailsPropsType> = ({
             <NavigationButtons
               handleBack={handleBack}
               activeStep={activeStep}
-              flightNumber={flightNumber}
             />
           </Form>
         )}

@@ -16,6 +16,5 @@ module.exports = generateSeats = (airplanesNumber) => {
       }
     }
   }
-  //console.dir(seatsArr, { maxArrayLength: 120 });
   return seatsArr;
 };

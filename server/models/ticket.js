@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Ticket.associate = (models) => {
     Ticket.belongsTo(models.Passenger);
-    // Ticket.belongsTo(models.Flight, {
-    //   foreignKey: 'FlightId',
-    // });
     Ticket.belongsToMany(models.Flight, { through: models.TicketFlight });
     Ticket.hasMany(models.TicketFlight);
   };

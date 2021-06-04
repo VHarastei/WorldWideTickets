@@ -14,7 +14,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import moment from 'moment';
 import React from 'react';
 import { Flight, FlightPair } from '../../store/ducks/flights/contracts/store';
-import { FlightCard, isPair } from './FlightCard';
+import { FlightCard, isPair } from '.';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

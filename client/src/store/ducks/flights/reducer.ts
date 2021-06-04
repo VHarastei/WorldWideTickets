@@ -7,10 +7,6 @@ const initialState: FlightsState = {
   totalPages: undefined,
   currentPage: undefined,
   items: [],
-  // items: {
-  //   directFlights: [],
-  //   connectingFlights: [],
-  // },
   loadingState: LoadingState.NEVER,
 };
 

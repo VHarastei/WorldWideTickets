@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
-import { VerifyDialog } from './VerifyDialog';
+import { VerifyDialog } from '../VerifyDialog';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {

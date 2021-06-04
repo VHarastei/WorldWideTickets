@@ -28,7 +28,6 @@ module.exports = {
           references: {
             model: {
               tableName: 'companies',
-              //schema: 'schema',
             },
             key: 'id',
           },

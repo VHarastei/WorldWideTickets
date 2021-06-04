@@ -4,7 +4,7 @@ import AirlineSeatIcon from '@material-ui/icons/AirlineSeatReclineNormalOutlined
 import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
 import PriceIcon from '@material-ui/icons/MonetizationOnOutlined';
 import { createStyles, makeStyles, Typography, Theme, Paper } from '@material-ui/core';
-import { FlightCard } from './FlightCard/FlightCard';
+import { FlightCard } from './FlightCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -17,7 +17,7 @@ import {
   LoadingState,
 } from '../../store/ducks/booking/contracts/store';
 import { selectBookingFlight, selectIsFlightLoaded } from '../../store/ducks/booking/selectors';
-import { isPair } from '../FlightCard/FlightCard';
+import { isPair } from '../FlightCard';
 import { LinearPreloader } from '../LinearPreloader';
 import { DownloadTicketStep } from './Steps/DownloadTicketStep/index';
 import { OverviewPaymentStep } from './Steps/OverviewPaymentStep/index';
@@ -60,9 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const BookingStepper = () => {
+export const BookingStepper = React.memo(() => {
   const classes = useStyles();
-
   const params: { flightNumber: string } = useParams();
   const flightNumber = params.flightNumber;
 
@@ -82,17 +81,10 @@ export const BookingStepper = () => {
   const [activeStep, setActiveStep] = React.useState(1);
   const steps = ['Search', 'Passenger details', 'Seating', 'Overview & Payment'];
 
-  const nextStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  if (activeStep === steps.length) {
-    return <DownloadTicketStep />;
-  }
+  if (activeStep === steps.length) return <DownloadTicketStep />;
 
   return (
     <Container className={classes.root}>
@@ -126,7 +118,7 @@ export const BookingStepper = () => {
       )}
     </Container>
   );
-};
+});
 
 function getStepContent(
   stepIndex: number,
